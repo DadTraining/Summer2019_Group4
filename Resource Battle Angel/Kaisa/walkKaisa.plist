@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>frames</key>
+		<dict>
+			<key>Idle_000.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{0,0},{832,1045}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{0,14},{832,1045}}</string>
+				<key>sourceSize</key>
+				<string>{867,1059}</string>
+			</dict>
+
+			<key>Idle_001.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{0,1046},{827,1049}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{0,10},{827,1049}}</string>
+				<key>sourceSize</key>
+				<string>{867,1059}</string>
+			</dict>
+
+			<key>Idle_002.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{0,2096},{822,1052}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{0,7},{822,1052}}</string>
+				<key>sourceSize</key>
+				<string>{867,1059}</string>
+			</dict>
+
+			<key>Idle_003.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{0,2096},{822,1052}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{0,7},{822,1052}}</string>
+				<key>sourceSize</key>
+				<string>{867,1059}</string>
+			</dict>
+
+			<key>Idle_004.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{0,1046},{827,1049}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{0,10},{827,1049}}</string>
+				<key>sourceSize</key>
+				<string>{867,1059}</string>
+			</dict>
+
+		</dict>
+
+		<key>metadata</key>
+		<dict>
+			<key>format</key>
+			<integer>2</integer>
+			<key>size</key>
+			<string>{1024,4096}</string>
+			<key>textureFileName</key>
+			<string>walk.png</string>
+			</dict>
+		</dict>
+</plist>

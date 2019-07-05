@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>frames</key>
+		<dict>
+			<key>idle_000.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{2227,977},{625,1003}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{151,0},{625,1003}}</string>
+				<key>sourceSize</key>
+				<string>{982,1012}</string>
+			</dict>
+
+			<key>idle_001.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{840,987},{743,995}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{109,8},{743,995}}</string>
+				<key>sourceSize</key>
+				<string>{982,1012}</string>
+			</dict>
+
+			<key>idle_002.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{0,0},{889,986}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{65,17},{889,986}}</string>
+				<key>sourceSize</key>
+				<string>{982,1012}</string>
+			</dict>
+
+			<key>idle_003.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{0,987},{839,976}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{86,26},{839,976}}</string>
+				<key>sourceSize</key>
+				<string>{982,1012}</string>
+			</dict>
+
+			<key>idle_004.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{890,0},{701,967}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{133,35},{701,967}}</string>
+				<key>sourceSize</key>
+				<string>{982,1012}</string>
+			</dict>
+
+			<key>idle_005.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{1584,968},{642,967}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{142,35},{642,967}}</string>
+				<key>sourceSize</key>
+				<string>{982,1012}</string>
+			</dict>
+
+			<key>idle_006.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{2227,0},{628,976}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{147,26},{628,976}}</string>
+				<key>sourceSize</key>
+				<string>{982,1012}</string>
+			</dict>
+
+			<key>idle_007.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{2853,977},{622,986}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{149,17},{622,986}}</string>
+				<key>sourceSize</key>
+				<string>{982,1012}</string>
+			</dict>
+
+			<key>idle_008.png</key>
+			<dict>
+				<key>frame</key>
+				<string>{{3476,0},{617,995}}</string>
+				<key>offset</key>
+				<string>{0,0}</string>
+				<key>rotated</key>
+				<false/>
+				<key>sourceColorRect</key>
+				<string>{{150,8},{617,995}}</string>
+				<key>sourceSize</key>
+				<string>{982,1012}</string>
+			</dict>
+
+		</dict>
+
+		<key>metadata</key>
+		<dict>
+			<key>format</key>
+			<integer>2</integer>
+			<key>size</key>
+			<string>{4096,2048}</string>
+			<key>textureFileName</key>
+			<string>idle.png</string>
+			</dict>
+		</dict>
+</plist>
