@@ -51,3 +51,20 @@ int * Objects::getDame()
 {
 	return this->m_dame;
 }
+
+Animation* Objects::createAnimation(std::string prerfixName, int pFrameOrder, float delay)
+{
+	Vector<SpriteFrame*> animFrame;
+	for (int i = 0; i <= pFrameOrder; i++)
+	{
+		char buffer[20] = { 0 };
+		sprintf(buffer, "%d.png", i);
+		std::string str = prerfixName + buffer;
+		auto frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(str);
+		animFrame.pushBack(frame);
+
+
+	}
+	animation = Animation::createWithSpriteFrames(animFrame, delay);
+	return animation;
+}

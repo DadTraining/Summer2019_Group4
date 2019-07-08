@@ -26,6 +26,8 @@ public:
 	int* getHP();
 	void setDame(int* m_dame);
 	int* getDame();
+	cocos2d::Animation* createAnimation(std::string prerfixName, int pFrameOrder, float delay);
+	cocos2d::Animation *animation;
 
 };
 
