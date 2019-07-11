@@ -1,4 +1,3 @@
-
 #ifndef __PLAYGAME_SCENE_H__
 #define __PLAYGAME_SCENE_H__
 
@@ -9,13 +8,17 @@ class PlayGameScene : public cocos2d::Scene
 {
 private:
 	Alita* m_Alita;
+	TMXLayer* Lane;
 public:
-    static cocos2d::Scene* createScene();
+	static cocos2d::Scene* createScene();
 
-    virtual bool init();
-    
+	virtual bool init();
+	void createController();
+	void createMap();
+	void createPhysic();
+
 	void update(float detaTime);
-    CREATE_FUNC(PlayGameScene);
+	CREATE_FUNC(PlayGameScene);
 };
 
 #endif // __PLAYGAME_SCENE_H__

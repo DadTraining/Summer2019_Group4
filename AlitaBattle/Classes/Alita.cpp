@@ -3,11 +3,19 @@
 
 Alita::Alita(Scene * scene)
 {
-	m_sprite = Sprite::create("Run__000.png");
+	m_sprite = Sprite::create("plist/Alita/Throw__000.png");
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	auto ScreenSize = Director::getInstance()->getVisibleSize();
 	m_sprite->setPosition(ScreenSize / 2);
 	m_sprite->setScale(0.2);
+
+	auto bodySprite1 = PhysicsBody::createBox(m_sprite->getContentSize());
+	bodySprite1->setGravityEnable(true);	//Gravity
+	bodySprite1->setMass(10);
+	bodySprite1->setRotationEnable(false);
+	//bodySprite1->setDynamic(true);		//setDynamic
+	m_sprite->setPhysicsBody(bodySprite1);
+	
 	scene->addChild(m_sprite);
 }
 
@@ -24,8 +32,8 @@ void Alita::Init()
 void Alita::MoveLeft()
 {
 
-	SpriteBatchNode *spriteNode = SpriteBatchNode::create("res/Alita/runAlita.png");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("res/Alita/runAlita.plist");
+	SpriteBatchNode *spriteNode = SpriteBatchNode::create("plist/Alita/runAlita.png");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/runAlita.plist");
 	auto model = Sprite::createWithSpriteFrameName("Run__000.png");
 	model->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(model);
@@ -43,8 +51,8 @@ void Alita::MoveLeft()
 void Alita::MoveRight()
 {
 	
-	SpriteBatchNode *spriteNode = SpriteBatchNode::create("res/Alita/runAlita.png");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("res/Alita/runAlita.plist");
+	SpriteBatchNode *spriteNode = SpriteBatchNode::create("plist/Alita/runAlita.png");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/runAlita.plist");
 	auto model = Sprite::createWithSpriteFrameName("Run__000.png");
 	model->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(model);
@@ -61,8 +69,10 @@ void Alita::MoveRight()
 
 void Alita::Jump()
 {
-	SpriteBatchNode *spriteNode = SpriteBatchNode::create("res/Alita/jumpAlita.png");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("res/Alita/jumpAlita.plist");
+
+	if (m_sprite->getPosition().y < Director::getInstance()->getVisibleSize().height / 2) {
+	SpriteBatchNode *spriteNode = SpriteBatchNode::create("plist/Alita/jumpAlita.png");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/jumpAlita.plist");
 	auto model = Sprite::createWithSpriteFrameName("Jump__000.png");
 	model->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(model);
@@ -70,12 +80,13 @@ void Alita::Jump()
 	animate->retain();
 	m_sprite->runAction(Repeat::create(animate, 1));
 	m_sprite->setPosition(Vec2(m_sprite->getPosition().x, m_sprite->getPosition().y+50));
+	}
 }
 
 void Alita::Attack()
 {
-	SpriteBatchNode *spriteNode = SpriteBatchNode::create("res/Alita/attackAlita.png");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("res/Alita/attackAlita.plist");
+	SpriteBatchNode *spriteNode = SpriteBatchNode::create("plist/Alita/attackAlita.png");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/attackAlita.plist");
 	auto model = Sprite::createWithSpriteFrameName("Attack__000.png");
 	model->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(model);
@@ -86,8 +97,8 @@ void Alita::Attack()
 
 void Alita::Throw()
 {
-	SpriteBatchNode *spriteNode = SpriteBatchNode::create("res/Alita/throwAlita.png");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("res/Alita/throwAlita.plist");
+	SpriteBatchNode *spriteNode = SpriteBatchNode::create("plist/Alita/throwAlita.png");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/throwAlita.plist");
 	auto model = Sprite::createWithSpriteFrameName("Throw__000.png");
 	model->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(model);
