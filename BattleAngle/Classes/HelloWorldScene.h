@@ -26,6 +26,8 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "Kaisa_Monster.h"
+#include "Alita.h"
 
 class HelloWorld : public cocos2d::Scene
 {
@@ -33,12 +35,22 @@ public:
     static cocos2d::Scene* createScene();
 
     virtual bool init();
-    
-    // a selector callback
-    void menuCloseCallback(cocos2d::Ref* pSender);
-    
-    // implement the "static create()" method manually
-    CREATE_FUNC(HelloWorld);
+
+	Kaisa_Monster* kaisa;
+	Alita* alita;
+
+	virtual void update(float deltaTime);
+	void ShootBullet(float deltaTime);
+	void createMapPhysics();
+	CREATE_FUNC(HelloWorld);
+
+private:
+	cocos2d::TMXLayer * mPhysicsLayer;
+	cocos2d::TMXTiledMap*  map;
+	cocos2d::PhysicsWorld *world;
+	void setPhysicsWorld(PhysicsWorld *m_world) {
+		world = m_world;
+	}
 };
 
 #endif // __HELLOWORLD_SCENE_H__
