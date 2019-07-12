@@ -1,6 +1,7 @@
 #include "Objects.h"
 #include "Alita.h"
 
+USING_NS_CC;
 Alita::Alita(Scene * scene)
 {
 	m_sprite = Sprite::create("plist/Alita/Throw__000.png");
@@ -15,8 +16,8 @@ Alita::Alita(Scene * scene)
 	bodySprite1->setRotationEnable(false);
 	//bodySprite1->setDynamic(true);		//setDynamic
 	m_sprite->setPhysicsBody(bodySprite1);
-	
 	scene->addChild(m_sprite);
+	Init();
 }
 
 Alita::~Alita()
@@ -26,45 +27,55 @@ Alita::~Alita()
 
 void Alita::Init()
 {
+	createAnimate();
+}
+
+void Alita::createAnimate()
+{
+
+	//createAnimate();
+	SpriteBatchNode *spriteNode = SpriteBatchNode::create("plist/Alita/runAlita.png");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/runAlita.plist");
+	auto model = Sprite::createWithSpriteFrameName("Run__000.png");
+	model->setPosition(m_sprite->getPosition());
+	spriteNode->addChild(model);
+	auto animate = Animate::create(createAnimation("Run__00", 9, 0.05));
+	mAnimation[ANIM_RUN] = RepeatForever::create(animate);
+	CC_SAFE_RETAIN(mAnimation[ANIM_RUN]);
+
+	spriteNode = SpriteBatchNode::create("plist/Alita/runAlita.png");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/runAlita.plist");
+	model = Sprite::createWithSpriteFrameName("Run__000.png");
+	model->setPosition(m_sprite->getPosition());
+	spriteNode->addChild(model);
+	animate = Animate::create(createAnimation("Run__00", 9, 0.05));
+	mAnimation[ANIM_RUN] = RepeatForever::create(animate);
+	CC_SAFE_RETAIN(mAnimation[ANIM_RUN]);
 
 }
 
 void Alita::MoveLeft()
 {
-
-	SpriteBatchNode *spriteNode = SpriteBatchNode::create("plist/Alita/runAlita.png");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/runAlita.plist");
-	auto model = Sprite::createWithSpriteFrameName("Run__000.png");
-	model->setPosition(m_sprite->getPosition());
-	spriteNode->addChild(model);
-	auto animate = Animate::create(createAnimation("Run__00", 9, 0.05));
-	animate->retain();
-	
 	if (isMoveRight) {
 		m_sprite->setFlippedX(true);
 		isMoveRight = false;
 	}
-	m_sprite->runAction(Repeat::create(animate, 1));
-	m_sprite->setPosition(Vec2(m_sprite->getPosition().x - 10, m_sprite->getPosition().y));
+	m_sprite->stopAllActions();
+	m_sprite->runAction(mAnimation[ANIM_RUN]);
+	isRun = true;
+	//m_sprite->setPosition(Vec2(m_sprite->getPosition().x - 10, m_sprite->getPosition().y));
 }
 
 void Alita::MoveRight()
 {
-	
-	SpriteBatchNode *spriteNode = SpriteBatchNode::create("plist/Alita/runAlita.png");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/runAlita.plist");
-	auto model = Sprite::createWithSpriteFrameName("Run__000.png");
-	model->setPosition(m_sprite->getPosition());
-	spriteNode->addChild(model);
-	auto animate = Animate::create(createAnimation("Run__00", 9, 0.05));
-	animate->retain();
-
+	//m_sprite->runAction(Repeat::create(animate, 1));
 	if (!isMoveRight) {
 		m_sprite->setFlippedX(false);
 		isMoveRight = true;
 	}
-	m_sprite->runAction(Repeat::create(animate, 1));
-	m_sprite->setPosition(Vec2(m_sprite->getPosition().x + 10, m_sprite->getPosition().y));
+	m_sprite->stopAllActions();
+	m_sprite->runAction(mAnimation[ANIM_RUN]);
+	isRun = true;
 }
 
 void Alita::Jump()
@@ -109,10 +120,27 @@ void Alita::Throw()
 
 void Alita::Update(float deltaTime)
 {
-
+	if (isRun) {
+		if (!isMoveRight) {
+			m_sprite->setPosition(m_sprite->getPosition() + Vec2(-1, 0));
+		}
+		else {
+			m_sprite->setPosition(m_sprite->getPosition() + Vec2(+1, 0));
+		}
+	}
 }
 
 void Alita::Collision()
 {
 
+}
+
+bool Alita::isRunning()
+{
+	return isRun;
+}
+
+bool Alita::setRunning(bool run)
+{
+	return run;
 }

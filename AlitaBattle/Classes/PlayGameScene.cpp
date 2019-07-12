@@ -38,6 +38,7 @@ bool PlayGameScene::init()
 	addChild(egdeNode);
 	m_Alita = new Alita(this);
 	createPhysic();
+	scheduleUpdate();
 	return true;
 }
 
@@ -60,6 +61,7 @@ void PlayGameScene::createController()
 	MoveLeftButton->addClickEventListener([&](Ref* event) {
 		m_Alita->MoveLeft();
 	});
+
 	MoveLeftButton->setAnchorPoint(Vec2(1, 0));
 	MoveLeftButton->setPosition(Vec2(ScreenSize.width / 3 - 70, ScreenSize.height / 5));
 	addChild(MoveLeftButton);
@@ -68,7 +70,7 @@ void PlayGameScene::createController()
 	auto JumpButton = ui::Button::create("res/Main_UI/jump.png",
 		"res/Main_UI/jump.png");
 	JumpButton->addClickEventListener([&](Ref* event) {
-		m_Alita->Jump();
+		m_Alita->Attack();
 	});
 	JumpButton->setAnchorPoint(Vec2(1, 0));
 	JumpButton->setPosition(Vec2(ScreenSize.width / 5 * 4, ScreenSize.height / 5));
@@ -138,4 +140,5 @@ void PlayGameScene::createPhysic(){
 
 void PlayGameScene::update(float detaTime)
 {
+	m_Alita->Update(detaTime);
 }

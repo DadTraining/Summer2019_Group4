@@ -16,7 +16,6 @@ public:
 	void createController();
 	void createMap();
 	void createPhysic();
-
 	void update(float detaTime);
 	CREATE_FUNC(PlayGameScene);
 };

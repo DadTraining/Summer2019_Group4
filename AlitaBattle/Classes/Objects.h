@@ -1,3 +1,5 @@
+
+
 #ifndef __OBJECTS__
 #define __OBJECTS__
 
@@ -13,7 +15,9 @@ protected:
 	int m_dame;
 	bool m_isAlive;
 
+
 public:
+	bool m_LefttoRight;
 	Objects();
 	~Objects();
 	virtual void Init() = 0;
@@ -26,6 +30,7 @@ public:
 	int getDame();
 	cocos2d::Animation* createAnimation(std::string prerfixName, int pFrameOrder, float delay);
 	cocos2d::Animation *animation;
+	Sprite* DuplicateSprite(Sprite * sprite);
 
 };
 
