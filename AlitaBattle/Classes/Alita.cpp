@@ -82,15 +82,15 @@ void Alita::Jump()
 {
 
 	if (m_sprite->getPosition().y < Director::getInstance()->getVisibleSize().height / 2) {
-	SpriteBatchNode *spriteNode = SpriteBatchNode::create("plist/Alita/jumpAlita.png");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/jumpAlita.plist");
-	auto model = Sprite::createWithSpriteFrameName("Jump__000.png");
-	model->setPosition(m_sprite->getPosition());
-	spriteNode->addChild(model);
-	auto animate = Animate::create(createAnimation("Jump__00", 9, 0.05));
-	animate->retain();
-	m_sprite->runAction(Repeat::create(animate, 1));
-	m_sprite->setPosition(Vec2(m_sprite->getPosition().x, m_sprite->getPosition().y+50));
+		SpriteBatchNode *spriteNode = SpriteBatchNode::create("plist/Alita/jumpAlita.png");
+		SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/jumpAlita.plist");
+		auto model = Sprite::createWithSpriteFrameName("Jump__000.png");
+		model->setPosition(m_sprite->getPosition());
+		spriteNode->addChild(model);
+		auto animate = Animate::create(createAnimation("Jump__00", 9, 0.05));
+		animate->retain();
+		m_sprite->runAction(Repeat::create(animate, 1));
+		m_sprite->setPosition(Vec2(m_sprite->getPosition().x, m_sprite->getPosition().y+50));
 	}
 }
 
@@ -140,7 +140,7 @@ bool Alita::isRunning()
 	return isRun;
 }
 
-bool Alita::setRunning(bool run)
+void Alita::setRunning(bool run)
 {
-	return run;
+	isRun = run;
 }
