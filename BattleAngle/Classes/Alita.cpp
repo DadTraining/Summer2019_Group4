@@ -6,7 +6,7 @@ Alita::Alita(Scene * scene)
 	m_sprite = Sprite::create("plist/Alita/Throw__000.png");
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	auto ScreenSize = Director::getInstance()->getVisibleSize();
-	m_sprite->setPosition(Vec2(ScreenSize.width/3, ScreenSize.height / 3));
+	m_sprite->setPosition(Vec2(ScreenSize.width/1.1, ScreenSize.height /2));
 	m_sprite->setScale(0.3);
 
 	auto bodySprite1 = PhysicsBody::createBox(m_sprite->getContentSize());

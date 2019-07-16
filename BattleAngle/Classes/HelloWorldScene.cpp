@@ -36,14 +36,10 @@ bool HelloWorld::init()
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	createMapPhysics();
 
-	this->kaisa = new Kaisa_Monster(this);
+	kaisa = new Kaisa_Monster(this);
 	alita = new Alita(this);
-	kaisa->Attack();
-	kaisa->Run();
-
-	
-	
-	this->schedule(CC_SCHEDULE_SELECTOR(HelloWorld::ShootBullet), 3);
+	this->schedule(CC_SCHEDULE_SELECTOR(HelloWorld::ShootBullet), 1);
+//	this->schedule(CC_SCHEDULE_SELECTOR(HelloWorld::update), 2);
 	this->scheduleUpdate();
 
 	return true;
@@ -61,12 +57,12 @@ void HelloWorld::update(float deltaTime)
 	{
 		kaisa->setTurnLeft();
 	}
-	kaisa->Attack();
 }
 
 void HelloWorld::ShootBullet(float deltaTime)
 {
-kaisa->Update(deltaTime);
+	createStateKaiSa();
+	//kaisa->Update(3);
 }
 
 
@@ -102,4 +98,20 @@ void HelloWorld::createMapPhysics() {
 		}
 	}
 	addChild(map, -1);
+}
+
+void HelloWorld::createStateKaiSa()
+{
+	
+	auto X_kaisa = kaisa->getSprite()->getPosition().x;
+	auto X_ailta = alita->getSprite()->getPosition().x;
+	auto X_shoot = abs(X_kaisa - X_ailta);
+	if (X_shoot <= 300)
+	{
+		kaisa->Attack();
+	} else 
+	{
+		kaisa->Run();
+		kaisa->Die();
+	}
 }
