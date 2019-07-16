@@ -81,7 +81,7 @@ void Alita::MoveRight()
 void Alita::Jump()
 {
 
-	if (m_sprite->getPosition().y < Director::getInstance()->getVisibleSize().height / 2) {
+	//if (m_sprite->getPosition().y < Director::getInstance()->getVisibleSize().height / 2) {
 		SpriteBatchNode *spriteNode = SpriteBatchNode::create("plist/Alita/jumpAlita.png");
 		SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/jumpAlita.plist");
 		auto model = Sprite::createWithSpriteFrameName("Jump__000.png");
@@ -91,7 +91,7 @@ void Alita::Jump()
 		animate->retain();
 		m_sprite->runAction(Repeat::create(animate, 1));
 		m_sprite->setPosition(Vec2(m_sprite->getPosition().x, m_sprite->getPosition().y + 50));
-	}
+	//}
 }
 
 void Alita::Attack()
@@ -122,10 +122,10 @@ void Alita::Update(float deltaTime)
 {
 	if (isRun) {
 		if (!isMoveRight) {
-			m_sprite->setPosition(m_sprite->getPosition() + Vec2(-1, 0));
+			m_sprite->setPosition(m_sprite->getPosition() + Vec2(-2, 0));
 		}
 		else {
-			m_sprite->setPosition(m_sprite->getPosition() + Vec2(+1, 0));
+			m_sprite->setPosition(m_sprite->getPosition() + Vec2(+2, 0));
 		}
 	}
 }
@@ -140,7 +140,7 @@ bool Alita::isRunning()
 	return isRun;
 }
 
-bool Alita::setRunning(bool run)
+void Alita::setRunning(bool run)
 {
-	return run;
+	isRun = run;
 }

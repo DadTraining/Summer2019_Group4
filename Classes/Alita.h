@@ -42,7 +42,7 @@ public:
 	void Throw();
 	void Collision();
 	bool isRunning();
-	bool setRunning(bool run);
+	void setRunning(bool run);
 private:
 	bool isRun = false;
 	Action * mAnimation[ANIM_TOTAl];
