@@ -77,12 +77,13 @@ void Kaisa_Monster::Run()
 	m_sprite->runAction(Repeat::create(animateRun,1));
 	if (getm_LetftoRight() == true) 
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x +3, m_sprite->getPosition().y);
+		m_sprite->setPosition(m_sprite->getPosition().x +5, m_sprite->getPosition().y);
 	}
 	else
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x -3, m_sprite->getPosition().y);
+		m_sprite->setPosition(m_sprite->getPosition().x -5, m_sprite->getPosition().y);
 	}
+
 }
 
 void Kaisa_Monster::Attack()

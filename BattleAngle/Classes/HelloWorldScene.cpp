@@ -62,7 +62,7 @@ void HelloWorld::update(float deltaTime)
 void HelloWorld::ShootBullet(float deltaTime)
 {
 	createStateKaiSa();
-	//kaisa->Update(3);
+	
 }
 
 
@@ -109,9 +109,12 @@ void HelloWorld::createStateKaiSa()
 	if (X_shoot <= 300)
 	{
 		kaisa->Attack();
-	} else 
+	} else if(X_shoot > 300 && X_shoot < 350)
 	{
 		kaisa->Run();
-		kaisa->Die();
 	}
+	else {
+		kaisa->Idle();
+	}
+
 }
