@@ -53,6 +53,7 @@ void Kaisa_Monster::Init()
 	m_sprite->setPhysicsBody(mPhysicBody);
 }
 
+
 void Kaisa_Monster::Update(float deltaTime)
 {
 	for (auto i : m_bullet)
@@ -63,6 +64,8 @@ void Kaisa_Monster::Update(float deltaTime)
 		}
 	}
 }
+
+
 
 void Kaisa_Monster::Run()
 {
@@ -167,3 +170,22 @@ bool Kaisa_Monster::getm_LetftoRight()
 		return false;
 }
 
+void Kaisa_Monster::setStateKaiSa(float position)
+{
+
+	auto X_kaisa = m_sprite->getPosition().x;
+	auto X_ailta = position;
+	auto X_shoot = abs(X_kaisa - X_ailta);
+	if (X_shoot <= 300)
+	{
+		Attack();
+	}
+	else if (X_shoot > 300 && X_shoot < 400)
+	{
+		Run();
+	}
+	else {
+		Idle();
+	}
+
+}

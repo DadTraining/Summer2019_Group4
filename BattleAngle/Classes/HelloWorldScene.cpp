@@ -38,8 +38,7 @@ bool HelloWorld::init()
 
 	kaisa = new Kaisa_Monster(this);
 	alita = new Alita(this);
-	this->schedule(CC_SCHEDULE_SELECTOR(HelloWorld::ShootBullet), 1);
-//	this->schedule(CC_SCHEDULE_SELECTOR(HelloWorld::update), 2);
+	this->schedule(CC_SCHEDULE_SELECTOR(HelloWorld::UpdateKaisa), 1);
 	this->scheduleUpdate();
 
 	return true;
@@ -57,13 +56,17 @@ void HelloWorld::update(float deltaTime)
 	{
 		kaisa->setTurnLeft();
 	}
-}
-
-void HelloWorld::ShootBullet(float deltaTime)
-{
-	createStateKaiSa();
+	
 	
 }
+
+void HelloWorld::UpdateKaisa(float deltaTime)
+{
+	auto positionAlita = alita->getSprite()->getPosition().x;
+	kaisa->setStateKaiSa(positionAlita);
+}
+
+
 
 
 void HelloWorld::createMapPhysics() {
@@ -81,40 +84,23 @@ void HelloWorld::createMapPhysics() {
 
 	auto mPhysicsLayer = map->getLayer("Layer 1");
 	Size layerSize = mPhysicsLayer->getLayerSize();
-	for (int i = 0; i < layerSize.width; i++)
-	{
-		for (int j = 0; j < layerSize.height; j++)
-		{
-			auto tileSet = mPhysicsLayer->getTileAt(Vec2(i, j));
-			if (tileSet != NULL)
-			{
-				auto physics = PhysicsBody::createBox(tileSet->getContentSize(), PhysicsMaterial(1.0f, 0.0f, 1.0f));
-				/*physics->setCollisionBitmask(Model::BITMASK_GROUND);
-				physics->setContactTestBitmask(true);*/
-				physics->setDynamic(false);
-				//physics->setMass(100);
-				tileSet->setPhysicsBody(physics);
-			}
-		}
-	}
+	//for (int i = 0; i < layerSize.width; i++)
+	//{
+	//	for (int j = 0; j < layerSize.height; j++)
+	//	{
+	//		auto tileSet = mPhysicsLayer->getTileAt(Vec2(i, j));
+	//		if (tileSet != NULL)
+	//		{
+	//			auto physics = PhysicsBody::createBox(tileSet->getContentSize(), PhysicsMaterial(1.0f, 0.0f, 1.0f));
+	//			/*physics->setCollisionBitmask(Model::BITMASK_GROUND);
+	//			physics->setContactTestBitmask(true);*/
+	//			physics->setDynamic(false);
+	//			//physics->setMass(100);
+	//			tileSet->setPhysicsBody(physics);
+	//		}
+	//	}
+	//}
 	addChild(map, -1);
 }
 
-void HelloWorld::createStateKaiSa()
-{
-	
-	auto X_kaisa = kaisa->getSprite()->getPosition().x;
-	auto X_ailta = alita->getSprite()->getPosition().x;
-	auto X_shoot = abs(X_kaisa - X_ailta);
-	if (X_shoot <= 300)
-	{
-		kaisa->Attack();
-	} else if(X_shoot > 300 && X_shoot < 350)
-	{
-		kaisa->Run();
-	}
-	else {
-		kaisa->Idle();
-	}
 
-}

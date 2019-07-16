@@ -40,7 +40,7 @@ public:
 	Alita* alita;
 
 	virtual void update(float deltaTime);
-	void ShootBullet(float deltaTime);
+	void UpdateKaisa(float deltaTime);
 	void createMapPhysics();
 	void createStateKaiSa();
 	CREATE_FUNC(HelloWorld);

@@ -30,6 +30,7 @@ public:
 	bool getm_LetftoRight();
 	void BulletCollision();
 	void AlitaCollision();
+	void setStateKaiSa(float position);
 
 private:
 	std::list<Objects*> m_bullet;
