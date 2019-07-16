@@ -31,6 +31,7 @@ public:
 	void BulletCollision();
 	void AlitaCollision();
 	void setStateKaiSa(float position);
+	void setTurnKaisa(float position);
 
 private:
 	std::list<Objects*> m_bullet;

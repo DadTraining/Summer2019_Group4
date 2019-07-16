@@ -48,15 +48,8 @@ bool HelloWorld::init()
 
 void HelloWorld::update(float deltaTime)
 {
-	if (alita->getSprite()->getPosition().x > kaisa->getSprite()->getPosition().x)
-	{
-		kaisa->setTurnRight();
-	}
-	else
-	{
-		kaisa->setTurnLeft();
-	}
-	
+	auto positionAlita = alita->getSprite()->getPosition().x;
+	kaisa->setTurnKaisa(positionAlita);
 	
 }
 
@@ -64,6 +57,7 @@ void HelloWorld::UpdateKaisa(float deltaTime)
 {
 	auto positionAlita = alita->getSprite()->getPosition().x;
 	kaisa->setStateKaiSa(positionAlita);
+	
 }
 
 

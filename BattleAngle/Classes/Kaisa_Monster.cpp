@@ -43,7 +43,7 @@ void Kaisa_Monster::Init()
 
 	m_sprite = Sprite::create("Plist/Kaisa/Die_000.png");
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
-	m_sprite->setPosition(Vec2(visibleSize.width / 3, 60));
+	m_sprite->setPosition(Vec2(visibleSize.width / 1.1, visibleSize.height / 2));
 	m_sprite->setScale(0.1);	
 	//PhysicBody
 	auto mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
@@ -151,11 +151,13 @@ void Kaisa_Monster::Die()
 void Kaisa_Monster::setTurnRight()
 {
 	this->m_sprite->setFlippedX(false);
+	
 	m_LefttoRight = true;
 }
 
 void Kaisa_Monster::setTurnLeft()
 {
+	
 	this->m_sprite->setFlippedX(true);	
 	Update(3);
 	m_LefttoRight = false;
@@ -187,5 +189,20 @@ void Kaisa_Monster::setStateKaiSa(float position)
 	else {
 		Idle();
 	}
+	//Setturn
+	
 
+}
+
+void Kaisa_Monster::setTurnKaisa(float position)
+{
+	if (position > m_sprite->getPosition().x)
+	{
+		setTurnRight();
+
+	}
+	else
+	{
+		setTurnLeft();
+	}
 }
