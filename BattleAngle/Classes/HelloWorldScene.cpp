@@ -78,22 +78,22 @@ void HelloWorld::createMapPhysics() {
 
 	auto mPhysicsLayer = map->getLayer("Layer 1");
 	Size layerSize = mPhysicsLayer->getLayerSize();
-	//for (int i = 0; i < layerSize.width; i++)
-	//{
-	//	for (int j = 0; j < layerSize.height; j++)
-	//	{
-	//		auto tileSet = mPhysicsLayer->getTileAt(Vec2(i, j));
-	//		if (tileSet != NULL)
-	//		{
-	//			auto physics = PhysicsBody::createBox(tileSet->getContentSize(), PhysicsMaterial(1.0f, 0.0f, 1.0f));
-	//			/*physics->setCollisionBitmask(Model::BITMASK_GROUND);
-	//			physics->setContactTestBitmask(true);*/
-	//			physics->setDynamic(false);
-	//			//physics->setMass(100);
-	//			tileSet->setPhysicsBody(physics);
-	//		}
-	//	}
-	//}
+	for (int i = 0; i < layerSize.width; i++)
+	{
+		for (int j = 0; j < layerSize.height; j++)
+		{
+			auto tileSet = mPhysicsLayer->getTileAt(Vec2(i, j));
+			if (tileSet != NULL)
+			{
+				auto physics = PhysicsBody::createBox(tileSet->getContentSize(), PhysicsMaterial(1.0f, 0.0f, 1.0f));
+				/*physics->setCollisionBitmask(Model::BITMASK_GROUND);
+				physics->setContactTestBitmask(true);*/
+				physics->setDynamic(false);
+				//physics->setMass(100);
+				tileSet->setPhysicsBody(physics);
+			}
+		}
+	}
 	addChild(map, -1);
 }
 
