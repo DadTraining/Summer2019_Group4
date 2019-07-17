@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "Murad_Monster.h"
 #include "Alita.h"
+#include "Kaisa_Monster.h"
 #include "ui/CocosGUI.h"
 
 using namespace cocos2d;
@@ -17,23 +18,22 @@ public:
 	virtual bool init();
 	virtual void update(float deltaTime);
 	std::vector<Murad_Monster*> mMurad;
+	std::vector<Kaisa_Monster*> mKaisa;
 
 	bool onTouchBegan(Touch* touch, Event  *event);
-	//void onTouchMoved(Touch* touch, Event  *event);
 	bool onTouchEnded(Touch* touch, Event  *event);
 	
 	CREATE_FUNC(PlayGameScene);
 
 private:
 	Alita* m_Alita;
+	Kaisa_Monster* nho;
 	float STATIC_Position_Alita;
 	Node *egdeNode;
 	float x_positon_Alita;
 	cocos2d::ui::Button* mMoveLeftController;
 	cocos2d::ui::Button* mMoveRightController;
 	cocos2d::ui::Button* mJumpController;
-	cocos2d::ui::Widget::TouchEventType mCurrentTouchState;
-	cocos2d::Point mCurrentTouchPoint;
 	cocos2d::TMXLayer * mPhysicsLayer;
 	cocos2d::TMXTiledMap*  map;
 	cocos2d::TMXObjectGroup* mObjectGroup;
@@ -41,7 +41,8 @@ private:
 	void createMapPhysics();
 	void createController();
 	void addListener();
-	void createObjects();
+	void createMonster();
+	void Update_Monster(float deltaTime);
 	void moveLeft(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void moveRight(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void jump(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);

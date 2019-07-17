@@ -20,8 +20,9 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
 	auto animateIdle = Animate::create(Murad_Monster::createAnimation("Idle_00", 9, 0.15));
-	animateIdle->retain();
+	//animateIdle->retain();
 	mAnimation[ANIM_IDLE] = m_sprite->runAction(Repeat::create(animateIdle, 1));
+	mAnimation[ANIM_IDLE]->retain();
 
 	spriteNode= SpriteBatchNode::create("Plist/Murad/Run_Murad.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Plist/Murad/Run_Murad.plist");
@@ -29,8 +30,9 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
 	auto animateRun = Animate::create(Murad_Monster::createAnimation("Run_00", 9, 0.15));
-	animateRun->retain();
+	//animateRun->retain();
 	mAnimation[ANIM_RUN] = m_sprite->runAction(Repeat::create(animateRun, 1));
+	mAnimation[ANIM_RUN]->retain();
 
 	spriteNode = SpriteBatchNode::create("plist/Murad/attack_Murad.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Murad/attack_Murad.plist");
@@ -38,8 +40,9 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
 	auto animateAttack = Animate::create(Murad_Monster::createAnimation("Attack_00", 9, 0.5));
-	animateAttack->retain();
+	//animateAttack->retain();
 	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create(animateAttack, 1));
+	mAnimation[ANIM_ATTACK]->retain();
 
 	spriteNode = SpriteBatchNode::create("plist/Murad/Dead_Murad.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Murad/Dead_Murad.plist");
@@ -47,9 +50,9 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
 	auto animateDie = Animate::create(Murad_Monster::createAnimation("Dead_00", 9, 0.15));
-	animateDie->retain();
+	//animateDie->retain();
 	mAnimation[ANIM_DIE] = m_sprite->runAction(Repeat::create(animateDie, 1));
-	
+	mAnimation[ANIM_DIE]->retain();
 }
 
 Murad_Monster::~Murad_Monster()
@@ -63,8 +66,8 @@ void Murad_Monster::Init() {
 	m_sprite = Sprite::create("plist/Murad/Idle_000.png");
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	m_sprite->setPosition(Vec2(visibleSize.width / 2, 0));
-	m_sprite->setScale(0.1);
-	auto mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize()*0.5);
+	m_sprite->setScale(0.05);
+	auto mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
 	mPhysicBody->setDynamic(true);
 	mPhysicBody->setRotationEnable(false);
 	m_sprite->setPhysicsBody(mPhysicBody);
@@ -80,11 +83,19 @@ void Murad_Monster::Idle()
 void Murad_Monster::Run() {
 	m_sprite->stopAllActions();
 	m_sprite->runAction(mAnimation[ANIM_RUN]);
+	if (getm_LetftoRight() == true)
+	{
+		m_sprite->setPosition(m_sprite->getPosition().x + 10, m_sprite->getPosition().y);
+	}
+	else
+	{
+		m_sprite->setPosition(m_sprite->getPosition().x - 10, m_sprite->getPosition().y);
+	}
 }
 
 void Murad_Monster::Attack() {
 	m_sprite->stopAllActions();
-	m_sprite->runAction(mAnimation[ANIM_RUN]);
+	m_sprite->runAction(mAnimation[ANIM_ATTACK]);
 }
 void Murad_Monster::Die()
 {
@@ -96,13 +107,58 @@ void Murad_Monster::Die()
 void Murad_Monster::setTurnRight()
 {
 	this->m_sprite->setFlippedX(false);
+	Update(3);
+	m_LefttoRight = true;
 }
 
 void Murad_Monster::setTurnLeft()
 {
 	this->m_sprite->setFlippedX(true);
+	Update(3);
+	m_LefttoRight = false;
 	
 }
+
+bool Murad_Monster::getm_LetftoRight()
+{
+	Update(3);
+	if (m_LefttoRight == true)
+		return true;
+	else
+		return false;
+}
+
+void Murad_Monster::setState_Murad(float position)
+{
+
+	auto X_murad = m_sprite->getPosition().x;
+	auto X_distance = abs(X_murad - position);
+	if (X_distance <= 80)
+	{
+		Attack();
+	}
+	else if (X_distance > 50 && X_distance < 250)
+	{
+		Run();
+	}
+	else {
+		Idle();
+	}
+}
+
+void Murad_Monster::setTurn_Murad(float position)
+{
+	if (position > m_sprite->getPosition().x)
+	{
+		setTurnRight();
+
+	}
+	else
+	{
+		setTurnLeft();
+	}
+}
+
 void Murad_Monster::Collision() {
 
 }

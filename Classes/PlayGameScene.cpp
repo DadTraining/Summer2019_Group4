@@ -24,27 +24,24 @@ bool PlayGameScene::init()
 		return false;
 	}
 	visibleSize = Director::getInstance()->getVisibleSize();
-	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
-	mCurrentTouchPoint = Point(-1, -1);
+
 	createMapPhysics();
 	addListener();
 	createController();
 	m_Alita = new Alita(this);
+	//nho = new Kaisa_Monster(this);
 	STATIC_Position_Alita = m_Alita->getSprite()->getPosition().x;
 	x_positon_Alita = m_Alita->getSprite()->getPosition().x;
-	//Murad_Monster* murad = new Murad_Monster(this);
+	
 
 	camera = this->getDefaultCamera();
-	//this->setCameraMask((unsigned short)CameraFlag::USER1, false);
 	camera->setAnchorPoint(Vec2(1, 1));
 	camera->setPosition(visibleSize.width / 2, visibleSize.height / 2);
-	//camera->setCameraFlag(CameraFlag::USER1);
-	//addChild(camera);
+	createMonster();
+	this->schedule(CC_SCHEDULE_SELECTOR(PlayGameScene::Update_Monster), 1);
 	scheduleUpdate();
-	createObjects()
-	/*auto touchListener = EventListenerTouchOneByOne::create();
-	touchListener->onTouchBegan = CC_CALLBACK_2(PlayGameScene::onTouchBegan, this);
-	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this)*/;
+	
+	
 	return true;
 }
 
@@ -53,16 +50,33 @@ void PlayGameScene::update(float deltaTime) {
 	auto x_alita = m_Alita->getSprite()->getPosition().x;
 	if (x_alita>STATIC_Position_Alita && x_alita<(map->getContentSize().width-visibleSize.width/2)) {
 		camera->setPosition(camera->getPosition().x + (x_alita - x_positon_Alita), visibleSize.height / 2);
-		//egdeNode->setPosition(egdeNode->getPosition().x + (x_alita - x_positon_Alita), visibleSize.height / 2);
 		mMoveLeftController->setPosition(Vec2(mMoveLeftController->getPosition().x + (x_alita - x_positon_Alita), mMoveLeftController->getPosition().y));
 		mMoveRightController->setPosition(Vec2(mMoveRightController->getPosition().x + (x_alita - x_positon_Alita), mMoveRightController->getPosition().y));
 		mJumpController->setPosition(Vec2(mJumpController->getPosition().x + (x_alita - x_positon_Alita), mJumpController->getPosition().y));
 		x_positon_Alita = x_alita;
 	}
 	
+	//nho->setTurnKaisa(x_alita);
+	for (auto i : mMurad) {
+		i->setTurn_Murad(x_alita);
+	}
+	/*for (auto i : mKaisa) {
+		i->setTurnKaisa(x_alita);
+	}*/
 
 }
-
+void PlayGameScene::Update_Monster(float deltaTime)
+{
+	auto positionAlita = m_Alita->getSprite()->getPosition().x;
+	for (auto i : mMurad) {
+		i->setState_Murad(positionAlita);
+	}
+	/*for (auto i : mKaisa) {
+		i->setStateKaiSa(positionAlita);
+	}*/
+	//nho->setStateKaiSa(positionAlita);
+	
+}
 
 
 void PlayGameScene::createMapPhysics() {
@@ -99,7 +113,7 @@ void PlayGameScene::createMapPhysics() {
 	egdeNode->setPhysicsBody(egdeBody);
 	addChild(egdeNode);
 }
-void PlayGameScene::createObjects() {
+void PlayGameScene::createMonster() {
 
 	//add effect
 	auto paricleEffect = ParticleSnow::create();
@@ -118,11 +132,14 @@ void PlayGameScene::createObjects() {
 		int posX = properties.at("x").asInt();
 		int posY = properties.at("y").asInt();
 		int type = object.asValueMap().at("type").asInt();
-		/*if (type == Objects::MODLE_TYPE_MAIN_CHARACTER)
+		/*if (type == 1)
 		{
-			mPlayer = new Player(this);
-		}
-		else*/ if (type ==2)
+			Kaisa_Monster *kaisa = new Kaisa_Monster(this);
+			kaisa->getSprite()->setPosition(Vec2(posX, posY));
+			mKaisa.push_back(kaisa);
+
+		}*/
+		 if (type ==2)
 		{
 			Murad_Monster *murad = new Murad_Monster(this);
 			murad->getSprite()->setPosition(Vec2(posX, posY));

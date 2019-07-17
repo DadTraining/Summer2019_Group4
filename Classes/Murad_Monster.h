@@ -23,11 +23,13 @@ public:
 	void Die();
 	void setTurnRight();
 	void setTurnLeft();
+	bool getm_LetftoRight();
+	void setState_Murad(float position);
+	void setTurn_Murad(float position);
 	void Collision();
 
 private:
 	cocos2d::Action* mAnimation[ANIM_TOTAl];
-	bool isRun = false;
 };
 
 #pragma once
