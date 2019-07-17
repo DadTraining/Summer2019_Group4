@@ -1,5 +1,4 @@
 #include "PlayGameScene.h"
-
 #include "ui\UIButton.h"
 
 USING_NS_CC;
@@ -40,7 +39,10 @@ bool PlayGameScene::init()
 	camera->setPosition(visibleSize.width / 2, visibleSize.height / 2);
 	//camera->setCameraFlag(CameraFlag::USER1);
 	//addChild(camera);
+	createMonsters();
+	this->schedule(CC_SCHEDULE_SELECTOR(PlayGameScene::UpdateMonster, 1));
 	scheduleUpdate();
+	
 	//createObjects()
 		/*auto touchListener = EventListenerTouchOneByOne::create();
 		touchListener->onTouchBegan = CC_CALLBACK_2(PlayGameScene::onTouchBegan, this);
@@ -62,6 +64,7 @@ void PlayGameScene::update(float deltaTime) {
 
 		x_positon_Alita = x_alita;
 	}
+	setTurn_Monster(x_alita);
 }
 
 
@@ -71,8 +74,8 @@ void PlayGameScene::createMapPhysics() {
 	map = TMXTiledMap::create("res/map/alita.tmx");
 	map->setAnchorPoint(Vec2(0, 0));
 	map->setPosition(0, 0);
-	mObjectGroup = map->getObjectGroup("Murad");
-	auto mPhysicsLayer = map->getLayer("Layer 1");
+	mObjectGroup = map->getObjectGroup("Monster");
+	auto mPhysicsLayer = map->getLayer("Lane");
 	Size layerSize = mPhysicsLayer->getLayerSize();
 	for (int i = 0; i < layerSize.width; i++)
 	{
@@ -98,7 +101,7 @@ void PlayGameScene::createMapPhysics() {
 	egdeNode->setPhysicsBody(egdeBody);
 	addChild(egdeNode);
 }
-void PlayGameScene::createObjects() {
+void PlayGameScene::createMonsters() {
 
 	//add effect
 	auto paricleEffect = ParticleSnow::create();
@@ -114,7 +117,18 @@ void PlayGameScene::createObjects() {
 		int posX = properties.at("x").asInt();
 		int posY = properties.at("y").asInt();
 		int type = object.asValueMap().at("type").asInt();
-		if (type == 2)
+		if (type == 0)
+		{
+			m_Alita->getSprite()->setPosition(Vec2(posX, posY));
+		}
+		//else if (type == 1)
+		//{
+		//	Kaisa_Monster *kaisa = new Kaisa_Monster(this);
+		//	kaisa->getSprite()->setPosition(Vec2(posX, posY));
+		//	//murad->setIndex(monster_count++);
+		//	mKaisa.push_back(kaisa);
+		//}
+		else if (type == 2)
 		{
 			Murad_Monster *murad = new Murad_Monster(this);
 			murad->getSprite()->setPosition(Vec2(posX, posY));
@@ -122,6 +136,25 @@ void PlayGameScene::createObjects() {
 			mMurad.push_back(murad);
 		}
 	}
+}
+void PlayGameScene::UpdateMonster(float DeltaTime)
+{
+	auto PositionAlita = m_Alita->getSprite()->getPositionX();
+	for (auto i : mMurad) {
+		i->setState_Murad(PositionAlita);
+	}
+	/*for (auto i : mKaisa) {
+		i->setStateKaiSa(PositionAlita);
+	}*/
+}
+void PlayGameScene::setTurn_Monster(float xAlita)
+{
+	for (auto i : mMurad) {
+		i->setTurn_Murad(xAlita);
+	}
+	/*for (auto i : mKaisa) {
+		i->setTurnKaisa(xAlita);
+	}*/
 }
 void PlayGameScene::addListener()
 {

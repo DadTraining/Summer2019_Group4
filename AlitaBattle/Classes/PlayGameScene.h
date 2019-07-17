@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "Murad_Monster.h"
+#include "Kaisa_Monster.h"
 #include "Alita.h"
 #include "ui/CocosGUI.h"
 
@@ -17,6 +18,7 @@ public:
 	virtual bool init();
 	virtual void update(float deltaTime);
 	std::vector<Murad_Monster*> mMurad;
+	std::vector<Kaisa_Monster*> mKaisa;
 
 	bool onTouchBegan(Touch* touch, Event  *event);
 	//void onTouchMoved(Touch* touch, Event  *event);
@@ -44,7 +46,10 @@ private:
 	void createMapPhysics();
 	void createController();
 	void addListener();
-	void createObjects();
+	void createMonsters();
+	void UpdateMonster(float DeltaTime);
+
+	void setTurn_Monster(float xAlita);
 	void moveLeft(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void moveRight(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void jump(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
