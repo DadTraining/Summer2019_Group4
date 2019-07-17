@@ -1,17 +1,20 @@
 #include"Bullet.h"
-
 Bullet::Bullet(cocos2d::Scene* scene)
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	//create Sprite bullet
 	this->Init();
 	this->m_sprite->removeFromParent();
+	//PhysicBody
 	auto mPhysicBody = PhysicsBody::createBox(Size(50, 50), PhysicsMaterial(1.0, 0.0, 1.0));
 	mPhysicBody->setGravityEnable(false);
 	mPhysicBody->setCollisionBitmask(false);
 	m_sprite->setPhysicsBody(mPhysicBody);
 	m_sprite->setScale(0.5);
+	//add bullet in scene
 	scene->addChild(this->m_sprite, 0);
+	m_LefttoRight = false;
 }
 
 Bullet::~Bullet()
@@ -33,9 +36,10 @@ void Bullet::Update(float deltaTime)
 	auto outHeight = visibleSize.height / 1.3;
 	this->m_sprite->setVisible(true);
 	//Check turn Kaisa Monster
-	if (m_LefttoRight == true)
+	if (!m_LefttoRight)
 	{
-		auto moveBy = MoveBy::create(deltaTime, Vec2(outHeight, 0));
+		//turn Right
+		auto moveBy = MoveBy::create(1, Vec2(outHeight, 0));
 		auto setVisibleSprite = CallFunc::create([&]() {
 			this->m_sprite->setVisible(false);
 		});
@@ -44,7 +48,8 @@ void Bullet::Update(float deltaTime)
 	}
 	else
 	{
-		auto moveBy = MoveBy::create(deltaTime, Vec2(-outHeight, 0));
+		//turn Left
+		auto moveBy = MoveBy::create(1, Vec2(-outHeight, 0));
 		auto setVisibleSprite = CallFunc::create([&]() {
 			this->m_sprite->setVisible(false);
 		});
@@ -52,5 +57,9 @@ void Bullet::Update(float deltaTime)
 		this->m_sprite->runAction(sequence);
 	}
 
+}
+
+void Bullet::MoveBullet(bool isRight)
+{
 
 }
