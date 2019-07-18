@@ -38,6 +38,8 @@ public:
 	void setTurnKaisa(float position);
 
 private:
+
+	int FPSKaisa = 0;
 	std::list<Objects*> m_bullet;
 	cocos2d::Action* mAnimation[ANIM_TOTAl];
 };

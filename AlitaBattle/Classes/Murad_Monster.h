@@ -30,6 +30,7 @@ public:
 
 private:
 	cocos2d::Action* mAnimation[ANIM_TOTAl];
+	int FPS = 0;
 };
 
 #pragma once

@@ -8,7 +8,7 @@ Size visibleSize;
 Scene* PlayGameScene::createScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	auto layer = PlayGameScene::create();
 	layer->setPhysicsWorld(scene->getPhysicsWorld());
 	scene->addChild(layer, 0);
@@ -28,6 +28,11 @@ bool PlayGameScene::init()
 	addListener();
 	createController();
 	createCamera();
+
+	//Kaisa_Monster *kaisa = new Kaisa_Monster(this);
+	//Murad_Monster *murad = new Murad_Monster(this);
+
+
 	createMonsters();
 	//this->schedule(CC_SCHEDULE_SELECTOR(PlayGameScene::UpdateMonster, 3));
 	scheduleUpdate();
@@ -114,14 +119,14 @@ void PlayGameScene::createMonsters() {
 		}
 		else if (type == 1)
 		{
-			Kaisa_Monster *kaisa = new Kaisa_Monster(this);
+			kaisa = new Kaisa_Monster(this);
 			kaisa->getSprite()->setPosition(Vec2(posX, posY));
 			//murad->setIndex(monster_count++);
 			mKaisa.push_back(kaisa);
 		}
 		else if (type == 2)
 		{
-			Murad_Monster *murad = new Murad_Monster(this);
+			murad = new Murad_Monster(this);
 			murad->getSprite()->setPosition(Vec2(posX, posY));
 			//murad->setIndex(monster_count++);
 			mMurad.push_back(murad);

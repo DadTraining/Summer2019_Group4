@@ -3,7 +3,6 @@
 #include "Bullet.h"
 
 USING_NS_CC;
-static int FPS = 0;
 Kaisa_Monster::Kaisa_Monster(Scene * scene)
 {
 	//set Blood for KaisaMonster
@@ -27,44 +26,45 @@ Kaisa_Monster::Kaisa_Monster(Scene * scene)
 	}
 
 	//Create Animation
-	SpriteBatchNode *spriteNode;
+	SpriteBatchNode *spriteNode1;
 	Sprite* sprite;
 
-	spriteNode = SpriteBatchNode::create("plist/Kaisa/run.png");
+	spriteNode1 = SpriteBatchNode::create("plist/Kaisa/run.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Kaisa/run.plist");
-	sprite = Sprite::createWithSpriteFrameName("Run_000.png");
+	sprite = Sprite::createWithSpriteFrameName("Run_0000.png");
 	sprite->setPosition(m_sprite->getPosition());
-	spriteNode->addChild(sprite);
-	auto animateRun = Animate::create(Kaisa_Monster::createAnimation("Run_00", 4, 0.15));
+	spriteNode1->addChild(sprite);
+	auto animateRun = Animate::create(Kaisa_Monster::createAnimation("Run_000", 4, 0.15));
 	mAnimation[ANIM_RUN] = m_sprite->runAction(Repeat::create(animateRun, 1));
-	mAnimation[ANIM_RUN]->retain();
+	CC_SAFE_RETAIN(mAnimation[ANIM_RUN]);
 
-	spriteNode = SpriteBatchNode::create("plist/Kaisa/attacknobullet.png");
+	spriteNode1 = SpriteBatchNode::create("plist/Kaisa/attacknobullet.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Kaisa/attacknobullet.plist");
-	sprite = Sprite::createWithSpriteFrameName("Attack_000.png");
+	sprite = Sprite::createWithSpriteFrameName("Attack_0000.png");
 	sprite->setPosition(m_sprite->getPosition());
-	spriteNode->addChild(sprite);
-	auto animateAttack = Animate::create(Kaisa_Monster::createAnimation("Attack_00", 2, 0.5));
+	spriteNode1->addChild(sprite);
+	auto animateAttack = Animate::create(Kaisa_Monster::createAnimation("Attack_000", 2, 0.5));
 	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create(animateAttack, 1));
-	mAnimation[ANIM_ATTACK]->retain();
+	CC_SAFE_RETAIN(mAnimation[ANIM_ATTACK]);
 
-	spriteNode = SpriteBatchNode::create("plist/Kaisa/idle.png");
+	spriteNode1 = SpriteBatchNode::create("plist/Kaisa/idle.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Kaisa/idle.plist");
-	sprite = Sprite::createWithSpriteFrameName("Idle_000.png");
+	sprite = Sprite::createWithSpriteFrameName("Idle_0000.png");
 	sprite->setPosition(m_sprite->getPosition());
-	spriteNode->addChild(sprite);
-	auto animateIdle = Animate::create(Kaisa_Monster::createAnimation("Idle_00", 4, 0.15));
+	spriteNode1->addChild(sprite);
+	auto animateIdle = Animate::create(Kaisa_Monster::createAnimation("Idle_000", 4, 0.15));
 	mAnimation[ANIM_IDLE] = m_sprite->runAction(Repeat::create(animateIdle, 1));
-	mAnimation[ANIM_IDLE]->retain();
+	CC_SAFE_RETAIN(mAnimation[ANIM_IDLE]);
 
-	spriteNode = SpriteBatchNode::create("plist/Kaisa/die.png");
+	spriteNode1 = SpriteBatchNode::create("plist/Kaisa/die.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Kaisa/die.plist");
-	sprite = Sprite::createWithSpriteFrameName("Die_000.png");
+	sprite = Sprite::createWithSpriteFrameName("Die_0000.png");
 	sprite->setPosition(m_sprite->getPosition());
-	spriteNode->addChild(sprite);
-	auto animateDie = Animate::create(Kaisa_Monster::createAnimation("Die_00", 4, 0.15));
+	spriteNode1->addChild(sprite);
+	auto animateDie = Animate::create(Kaisa_Monster::createAnimation("Die_000", 4, 0.15));
 	mAnimation[ANIM_DIE] = m_sprite->runAction(Repeat::create(animateDie, 1));
-	mAnimation[ANIM_DIE]->retain();
+	CC_SAFE_RETAIN(mAnimation[ANIM_DIE]);
+
 }
 
 Kaisa_Monster::~Kaisa_Monster()
@@ -99,10 +99,10 @@ void Kaisa_Monster::Update(float deltaTime)
 			i->m_LefttoRight = (!m_LefttoRight);
 		}
 	}
-	FPS++;
-	if (FPS == 150) {
+	FPSKaisa++;
+	if (FPSKaisa == 150) {
 		setStateKaiSa(deltaTime);
-		FPS = 0;
+		FPSKaisa = 0;
 	}
 }
 

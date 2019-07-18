@@ -21,6 +21,8 @@ private:
 	TMXObjectGroup* mObjectGroup;
 	PhysicsWorld *world;
 	Camera *camera;
+	Kaisa_Monster *kaisa;
+	Murad_Monster *murad;
 	std::vector<Murad_Monster*> mMurad;
 	std::vector<Kaisa_Monster*> mKaisa;
 	

@@ -1,7 +1,6 @@
 #include "Murad_Monster.h"
 
 USING_NS_CC;
-static int FPS = 0;
 Murad_Monster::Murad_Monster(Scene * scene)
 {
 	this->setHP(HP_MURADMONSTER);
@@ -10,49 +9,63 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	Init();
 	scene->addChild(m_sprite);
 
-
 	SpriteBatchNode *spriteNode;
 	Sprite* sprite;
+	SpriteFrame* spriteFrame;
 
 	spriteNode = SpriteBatchNode::create("plist/Murad/Idle_Murad.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Murad/Idle_Murad.plist");
-	sprite = Sprite::createWithSpriteFrameName("Idle_000.png");
+	//sprite = Sprite::createWithSpriteFrameName("Idle_000.png");
+	 spriteFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName("Idle_000.png");
+	sprite = Sprite::createWithSpriteFrame(spriteFrame);
+
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
 	auto animateIdle = Animate::create(Murad_Monster::createAnimation("Idle_00", 9, 0.15));
 	//animateIdle->retain();
 	mAnimation[ANIM_IDLE] = m_sprite->runAction(Repeat::create(animateIdle, 1));
-	mAnimation[ANIM_IDLE]->retain();
+	CC_SAFE_RETAIN(mAnimation[ANIM_IDLE]);
 
-	spriteNode = SpriteBatchNode::create("Plist/Murad/Run_Murad.png");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Plist/Murad/Run_Murad.plist");
-	sprite = Sprite::createWithSpriteFrameName("Run_000.png");
+	spriteNode = SpriteBatchNode::create("plist/Murad/Run_Murad.png");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Murad/Run_Murad.plist");
+	//sprite = Sprite::createWithSpriteFrameName("Run_000.png");
+	spriteFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName("Run_000.png");
+	sprite = Sprite::createWithSpriteFrame(spriteFrame);
+
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
 	auto animateRun = Animate::create(Murad_Monster::createAnimation("Run_00", 9, 0.15));
 	//animateRun->retain();
 	mAnimation[ANIM_RUN] = m_sprite->runAction(Repeat::create(animateRun, 1));
-	mAnimation[ANIM_RUN]->retain();
+	CC_SAFE_RETAIN(mAnimation[ANIM_RUN]);
 
 	spriteNode = SpriteBatchNode::create("plist/Murad/attack_Murad.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Murad/attack_Murad.plist");
-	sprite = Sprite::createWithSpriteFrameName("Attack_000.png");
+	//sprite = Sprite::createWithSpriteFrameName("Attack_000.png");
+	spriteFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName("Attack_000.png");
+	sprite = Sprite::createWithSpriteFrame(spriteFrame);
+
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
 	auto animateAttack = Animate::create(Murad_Monster::createAnimation("Attack_00", 9, 0.5));
 	//animateAttack->retain();
 	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create(animateAttack, 1));
-	mAnimation[ANIM_ATTACK]->retain();
+	CC_SAFE_RETAIN(mAnimation[ANIM_ATTACK]);
 
 	spriteNode = SpriteBatchNode::create("plist/Murad/Dead_Murad.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Murad/Dead_Murad.plist");
-	sprite = Sprite::createWithSpriteFrameName("Dead_000.png");
+	spriteFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName("Dead_000.png");
+	sprite = Sprite::createWithSpriteFrame(spriteFrame);
+	//sprite = Sprite::createWithSpriteFrameName("Dead_000.png");
+	
+
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
 	auto animateDie = Animate::create(Murad_Monster::createAnimation("Dead_00", 9, 0.15));
 	//animateDie->retain();
 	mAnimation[ANIM_DIE] = m_sprite->runAction(Repeat::create(animateDie, 1));
-	mAnimation[ANIM_DIE]->retain();
+	CC_SAFE_RETAIN(mAnimation[ANIM_DIE]);
+
 }
 
 Murad_Monster::~Murad_Monster()
