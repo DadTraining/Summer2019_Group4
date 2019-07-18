@@ -52,7 +52,7 @@ bool LoadingScene::init()
 
 		{
 
-			loadingbar->setPercent(loadingbar->getPercent() + 1);
+			loadingbar->setPercent(loadingbar->getPercent() + 2);
 
 		}
 
@@ -71,7 +71,7 @@ bool LoadingScene::init()
 
 	});
 
-	auto sequence = Sequence::create(DelayTime::create(10), gotoNext,
+	auto sequence = Sequence::create(DelayTime::create(5), gotoNext,
 		nullptr);
 
 	runAction(sequence);

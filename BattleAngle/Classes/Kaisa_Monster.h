@@ -28,8 +28,8 @@ public:
 	void setTurnRight();
 	void setTurnLeft();
 	bool getm_LetftoRight();
-	void BulletCollision();
-	void AlitaCollision();
+	//void BulletCollision();
+	//void AlitaCollision();
 	void setStateKaiSa(float position);
 	void setTurnKaisa(float position);
 

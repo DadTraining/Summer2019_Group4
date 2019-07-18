@@ -42,7 +42,8 @@ public:
 	virtual void update(float deltaTime);
 	void UpdateKaisa(float deltaTime);
 	void createMapPhysics();
-	void createStateKaiSa();
+	void createHubAlita();
+	//void createStateKaiSa();
 	CREATE_FUNC(HelloWorld);
 
 private:

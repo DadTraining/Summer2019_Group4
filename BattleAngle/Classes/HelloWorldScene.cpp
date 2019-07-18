@@ -2,6 +2,7 @@
 
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
+#include "ui/CocosGUI.h"
 #include "Bullet.h"
 
 USING_NS_CC;
@@ -35,7 +36,7 @@ bool HelloWorld::init()
 	visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	createMapPhysics();
-
+	createHubAlita();
 	kaisa = new Kaisa_Monster(this);
 	alita = new Alita(this);
 	this->schedule(CC_SCHEDULE_SELECTOR(HelloWorld::UpdateKaisa), 1);
@@ -95,6 +96,25 @@ void HelloWorld::createMapPhysics() {
 		}
 	}
 	addChild(map, -1);
+}
+
+void HelloWorld::createHubAlita()
+{
+	auto hud = Sprite::create("res/BloodMc/hud.png");
+	hud->setPosition(Vec2(50,visibleSize.height-40));
+	hud->setScale(0.5);
+	hud->setAnchorPoint(Vec2(0,0));
+	addChild(hud,10);
+
+	auto bloodMC = ui::LoadingBar::create("res/BloodMc/hud_blood.png");
+	bloodMC->setPosition(Vec2(50, visibleSize.height - 40));
+	bloodMC->setDirection(ui::LoadingBar::Direction::RIGHT);
+	bloodMC->setScale(0.5);
+	bloodMC->setPercent(20);
+	bloodMC->setAnchorPoint(Vec2(0, 0));
+	addChild(bloodMC, 11);
+
+
 }
 
 

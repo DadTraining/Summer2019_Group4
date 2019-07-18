@@ -9,12 +9,13 @@ Bullet::Bullet(cocos2d::Scene* scene)
 	//PhysicBody
 	auto mPhysicBody = PhysicsBody::createBox(Size(50,50), PhysicsMaterial(1.0, 0.0, 1.0));
 	mPhysicBody->setGravityEnable(false);
+	mPhysicBody->setDynamic(true);
 	mPhysicBody->setCollisionBitmask(false);
 	m_sprite->setPhysicsBody(mPhysicBody);
 	m_sprite->setScale(0.5);
 	//add bullet in scene
 	scene->addChild(this->m_sprite,0);
-	m_LefttoRight = false;
+	m_LefttoRight = true;
 }
 
 Bullet::~Bullet()
