@@ -16,7 +16,7 @@ public:
 	Murad_Monster(Scene * scene);
 	~Murad_Monster();
 	void Init() override;
-	void Update(float deltaTime) override;
+	void Update(float xAlita) override;
 	void Idle();
 	void Run();
 	void Attack();

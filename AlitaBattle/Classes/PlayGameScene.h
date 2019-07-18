@@ -11,45 +11,48 @@ using namespace cocos2d;
 
 class PlayGameScene : public cocos2d::Scene
 {
-public:
-
-	static cocos2d::Scene* createScene();
-
-	virtual bool init();
-	virtual void update(float deltaTime);
+private:
+	/*Attriibute Mainly*/
+	Alita* m_Alita;
+	Node *egdeNode;
+	Point mCurrentTouchPoint;
+	TMXLayer * mPhysicsLayer;
+	TMXTiledMap*  map;
+	TMXObjectGroup* mObjectGroup;
+	PhysicsWorld *world;
+	Camera *camera;
 	std::vector<Murad_Monster*> mMurad;
 	std::vector<Kaisa_Monster*> mKaisa;
-
-	bool onTouchBegan(Touch* touch, Event  *event);
-	//void onTouchMoved(Touch* touch, Event  *event);
-	bool onTouchEnded(Touch* touch, Event  *event);
-
-	CREATE_FUNC(PlayGameScene);
-
-private:
-	Alita* m_Alita;
+	
+	/*Another Attribute */
 	float STATIC_Position_Alita;
-	Node *egdeNode;
 	float x_positon_Alita;
+
+public:
+	/*Methods in cocos2dx default*/
+	static cocos2d::Scene* createScene();
+	virtual bool init();
+	virtual void update(float deltaTime);
+
+	/* Methods using for Init*/
+	void createMapPhysics();
+	void createMap();
+	void createPhysics();
+	void createCamera();
+	void createController();
+	void createMC();
+	void addListener();
+	void createMonsters();
+
+	/* Methods using for controller game*/
 	cocos2d::ui::Button* mMoveLeftController;
 	cocos2d::ui::Button* mMoveRightController;
 	cocos2d::ui::Button* mJumpController;
 	cocos2d::ui::Button* mAttackController;
 	cocos2d::ui::Button* mThrowController;
-
+	bool onTouchBegan(Touch* touch, Event  *event);
+	bool onTouchEnded(Touch* touch, Event  *event);
 	cocos2d::ui::Widget::TouchEventType mCurrentTouchState;
-	cocos2d::Point mCurrentTouchPoint;
-	cocos2d::TMXLayer * mPhysicsLayer;
-	cocos2d::TMXTiledMap*  map;
-	cocos2d::TMXObjectGroup* mObjectGroup;
-	cocos2d::PhysicsWorld *world;
-	void createMapPhysics();
-	void createController();
-	void addListener();
-	void createMonsters();
-	void UpdateMonster(float DeltaTime);
-
-	void setTurn_Monster(float xAlita);
 	void moveLeft(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void moveRight(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void jump(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
@@ -58,6 +61,13 @@ private:
 	void setPhysicsWorld(PhysicsWorld *m_world) {
 		world = m_world;
 	}
+	
+	/* Methods using for update*/
+	void setTurn_Monster(float xAlita);
+	void updateCenterView();
+	void UpdateMonster(float x_alita);
+
+	CREATE_FUNC(PlayGameScene);
 };
 
 #endif // __PLAY_GAME_SCENE_H__

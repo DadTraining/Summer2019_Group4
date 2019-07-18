@@ -37,7 +37,7 @@ bool MenuScene::init()
 
 		});
 
-		auto sequence = Sequence::create(DelayTime::create(1), gotoNext,
+		auto sequence = Sequence::create(DelayTime::create(0.1), gotoNext,
 			nullptr);
 
 		runAction(sequence);

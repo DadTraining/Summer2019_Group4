@@ -59,7 +59,7 @@ bool LoadingScene::init()
 	});
 
 	auto sequenceRunUpdateLoadingBar =
-		Sequence::createWithTwoActions(updateLoadingBar, DelayTime::create(0.02f));
+		Sequence::createWithTwoActions(updateLoadingBar, DelayTime::create(0.01f));
 
 	auto repeat = Repeat::create(sequenceRunUpdateLoadingBar, 100);
 
@@ -71,7 +71,7 @@ bool LoadingScene::init()
 
 	});
 
-	auto sequence = Sequence::create(DelayTime::create(2), gotoNext,
+	auto sequence = Sequence::create(DelayTime::create(1), gotoNext,
 		nullptr);
 
 	runAction(sequence);

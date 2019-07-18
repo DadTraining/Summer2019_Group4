@@ -4,8 +4,6 @@
 USING_NS_CC;
 
 Size visibleSize;
-Camera *camera;
-
 
 Scene* PlayGameScene::createScene()
 {
@@ -25,55 +23,42 @@ bool PlayGameScene::init()
 	visibleSize = Director::getInstance()->getVisibleSize();
 	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
 	mCurrentTouchPoint = Point(-1, -1);
+	createMC();
 	createMapPhysics();
 	addListener();
 	createController();
-	m_Alita = new Alita(this);
-	STATIC_Position_Alita = m_Alita->getSprite()->getPosition().x;
-	x_positon_Alita = m_Alita->getSprite()->getPosition().x;
-	//Murad_Monster* murad = new Murad_Monster(this);
-
-	camera = this->getDefaultCamera();
-	//this->setCameraMask((unsigned short)CameraFlag::USER1, false);
-	camera->setAnchorPoint(Vec2(1, 1));
-	camera->setPosition(visibleSize.width / 2, visibleSize.height / 2);
-	//camera->setCameraFlag(CameraFlag::USER1);
-	//addChild(camera);
+	createCamera();
 	createMonsters();
-	this->schedule(CC_SCHEDULE_SELECTOR(PlayGameScene::UpdateMonster, 1));
+	//this->schedule(CC_SCHEDULE_SELECTOR(PlayGameScene::UpdateMonster, 3));
 	scheduleUpdate();
-	
-	//createObjects()
-		/*auto touchListener = EventListenerTouchOneByOne::create();
-		touchListener->onTouchBegan = CC_CALLBACK_2(PlayGameScene::onTouchBegan, this);
-		this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this)*/;
 	return true;
 }
 
 void PlayGameScene::update(float deltaTime) {
-	m_Alita->Update(deltaTime);
 	auto x_alita = m_Alita->getSprite()->getPosition().x;
-	if (x_alita>STATIC_Position_Alita && x_alita<(map->getContentSize().width - visibleSize.width / 2)) {
-		camera->setPosition(camera->getPosition().x + (x_alita - x_positon_Alita), visibleSize.height / 2);
-		//egdeNode->setPosition(egdeNode->getPosition().x + (x_alita - x_positon_Alita), visibleSize.height / 2);
-		mMoveLeftController->setPosition(Vec2(mMoveLeftController->getPosition().x + (x_alita - x_positon_Alita), mMoveLeftController->getPosition().y));
-		mMoveRightController->setPosition(Vec2(mMoveRightController->getPosition().x + (x_alita - x_positon_Alita), mMoveRightController->getPosition().y));
-		mJumpController->setPosition(Vec2(mJumpController->getPosition().x + (x_alita - x_positon_Alita), mJumpController->getPosition().y));
-		mAttackController->setPosition(Vec2(mAttackController->getPosition().x + (x_alita - x_positon_Alita), mAttackController->getPosition().y));
-		mThrowController->setPosition(Vec2(mThrowController->getPosition().x + (x_alita - x_positon_Alita), mThrowController->getPosition().y));
-
-		x_positon_Alita = x_alita;
-	}
+	m_Alita->Update(deltaTime);
+	updateCenterView();
 	setTurn_Monster(x_alita);
+	UpdateMonster(x_alita);
 }
 
 
 
 void PlayGameScene::createMapPhysics() {
+	
+	createMap();
+	createPhysics();
+}
+void PlayGameScene::createMap()
+{
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	map = TMXTiledMap::create("res/map/alita.tmx");
 	map->setAnchorPoint(Vec2(0, 0));
 	map->setPosition(0, 0);
+
+}
+void PlayGameScene::createPhysics()
+{
 	mObjectGroup = map->getObjectGroup("Monster");
 	auto mPhysicsLayer = map->getLayer("Lane");
 	Size layerSize = mPhysicsLayer->getLayerSize();
@@ -101,6 +86,12 @@ void PlayGameScene::createMapPhysics() {
 	egdeNode->setPhysicsBody(egdeBody);
 	addChild(egdeNode);
 }
+void PlayGameScene::createCamera()
+{
+	camera = this->getDefaultCamera();
+	camera->setAnchorPoint(Vec2(1, 1));
+	camera->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+}
 void PlayGameScene::createMonsters() {
 
 	//add effect
@@ -121,13 +112,13 @@ void PlayGameScene::createMonsters() {
 		{
 			m_Alita->getSprite()->setPosition(Vec2(posX, posY));
 		}
-		//else if (type == 1)
-		//{
-		//	Kaisa_Monster *kaisa = new Kaisa_Monster(this);
-		//	kaisa->getSprite()->setPosition(Vec2(posX, posY));
-		//	//murad->setIndex(monster_count++);
-		//	mKaisa.push_back(kaisa);
-		//}
+		else if (type == 1)
+		{
+			Kaisa_Monster *kaisa = new Kaisa_Monster(this);
+			kaisa->getSprite()->setPosition(Vec2(posX, posY));
+			//murad->setIndex(monster_count++);
+			mKaisa.push_back(kaisa);
+		}
 		else if (type == 2)
 		{
 			Murad_Monster *murad = new Murad_Monster(this);
@@ -137,24 +128,38 @@ void PlayGameScene::createMonsters() {
 		}
 	}
 }
-void PlayGameScene::UpdateMonster(float DeltaTime)
+void PlayGameScene::UpdateMonster(float x_alita)
 {
-	auto PositionAlita = m_Alita->getSprite()->getPositionX();
+//	auto PositionAlita = m_Alita->getSprite()->getPositionX();
 	for (auto i : mMurad) {
-		i->setState_Murad(PositionAlita);
+		i->Update(x_alita);
 	}
-	/*for (auto i : mKaisa) {
-		i->setStateKaiSa(PositionAlita);
-	}*/
+	for (auto i : mKaisa) {
+		i->Update(x_alita);
+	}
 }
 void PlayGameScene::setTurn_Monster(float xAlita)
 {
 	for (auto i : mMurad) {
 		i->setTurn_Murad(xAlita);
 	}
-	/*for (auto i : mKaisa) {
+	for (auto i : mKaisa) {
 		i->setTurnKaisa(xAlita);
-	}*/
+	}
+}
+void PlayGameScene::updateCenterView()
+{
+	auto x_alita = m_Alita->getSprite()->getPosition().x;
+	if (x_alita>STATIC_Position_Alita && x_alita<(map->getContentSize().width - visibleSize.width / 2)) {
+		camera->setPosition(camera->getPosition().x + (x_alita - x_positon_Alita), visibleSize.height / 2);
+		//egdeNode->setPosition(egdeNode->getPosition().x + (x_alita - x_positon_Alita), visibleSize.height / 2);
+		mMoveLeftController->setPosition(Vec2(mMoveLeftController->getPosition().x + (x_alita - x_positon_Alita), mMoveLeftController->getPosition().y));
+		mMoveRightController->setPosition(Vec2(mMoveRightController->getPosition().x + (x_alita - x_positon_Alita), mMoveRightController->getPosition().y));
+		mJumpController->setPosition(Vec2(mJumpController->getPosition().x + (x_alita - x_positon_Alita), mJumpController->getPosition().y));
+		mAttackController->setPosition(Vec2(mAttackController->getPosition().x + (x_alita - x_positon_Alita), mAttackController->getPosition().y));
+		mThrowController->setPosition(Vec2(mThrowController->getPosition().x + (x_alita - x_positon_Alita), mThrowController->getPosition().y));
+		x_positon_Alita = x_alita;
+	}
 }
 void PlayGameScene::addListener()
 {
@@ -162,7 +167,6 @@ void PlayGameScene::addListener()
 	auto touchListener = EventListenerTouchOneByOne::create();
 	touchListener->setSwallowTouches(true);
 	touchListener->onTouchBegan = CC_CALLBACK_2(PlayGameScene::onTouchBegan, this);
-	//touchListener->onTouchMoved = CC_CALLBACK_2(PlayGameScene::onTouchMoved, this);
 	touchListener->onTouchEnded = CC_CALLBACK_2(PlayGameScene::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 }
@@ -216,6 +220,13 @@ void PlayGameScene::createController()
 	addChild(mThrowController);
 }
 
+void PlayGameScene::createMC()
+{
+	m_Alita = new Alita(this);
+	STATIC_Position_Alita = m_Alita->getSprite()->getPosition().x;
+	x_positon_Alita = m_Alita->getSprite()->getPosition().x;
+}
+
 void PlayGameScene::moveRight(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
 	switch (type)
 	{
@@ -249,6 +260,8 @@ void PlayGameScene::jump(Ref* sender, ui::Widget::TouchEventType type)
 	case ui::Widget::TouchEventType::BEGAN:
 		m_Alita->Jump();
 		break;
+	case ui::Widget::TouchEventType::ENDED:
+		break;
 	}
 }
 
@@ -259,6 +272,8 @@ void PlayGameScene::attack(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 	case ui::Widget::TouchEventType::BEGAN:
 		m_Alita->Attack();
 		break;
+	case ui::Widget::TouchEventType::ENDED:
+		break;
 	}
 }
 
@@ -268,6 +283,8 @@ void PlayGameScene::throws(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 	{
 	case ui::Widget::TouchEventType::BEGAN:
 		m_Alita->Throw();
+		break;
+	case ui::Widget::TouchEventType::ENDED:
 		break;
 	}
 }

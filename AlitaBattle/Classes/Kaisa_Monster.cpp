@@ -3,9 +3,7 @@
 #include "Bullet.h"
 
 USING_NS_CC;
-
-
-
+static int FPS = 0;
 Kaisa_Monster::Kaisa_Monster(Scene * scene)
 {
 	//set Blood for KaisaMonster
@@ -101,6 +99,11 @@ void Kaisa_Monster::Update(float deltaTime)
 			i->m_LefttoRight = (!m_LefttoRight);
 		}
 	}
+	FPS++;
+	if (FPS == 150) {
+		setStateKaiSa(deltaTime);
+		FPS = 0;
+	}
 }
 
 
@@ -126,8 +129,6 @@ void Kaisa_Monster::Attack()
 	m_sprite->stopAllActions();
 	m_sprite->runAction(mAnimation[ANIM_ATTACK]);
 	Shoot();
-
-
 }
 
 void Kaisa_Monster::Shoot()
@@ -150,7 +151,6 @@ void Kaisa_Monster::Idle()
 {
 	m_sprite->stopAllActions();
 	m_sprite->runAction(mAnimation[ANIM_IDLE]);
-
 }
 
 void Kaisa_Monster::Die()
@@ -183,17 +183,24 @@ bool Kaisa_Monster::getm_LetftoRight()
 		return false;
 }
 
+void Kaisa_Monster::BulletCollision()
+{
+}
+
+void Kaisa_Monster::AlitaCollision()
+{
+}
+
 void Kaisa_Monster::setStateKaiSa(float position)
 {
-
 	auto X_kaisa = m_sprite->getPosition().x;
 	auto X_ailta = position;
 	auto X_shoot = abs(X_kaisa - X_ailta);
-	if (X_shoot <= 300)
+	if (X_shoot <= 250)
 	{
 		Attack();
 	}
-	else if (X_shoot > 300 && X_shoot < 400)
+	else if (X_shoot > 250 && X_shoot < 350)
 	{
 		Run();
 	}

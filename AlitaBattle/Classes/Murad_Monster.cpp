@@ -1,7 +1,7 @@
 #include "Murad_Monster.h"
 
 USING_NS_CC;
-
+static int FPS = 0;
 Murad_Monster::Murad_Monster(Scene * scene)
 {
 	this->setHP(HP_MURADMONSTER);
@@ -72,8 +72,12 @@ void Murad_Monster::Init() {
 	mPhysicBody->setRotationEnable(false);
 	m_sprite->setPhysicsBody(mPhysicBody);
 }
-void Murad_Monster::Update(float deltaTime) {
-
+void Murad_Monster::Update(float xAlita) {
+	FPS++;
+	if (FPS == 150) {
+		setState_Murad(xAlita);
+		FPS = 0;
+	}
 }
 void Murad_Monster::Idle()
 {
@@ -130,14 +134,13 @@ bool Murad_Monster::getm_LetftoRight()
 
 void Murad_Monster::setState_Murad(float position)
 {
-
 	auto X_murad = m_sprite->getPosition().x;
 	auto X_distance = abs(X_murad - position);
-	if (X_distance <= 50)
+	if (X_distance <= 100)
 	{
 		Attack();
 	}
-	else if (X_distance > 50 && X_distance < 250)
+	else if (X_distance > 100 && X_distance < 250)
 	{
 		Run();
 	}
