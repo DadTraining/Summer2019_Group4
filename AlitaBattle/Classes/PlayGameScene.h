@@ -60,10 +60,13 @@ public:
 	void jump(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void attack(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void throws(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
+	
+	/*Methods using logic game*/
 	void setPhysicsWorld(PhysicsWorld *m_world) {
 		world = m_world;
 	}
-	
+	bool onContactBegin(cocos2d::PhysicsContact& contact);
+
 	/* Methods using for update*/
 	void setTurn_Monster(float xAlita);
 	void updateCenterView();

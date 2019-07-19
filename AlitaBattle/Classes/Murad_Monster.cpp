@@ -3,8 +3,8 @@
 USING_NS_CC;
 Murad_Monster::Murad_Monster(Scene * scene)
 {
-	this->setHP(HP_MURADMONSTER);
-	this->setDame(DAME_MURADMONSTER);
+	this->setHP(Objects::MURAD_HP);
+	this->setDame(Objects::MURAD_DAME);
 	this->m_isAlive = true;
 	Init();
 	scene->addChild(m_sprite);
@@ -79,8 +79,8 @@ void Murad_Monster::Init() {
 	m_sprite = Sprite::create("plist/Murad/Idle_000.png");
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	m_sprite->setPosition(Vec2(visibleSize.width / 2, 0));
-	m_sprite->setScale(0.05);
-	auto mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
+	m_sprite->setScale(0.12);
+	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
 	mPhysicBody->setDynamic(true);
 	mPhysicBody->setRotationEnable(false);
 	m_sprite->setPhysicsBody(mPhysicBody);

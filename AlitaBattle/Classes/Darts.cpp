@@ -12,6 +12,8 @@ Darts::Darts(cocos2d::Scene * scene)
 	mPhysicBody->setGravityEnable(false);
 	mPhysicBody->setCollisionBitmask(1);
 	mPhysicBody->setRotationEnable(false);
+	mPhysicBody->setCollisionBitmask(Objects::BITMASK_DART);
+	mPhysicBody->setContactTestBitmask(true);
 	m_sprite->setPhysicsBody(mPhysicBody);
 	m_sprite->setScale(0.5);
 	//add bullet in scene

@@ -14,6 +14,8 @@ Alita::Alita(Scene * scene)
 	bodySprite1->setGravityEnable(true);	//Gravity
 	bodySprite1->setMass(200);
 	bodySprite1->setRotationEnable(false);
+	bodySprite1->setCollisionBitmask(Objects::BITMASK_ALITA);
+	bodySprite1->setContactTestBitmask(true);
 	//bodySprite1->setDynamic(true);		//setDynamic
 	m_sprite->setPhysicsBody(bodySprite1);
 	scene->addChild(m_sprite,10);

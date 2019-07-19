@@ -8,7 +8,7 @@ Size visibleSize;
 Scene* PlayGameScene::createScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	auto layer = PlayGameScene::create();
 	layer->setPhysicsWorld(scene->getPhysicsWorld());
 	scene->addChild(layer, 0);
@@ -104,11 +104,11 @@ void PlayGameScene::createMonsters() {
 	paricleEffect->setPosition(Vec2(visibleSize.width / 2, visibleSize.height));
 	addChild(paricleEffect);
 	auto objects = mObjectGroup->getObjects();
-	int monster_count = 0;
+	int kaisa_count = 0;
+	int murad_count = 0;
 	for (int i = 0; i < objects.size(); i++)
 	{
 		auto object = objects.at(i);
-
 		auto properties = object.asValueMap();
 		int posX = properties.at("x").asInt();
 		int posY = properties.at("y").asInt();
@@ -121,14 +121,14 @@ void PlayGameScene::createMonsters() {
 		{
 			kaisa = new Kaisa_Monster(this);
 			kaisa->getSprite()->setPosition(Vec2(posX, posY));
-			//murad->setIndex(monster_count++);
+			kaisa->setIndex(kaisa_count++);
 			mKaisa.push_back(kaisa);
 		}
 		else if (type == 2)
 		{
 			murad = new Murad_Monster(this);
 			murad->getSprite()->setPosition(Vec2(posX, posY));
-			//murad->setIndex(monster_count++);
+			murad->setIndex(murad_count++);
 			mMurad.push_back(murad);
 		}
 	}
@@ -142,6 +142,24 @@ void PlayGameScene::UpdateMonster(float x_alita)
 	for (auto i : mKaisa) {
 		i->Update(x_alita);
 	}
+}
+bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
+{
+	PhysicsBody* a = contact.getShapeA()->getBody();
+	PhysicsBody* b = contact.getShapeB()->getBody();
+	if ((a->getCollisionBitmask() == Objects::BITMASK_DART && b->getCollisionBitmask() == Objects::BITMASK_KAISA)
+		|| (a->getCollisionBitmask() == Objects::BITMASK_KAISA && b->getCollisionBitmask() == Objects::BITMASK_DART))
+	{
+		if (a->getCollisionBitmask() == Objects::BITMASK_DART)
+		{
+			mKaisa.at(b->getGroup())->DarkCollision();
+		}
+		else if (b->getCollisionBitmask() == Objects::BITMASK_DART)
+		{
+			mKaisa.at(a->getGroup())->DarkCollision();
+		}
+	}
+	return true;
 }
 void PlayGameScene::setTurn_Monster(float xAlita)
 {
@@ -174,11 +192,16 @@ void PlayGameScene::addListener()
 	touchListener->onTouchBegan = CC_CALLBACK_2(PlayGameScene::onTouchBegan, this);
 	touchListener->onTouchEnded = CC_CALLBACK_2(PlayGameScene::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+
+	//add contact event listener
+	auto contactListener = EventListenerPhysicsContact::create();
+	contactListener->onContactBegin = CC_CALLBACK_1(PlayGameScene::onContactBegin, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 }
 bool PlayGameScene::onTouchBegan(Touch* touch, Event  *event)
 {
 	//mCurrentTouchState = ui::Widget::TouchEventType::BEGAN;
-	//mCurrentTouchPoint = touch->getLocation();
+	mCurrentTouchPoint = touch->getLocation();
 	return true;
 }
 
@@ -186,7 +209,7 @@ bool PlayGameScene::onTouchBegan(Touch* touch, Event  *event)
 bool PlayGameScene::onTouchEnded(Touch* touch, Event  *event)
 {
 	//mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
-	//mCurrentTouchPoint = Point(-1, -1);
+	mCurrentTouchPoint = Point(-1, -1);
 	return true;
 }
 
@@ -197,32 +220,39 @@ void PlayGameScene::createController()
 
 	mMoveLeftController = ui::Button::create("res/Main_UI/left.png", "res/Main_UI/left.png");
 	mMoveLeftController->setPosition(Vec2(80, 80));
+	mMoveLeftController->setScale(0.7);
+	mMoveLeftController->setOpacity(160);
 	mMoveLeftController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::moveLeft, this));
-	addChild(mMoveLeftController);
+	addChild(mMoveLeftController, 10);
 	//MoveRight
 	mMoveRightController = ui::Button::create("res/Main_UI/left.png", "res/Main_UI/left.png");
 	mMoveRightController->setFlippedX(true);
 	mMoveRightController->setPosition(mMoveLeftController->getPosition() + Vec2(mMoveLeftController->getContentSize().width, 0));
+	mMoveRightController->setScale(0.7);
+	mMoveRightController->setOpacity(160);
 	mMoveRightController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::moveRight, this));
-	addChild(mMoveRightController);
+	addChild(mMoveRightController,10);
 	//Jump
 	mJumpController = ui::Button::create("res/Main_UI/jump.png", "res/Main_UI/jump.png");
 	mJumpController->setScale(0.7);
+	mJumpController->setOpacity(160);
 	mJumpController->setPosition(Vec2(visibleSize.width - mJumpController->getContentSize().width -10, mJumpController->getContentSize().height + 70));
 	mJumpController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::jump, this));
-	addChild(mJumpController);
+	addChild(mJumpController, 10);
 	//Attack
 	mAttackController = ui::Button::create("res/Main_UI/attack.png", "res/Main_UI/attack.png");
 	mAttackController->setScale(0.7);
+	mAttackController->setOpacity(160);
 	mAttackController->setPosition(Vec2(visibleSize.width - mJumpController->getContentSize().width +10, mJumpController->getContentSize().height-10));
 	mAttackController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::attack, this));
-	addChild(mAttackController);
+	addChild(mAttackController, 10);
 	//Throw
 	mThrowController = ui::Button::create("res/Main_UI/skill.png", "res/Main_UI/skill.png");
 	mThrowController->setScale(0.7);
+	mThrowController->setOpacity(160);
 	mThrowController->setPosition(Vec2(visibleSize.width - mJumpController->getContentSize().width -60, mJumpController->getContentSize().height));
 	mThrowController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::throws, this));
-	addChild(mThrowController);
+	addChild(mThrowController, 10);
 }
 
 void PlayGameScene::createMC()
@@ -238,6 +268,12 @@ void PlayGameScene::moveRight(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEv
 	case ui::Widget::TouchEventType::BEGAN:
 		m_Alita->MoveRight();
 		break;
+	case ui::Widget::TouchEventType::MOVED:
+		/*if (!Rect(mMoveRightController->getPositionX(), mMoveRightController->getPositionY(), mMoveRightController->getContentSize().width*3, mMoveRightController->getContentSize().height*3).containsPoint(mCurrentTouchPoint)) {
+			m_Alita->getSprite()->stopAllActions();
+			m_Alita->setRunning(false);
+		}*/
+		break;
 	case ui::Widget::TouchEventType::ENDED:
 		m_Alita->getSprite()->stopAllActions();
 		m_Alita->setRunning(false);
@@ -251,6 +287,12 @@ void PlayGameScene::moveLeft(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEve
 	{
 	case ui::Widget::TouchEventType::BEGAN:
 		m_Alita->MoveLeft();
+		break;
+	case ui::Widget::TouchEventType::MOVED:
+		/*if (!Rect(mMoveRightController->getPositionX(), mMoveRightController->getPositionY(), mMoveRightController->getContentSize().width*3, mMoveRightController->getContentSize().height*3).containsPoint(mCurrentTouchPoint)) {
+			m_Alita->getSprite()->stopAllActions();
+			m_Alita->setRunning(false);
+		}*/
 		break;
 	case ui::Widget::TouchEventType::ENDED:
 		m_Alita->getSprite()->stopAllActions();
