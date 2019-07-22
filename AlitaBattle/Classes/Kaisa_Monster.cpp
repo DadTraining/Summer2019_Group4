@@ -20,6 +20,7 @@ Kaisa_Monster::Kaisa_Monster(Scene * scene)
 	//Create Bullet
 	bullet = new Bullet(scene);
 	bullet->getSprite()->setVisible(false);
+	//bullet->getSprite()->setPosition(Vec2(this->m_sprite->getPosition().x - 20, this->m_sprite->getPosition().y + 60));
 
 	//Create Animation
 	SpriteBatchNode *spriteNode1;
@@ -82,6 +83,7 @@ void Kaisa_Monster::Init()
 	mPhysicBody->setRotationEnable(false);
 	mPhysicBody->setCollisionBitmask(Objects::BITMASK_KAISA);
 	mPhysicBody->setContactTestBitmask(true);
+	mPhysicBody->setCategoryBitmask(1);
 	m_sprite->setPhysicsBody(mPhysicBody);
 }
 
@@ -130,9 +132,9 @@ void Kaisa_Monster::Shoot()
 	if (bullet->getSprite()->isVisible() == false)
 	{
 		bullet->getSprite()->setPosition(Vec2(this->m_sprite->getPosition().x - 20, this->m_sprite->getPosition().y + 60));
-		if (bullet->isAlive()) {
+		/*if (bullet->isAlive()) {
 			bullet->getSprite()->setVisible(true);
-		}
+		}*/
 		bullet->Update(3);
 	}
 }
@@ -222,4 +224,9 @@ void Kaisa_Monster::setTurnKaisa(float position)
 	{
 		setTurnLeft();
 	}
+}
+
+Bullet * Kaisa_Monster::getBullet()
+{
+	return bullet;
 }

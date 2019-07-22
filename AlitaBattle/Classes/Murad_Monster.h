@@ -21,6 +21,7 @@ public:
 	void setTurnRight();
 	void setTurnLeft();
 	bool getm_LetftoRight();
+	void DarkCollision();
 	void setState_Murad(float position);
 	void setTurn_Murad(float position);
 	void Collision();

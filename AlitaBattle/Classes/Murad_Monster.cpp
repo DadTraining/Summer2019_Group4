@@ -81,6 +81,9 @@ void Murad_Monster::Init() {
 	m_sprite->setPosition(Vec2(visibleSize.width / 2, 0));
 	m_sprite->setScale(0.12);
 	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
+	mPhysicBody->setCollisionBitmask(Objects::BITMASK_MURAD);
+	mPhysicBody->setContactTestBitmask(true);
+	mPhysicBody->setCategoryBitmask(1);
 	mPhysicBody->setDynamic(true);
 	mPhysicBody->setRotationEnable(false);
 	m_sprite->setPhysicsBody(mPhysicBody);
@@ -118,6 +121,8 @@ void Murad_Monster::Die()
 {
 	m_sprite->stopAllActions();
 	m_sprite->runAction(mAnimation[ANIM_DIE]);
+	mPhysicBody->setEnabled(false);
+	m_sprite->setVisible(false);
 }
 
 
@@ -143,6 +148,14 @@ bool Murad_Monster::getm_LetftoRight()
 		return true;
 	else
 		return false;
+}
+
+void Murad_Monster::DarkCollision()
+{
+	this->setHP(this->getHP() - Objects::ALITA_DAME);
+	if (this->getHP() <= 0) {
+		this->Die();
+	}
 }
 
 void Murad_Monster::setState_Murad(float position)

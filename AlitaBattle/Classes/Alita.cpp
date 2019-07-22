@@ -9,15 +9,15 @@ Alita::Alita(Scene * scene)
 	auto ScreenSize = Director::getInstance()->getVisibleSize();
 	m_sprite->setPosition(ScreenSize / 2);
 	m_sprite->setScale(0.2);
-
-	bodySprite1 = PhysicsBody::createBox(m_sprite->getContentSize());
-	bodySprite1->setGravityEnable(true);	//Gravity
-	bodySprite1->setMass(200);
-	bodySprite1->setRotationEnable(false);
-	bodySprite1->setCollisionBitmask(Objects::BITMASK_ALITA);
-	bodySprite1->setContactTestBitmask(true);
-	//bodySprite1->setDynamic(true);		//setDynamic
-	m_sprite->setPhysicsBody(bodySprite1);
+	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
+	mPhysicBody->setGravityEnable(true);	//Gravity
+	mPhysicBody->setMass(200);
+	mPhysicBody->setRotationEnable(false);
+	mPhysicBody->setCollisionBitmask(Objects::BITMASK_ALITA);
+	mPhysicBody->setContactTestBitmask(true);
+	mPhysicBody->setDynamic(true);	//setDynamic
+	mPhysicBody->setCategoryBitmask(1);
+	m_sprite->setPhysicsBody(mPhysicBody);
 	scene->addChild(m_sprite,10);
 	this->darts = new Darts(scene);
 	Init();
@@ -32,6 +32,7 @@ void Alita::Init()
 {
 	createAnimate();
 	Idle();
+	setHP(Objects::ALITA_HP);
 }
 
 void Alita::createAnimate()
@@ -94,7 +95,9 @@ void Alita::MoveLeft()
 		isMoveRight = false;
 	}
 	m_sprite->stopAllActions();
-	m_sprite->runAction(mAnimation[ANIM_RUN]);
+	if (!isJump) {
+		m_sprite->runAction(mAnimation[ANIM_RUN]);
+	}
 	isRun = true;
 	//m_sprite->setPosition(Vec2(m_sprite->getPosition().x - 10, m_sprite->getPosition().y));
 }
@@ -107,15 +110,20 @@ void Alita::MoveRight()
 		isMoveRight = true;
 	}
 	m_sprite->stopAllActions();
-	m_sprite->runAction(mAnimation[ANIM_RUN]);
+	if (!isJump) {
+		m_sprite->runAction(mAnimation[ANIM_RUN]);
+	}
 	isRun = true;
 }
 
 void Alita::Jump()
 {
-	m_sprite->stopAllActions();
-	m_sprite->runAction(mAnimation[ANIM_JUMP]);
-	bodySprite1->applyImpulse(Vec2(0, 25000));
+	if (!isJump) {
+		m_sprite->stopAllActions();
+		m_sprite->runAction(mAnimation[ANIM_JUMP]);
+		mPhysicBody->applyImpulse(Vec2(0, 60000));
+		isJump = true;
+	}
 }
 
 void Alita::Attack()
@@ -159,6 +167,15 @@ void Alita::Collision()
 
 }
 
+void Alita::BulletCollision()
+{
+	this->setHP(this->getHP() - Objects::KAISA_DAME);
+	if (this->getHP() <= 0) {
+		this->m_sprite->setVisible(false);
+		mPhysicBody->setEnabled(false);
+	}
+}
+
 bool Alita::isRunning()
 {
 	return isRun;
@@ -168,6 +185,30 @@ void Alita::setRunning(bool run)
 {
 	if (run == false) {
 		isRun = run;
-		Idle();
 	}
+}
+
+bool Alita::isJumping()
+{
+	return isJump;
+}
+
+
+void Alita::setJumping(bool jump)
+{
+	isJump = jump;
+	if (!jump) {
+		if (isRun) {
+			m_sprite->stopAllActions();
+			m_sprite->runAction(mAnimation[ANIM_RUN]);
+		}
+		else {
+			Idle();
+		}
+	}
+}
+
+Darts * Alita::getDarts()
+{
+	return darts;
 }

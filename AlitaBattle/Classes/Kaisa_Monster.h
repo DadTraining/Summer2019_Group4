@@ -38,6 +38,7 @@ public:
 	void AlitaCollision();
 	void setStateKaiSa(float position);
 	void setTurnKaisa(float position);
+	Bullet * getBullet();
 
 };
 

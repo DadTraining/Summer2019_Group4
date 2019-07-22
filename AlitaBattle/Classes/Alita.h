@@ -43,12 +43,15 @@ public:
 	void Attack();
 	void Throw();
 	void Collision();
+	void BulletCollision();
 	bool isRunning();
 	void setRunning(bool run);
+	bool isJumping();
+	void setJumping(bool jump);
+	Darts* getDarts();
 private:
-	
+	bool isJump= false;
 	bool isRun= false;
-	cocos2d::PhysicsBody* bodySprite1;
 	Action * mAnimation[ANIM_TOTAl];
 	bool isMoveRight = true;
 	Darts* darts;

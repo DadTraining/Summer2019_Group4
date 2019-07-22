@@ -9,6 +9,8 @@ Scene* PlayGameScene::createScene()
 {
 	auto scene = Scene::createWithPhysics();
 	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setGravity(Vec2(0, -500));
+	//scene->getPhysicsWorld()->setSpeed(3);
 	auto layer = PlayGameScene::create();
 	layer->setPhysicsWorld(scene->getPhysicsWorld());
 	scene->addChild(layer, 0);
@@ -75,8 +77,9 @@ void PlayGameScene::createPhysics()
 			if (tileSet != NULL)
 			{
 				auto physics = PhysicsBody::createBox(tileSet->getContentSize(), PhysicsMaterial(1.0f, 0.0f, 1.0f));
-				/*physics->setCollisionBitmask(Model::BITMASK_GROUND);
-				physics->setContactTestBitmask(true);*/
+				physics->setCategoryBitmask(3);
+				physics->setCollisionBitmask(Objects::BITMASK_GROUND);
+				physics->setContactTestBitmask(true);
 				physics->setDynamic(false);
 				//physics->setMass(100);
 				tileSet->setPhysicsBody(physics);
@@ -86,6 +89,7 @@ void PlayGameScene::createPhysics()
 	addChild(map, -1);
 	auto egdeBody = PhysicsBody::createEdgeBox(map->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT, 3);
 	egdeBody->setDynamic(false);
+	//egdeBody->;
 	egdeNode = Node::create();
 	egdeNode->setPosition(map->getContentSize().width / 2, map->getContentSize().height / 2);
 	egdeNode->setPhysicsBody(egdeBody);
@@ -122,6 +126,7 @@ void PlayGameScene::createMonsters() {
 			kaisa = new Kaisa_Monster(this);
 			kaisa->getSprite()->setPosition(Vec2(posX, posY));
 			kaisa->setIndex(kaisa_count++);
+			kaisa->getBullet()->setIndex(kaisa_count);
 			mKaisa.push_back(kaisa);
 		}
 		else if (type == 2)
@@ -147,6 +152,7 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 {
 	PhysicsBody* a = contact.getShapeA()->getBody();
 	PhysicsBody* b = contact.getShapeB()->getBody();
+
 	if ((a->getCollisionBitmask() == Objects::BITMASK_DART && b->getCollisionBitmask() == Objects::BITMASK_KAISA)
 		|| (a->getCollisionBitmask() == Objects::BITMASK_KAISA && b->getCollisionBitmask() == Objects::BITMASK_DART))
 	{
@@ -158,6 +164,44 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 		{
 			mKaisa.at(a->getGroup())->DarkCollision();
 		}
+	}
+
+	//dark vs mMurad
+	if ((a->getCollisionBitmask() == Objects::BITMASK_DART && b->getCollisionBitmask() == Objects::BITMASK_MURAD)
+		|| (a->getCollisionBitmask() == Objects::BITMASK_MURAD && b->getCollisionBitmask() == Objects::BITMASK_DART))
+	{
+		if (a->getCollisionBitmask() == Objects::BITMASK_DART)
+		{
+			mMurad.at(b->getGroup())->DarkCollision();
+		}
+		else if (b->getCollisionBitmask() == Objects::BITMASK_DART)
+		{
+			mMurad.at(a->getGroup())->DarkCollision();
+		}
+	}
+
+	//bullet vs Alita 
+	if ((a->getCollisionBitmask() == Objects::BITMASK_BULLET && b->getCollisionBitmask() == Objects::BITMASK_ALITA)
+		|| (a->getCollisionBitmask() == Objects::BITMASK_ALITA && b->getCollisionBitmask() == Objects::BITMASK_BULLET))
+	{
+		if (a->getCollisionBitmask() == Objects::BITMASK_BULLET)
+		{
+			m_Alita->BulletCollision();
+			//mKaisa.at(a->getGroup())->getBullet()->getSprite()->setVisible(false);
+		}
+		else if(b->getCollisionBitmask() == Objects::BITMASK_BULLET)
+		{
+			m_Alita->BulletCollision();
+			//mKaisa.at(a->getGroup())->getBullet()->getSprite()->setVisible(false);
+		}
+	}
+	//Attack Murad vs Alita
+	
+	//Alita vs Round
+	if ((a->getCollisionBitmask() == Objects::BITMASK_GROUND && b->getCollisionBitmask() == Objects::BITMASK_ALITA)
+		|| (a->getCollisionBitmask() == Objects::BITMASK_ALITA && b->getCollisionBitmask() == Objects::BITMASK_GROUND))
+	{
+		m_Alita->setJumping(false);
 	}
 	return true;
 }
