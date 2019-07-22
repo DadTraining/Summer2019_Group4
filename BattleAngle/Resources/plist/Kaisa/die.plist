@@ -4,7 +4,7 @@
 	<dict>
 		<key>frames</key>
 		<dict>
-			<key>Die_000.png</key>
+			<key>Die_0000.png</key>
 			<dict>
 				<key>frame</key>
 				<string>{{876,589},{832,1045}}</string>
@@ -18,7 +18,7 @@
 				<string>{1364,1178}</string>
 			</dict>
 
-			<key>Die_001.png</key>
+			<key>Die_0001.png</key>
 			<dict>
 				<key>frame</key>
 				<string>{{1709,1056},{810,980}}</string>
@@ -32,7 +32,7 @@
 				<string>{1364,1178}</string>
 			</dict>
 
-			<key>Die_002.png</key>
+			<key>Die_0002.png</key>
 			<dict>
 				<key>frame</key>
 				<string>{{1709,0},{824,1055}}</string>
@@ -46,7 +46,7 @@
 				<string>{1364,1178}</string>
 			</dict>
 
-			<key>Die_003.png</key>
+			<key>Die_0003.png</key>
 			<dict>
 				<key>frame</key>
 				<string>{{0,589},{875,935}}</string>
@@ -60,7 +60,7 @@
 				<string>{1364,1178}</string>
 			</dict>
 
-			<key>Die_004.png</key>
+			<key>Die_0004.png</key>
 			<dict>
 				<key>frame</key>
 				<string>{{0,0},{1075,588}}</string>

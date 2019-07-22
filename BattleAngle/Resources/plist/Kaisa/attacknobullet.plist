@@ -4,7 +4,7 @@
 	<dict>
 		<key>frames</key>
 		<dict>
-			<key>Attack_000.png</key>
+			<key>Attack_0000.png</key>
 			<dict>
 				<key>frame</key>
 				<string>{{0,1044},{832,1046}}</string>
@@ -18,7 +18,7 @@
 				<string>{1880,1098}</string>
 			</dict>
 
-			<key>Attack_001.png</key>
+			<key>Attack_0001.png</key>
 			<dict>
 				<key>frame</key>
 				<string>{{0,2091},{822,1026}}</string>
@@ -32,7 +32,7 @@
 				<string>{1880,1098}</string>
 			</dict>
 
-			<key>Attack_002.png</key>
+			<key>Attack_0002.png</key>
 			<dict>
 				<key>frame</key>
 				<string>{{0,0},{964,1043}}</string>

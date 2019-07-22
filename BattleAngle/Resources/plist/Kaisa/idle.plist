@@ -4,7 +4,7 @@
 	<dict>
 		<key>frames</key>
 		<dict>
-			<key>Idle_000.png</key>
+			<key>Idle_0000.png</key>
 			<dict>
 				<key>frame</key>
 				<string>{{0,0},{832,1045}}</string>
@@ -18,7 +18,7 @@
 				<string>{867,1059}</string>
 			</dict>
 
-			<key>Idle_001.png</key>
+			<key>Idle_0001.png</key>
 			<dict>
 				<key>frame</key>
 				<string>{{0,1046},{827,1049}}</string>
@@ -32,7 +32,7 @@
 				<string>{867,1059}</string>
 			</dict>
 
-			<key>Idle_002.png</key>
+			<key>Idle_0002.png</key>
 			<dict>
 				<key>frame</key>
 				<string>{{0,2096},{822,1052}}</string>
@@ -46,7 +46,7 @@
 				<string>{867,1059}</string>
 			</dict>
 
-			<key>Idle_003.png</key>
+			<key>Idle_0003.png</key>
 			<dict>
 				<key>frame</key>
 				<string>{{0,2096},{822,1052}}</string>
@@ -60,7 +60,7 @@
 				<string>{867,1059}</string>
 			</dict>
 
-			<key>Idle_004.png</key>
+			<key>Idle_0004.png</key>
 			<dict>
 				<key>frame</key>
 				<string>{{0,1046},{827,1049}}</string>
