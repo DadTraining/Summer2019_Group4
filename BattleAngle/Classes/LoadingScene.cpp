@@ -20,7 +20,7 @@ bool LoadingScene::init()
 	if (!Scene::init())
 	{
 		return false;
-	} 
+	}
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	auto bgloading = Sprite::create("res/Loading_Bar/text.png");
@@ -52,14 +52,14 @@ bool LoadingScene::init()
 
 		{
 
-			loadingbar->setPercent(loadingbar->getPercent() + 2);
+			loadingbar->setPercent(loadingbar->getPercent() + 1);
 
 		}
 
 	});
 
 	auto sequenceRunUpdateLoadingBar =
-		Sequence::createWithTwoActions(updateLoadingBar, DelayTime::create(0.1f));
+		Sequence::createWithTwoActions(updateLoadingBar, DelayTime::create(0.01f));
 
 	auto repeat = Repeat::create(sequenceRunUpdateLoadingBar, 100);
 
@@ -71,7 +71,7 @@ bool LoadingScene::init()
 
 	});
 
-	auto sequence = Sequence::create(DelayTime::create(5), gotoNext,
+	auto sequence = Sequence::create(DelayTime::create(1), gotoNext,
 		nullptr);
 
 	runAction(sequence);

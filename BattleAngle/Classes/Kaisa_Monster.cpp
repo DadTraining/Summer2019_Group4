@@ -1,38 +1,69 @@
-
 #include "Objects.h"
 #include "Kaisa_Monster.h"
 #include "Bullet.h"
 
 USING_NS_CC;
-
-
-
 Kaisa_Monster::Kaisa_Monster(Scene * scene)
 {
 	//set Blood for KaisaMonster
-	this->setHP(HP_KAISAMONSTER);
+	this->setHP(Objects::KAISA_HP);
 
 	//Set Dame for KaisaMonster
-	this->setDame(DAME_KAISAMONSTER);
+	this->setDame(Objects::KAISA_DAME);
 
 	//KaisaMonster is live
 	this->m_isAlive = true;
 
 	Init();
 	scene->addChild(m_sprite);
-	
-	//Bullet
-	for (int i = 0; i < 1; i++)
-	{
-		Bullet*  bullet = new Bullet(scene);
-		bullet->getSprite()->setVisible(false);
-		m_bullet.push_back(bullet);
-	}
 
- }
+	//Create Bullet
+	bullet = new Bullet(scene);
+	bullet->getSprite()->setVisible(false);
+
+	//Create Animation
+	SpriteBatchNode *spriteNode1;
+	Sprite* sprite;
+	spriteNode1 = SpriteBatchNode::create("plist/Kaisa/run.png");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Kaisa/run.plist");
+	sprite = Sprite::createWithSpriteFrameName("Run_0000.png");
+	sprite->setPosition(m_sprite->getPosition());
+	spriteNode1->addChild(sprite);
+	auto animateRun = Animate::create(Kaisa_Monster::createAnimation("Run_000", 4, 0.15));
+	mAnimation[ANIM_RUN] = m_sprite->runAction(Repeat::create(animateRun, 1));
+	CC_SAFE_RETAIN(mAnimation[ANIM_RUN]);
+
+	spriteNode1 = SpriteBatchNode::create("plist/Kaisa/attacknobullet.png");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Kaisa/attacknobullet.plist");
+	sprite = Sprite::createWithSpriteFrameName("Attack_0000.png");
+	sprite->setPosition(m_sprite->getPosition());
+	spriteNode1->addChild(sprite);
+	auto animateAttack = Animate::create(Kaisa_Monster::createAnimation("Attack_000", 2, 0.5));
+	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create(animateAttack, 1));
+	CC_SAFE_RETAIN(mAnimation[ANIM_ATTACK]);
+
+	spriteNode1 = SpriteBatchNode::create("plist/Kaisa/idle.png");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Kaisa/idle.plist");
+	sprite = Sprite::createWithSpriteFrameName("Idle_0000.png");
+	sprite->setPosition(m_sprite->getPosition());
+	spriteNode1->addChild(sprite);
+	auto animateIdle = Animate::create(Kaisa_Monster::createAnimation("Idle_000", 4, 0.15));
+	mAnimation[ANIM_IDLE] = m_sprite->runAction(Repeat::create(animateIdle, 1));
+	CC_SAFE_RETAIN(mAnimation[ANIM_IDLE]);
+
+	spriteNode1 = SpriteBatchNode::create("plist/Kaisa/die.png");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Kaisa/die.plist");
+	sprite = Sprite::createWithSpriteFrameName("Die_0000.png");
+	sprite->setPosition(m_sprite->getPosition());
+	spriteNode1->addChild(sprite);
+	auto animateDie = Animate::create(Kaisa_Monster::createAnimation("Die_000", 4, 0.15));
+	mAnimation[ANIM_DIE] = m_sprite->runAction(Repeat::create(animateDie, 1));
+	CC_SAFE_RETAIN(mAnimation[ANIM_DIE]);
+}
 
 Kaisa_Monster::~Kaisa_Monster()
 {
+	delete this;
 }
 
 
@@ -41,27 +72,31 @@ void Kaisa_Monster::Init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	m_sprite = Sprite::create("Plist/Kaisa/Die_000.png");
+	m_sprite = Sprite::create("plist/Kaisa/Die_000.png");
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	m_sprite->setPosition(Vec2(visibleSize.width / 1.1, visibleSize.height / 2));
-	m_sprite->setScale(0.1);	
+	m_sprite->setScale(0.08);
 	//PhysicBody
-	auto mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
+	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
 	mPhysicBody->setDynamic(true);
 	mPhysicBody->setRotationEnable(false);
-	mPhysicBody->setCollisionBitmask(1);
+	mPhysicBody->setCollisionBitmask(Objects::BITMASK_KAISA);
+	mPhysicBody->setContactTestBitmask(true);
 	m_sprite->setPhysicsBody(mPhysicBody);
 }
 
 
 void Kaisa_Monster::Update(float deltaTime)
 {
-	for (auto i : m_bullet)
+
+	if (bullet->getSprite()->isVisible() == false)
 	{
-		if (i->getSprite()->isVisible() == false) 
-		{
-			i->m_LefttoRight = (!m_LefttoRight);
-		}
+		bullet->m_LefttoRight = (!m_LefttoRight);
+	}
+	FPSKaisa++;
+	if (FPSKaisa == 150) {
+		setStateKaiSa(deltaTime);
+		FPSKaisa = 0;
 	}
 }
 
@@ -69,96 +104,67 @@ void Kaisa_Monster::Update(float deltaTime)
 
 void Kaisa_Monster::Run()
 {
-	SpriteBatchNode *spriteNode= SpriteBatchNode::create("Plist/Kaisa/run.png");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Plist/Kaisa/run.plist");
-	auto sprite = Sprite::createWithSpriteFrameName("Run_000.png");
-	
-	sprite->setPosition(m_sprite->getPosition());
-	spriteNode->addChild(sprite);
-	auto animateRun = Animate::create(Kaisa_Monster::createAnimation("Run_00", 4, 0.15));
-	animateRun->retain();
-	m_sprite->runAction(Repeat::create(animateRun,1));
-	if (getm_LetftoRight() == true) 
+
+	m_sprite->stopAllActions();
+	m_sprite->runAction(mAnimation[ANIM_RUN]);
+	if (getm_LetftoRight() == true)
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x +5, m_sprite->getPosition().y);
+		m_sprite->setPosition(m_sprite->getPosition().x + 5, m_sprite->getPosition().y);
 	}
 	else
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x -5, m_sprite->getPosition().y);
+		m_sprite->setPosition(m_sprite->getPosition().x - 5, m_sprite->getPosition().y);
 	}
 
 }
 
 void Kaisa_Monster::Attack()
 {
-	SpriteBatchNode *spriteNode = SpriteBatchNode::create("Plist/Kaisa/attacknobullet.png");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Plist/Kaisa/attacknobullet.plist");
-	auto sprite = Sprite::createWithSpriteFrameName("Attack_000.png");
-	sprite->setPosition(m_sprite->getPosition());
-	spriteNode->addChild(sprite);
-	auto animateAttack = Animate::create(Kaisa_Monster::createAnimation("Attack_00", 2, 0.5));
-	animateAttack->retain();
-
-	m_sprite->runAction(Repeat::create(animateAttack, 1));
-	//Kaisa shoot bullet
+	m_sprite->stopAllActions();
+	m_sprite->runAction(mAnimation[ANIM_ATTACK]);
 	Shoot();
-	
-	
 }
 
 void Kaisa_Monster::Shoot()
 {
-
-	for (auto i : m_bullet)
+	if (bullet->getSprite()->isVisible() == false)
 	{
-		if (i->getSprite()->isVisible() == false)
-		{
-			i->getSprite()->setPosition(Vec2(this->m_sprite->getPosition().x - 20, this->m_sprite->getPosition().y + 60));
-			i->getSprite()->setVisible(true);
-			i->Update(3);
-			break;
+		bullet->getSprite()->setPosition(Vec2(this->m_sprite->getPosition().x - 20, this->m_sprite->getPosition().y + 60));
+		if (bullet->isAlive()) {
+			bullet->getSprite()->setVisible(true);
 		}
+		bullet->Update(3);
 	}
-
 }
 
 void Kaisa_Monster::Idle()
 {
-	SpriteBatchNode *spriteNode = SpriteBatchNode::create("Plist/Kaisa/idle.png");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Plist/Kaisa/idle.plist");
-	auto sprite = Sprite::createWithSpriteFrameName("Idle_000.png");
-	sprite->setPosition(m_sprite->getPosition());
-	spriteNode->addChild(sprite);
-	auto animateIdle = Animate::create(Kaisa_Monster::createAnimation("Idle_00", 4, 0.15));
-	animateIdle->retain();
-
-	m_sprite->runAction(Repeat::create(animateIdle, 1));
+	m_sprite->stopAllActions();
+	m_sprite->runAction(mAnimation[ANIM_IDLE]);
 }
 
 void Kaisa_Monster::Die()
 {
-	SpriteBatchNode *spriteNode = SpriteBatchNode::create("Plist/Kaisa/die.png");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Plist/Kaisa/die.plist");
-	auto sprite = Sprite::createWithSpriteFrameName("Die_000.png");
-	sprite->setPosition(m_sprite->getPosition());
-	spriteNode->addChild(sprite);
-	auto animateDie = Animate::create(Kaisa_Monster::createAnimation("Die_00", 4, 0.15));
-	animateDie->retain();
-
-	m_sprite->runAction(Repeat::create(animateDie, 1));
+	m_sprite->stopAllActions();
+	m_sprite->runAction(mAnimation[ANIM_DIE]);
+	mPhysicBody->setEnabled(false);
+	m_sprite->setVisible(false);
+	bullet->mPhysicBody->setEnabled(false);
+	bullet->getSprite()->setVisible(false);
+	bullet->setAlive(false);
 }
 
 void Kaisa_Monster::setTurnRight()
 {
 	this->m_sprite->setFlippedX(false);
-	
+	Update(3);
 	m_LefttoRight = true;
 }
 
 void Kaisa_Monster::setTurnLeft()
 {
-	
-	this->m_sprite->setFlippedX(true);	
+
+	this->m_sprite->setFlippedX(true);
 	Update(3);
 	m_LefttoRight = false;
 }
@@ -172,17 +178,28 @@ bool Kaisa_Monster::getm_LetftoRight()
 		return false;
 }
 
+void Kaisa_Monster::DarkCollision()
+{
+	this->setHP(this->getHP() - Objects::ALITA_DAME);
+	if (this->getHP() <= 0) {
+		this->Die();
+	}
+}
+
+void Kaisa_Monster::AlitaCollision()
+{
+}
+
 void Kaisa_Monster::setStateKaiSa(float position)
 {
-
 	auto X_kaisa = m_sprite->getPosition().x;
 	auto X_ailta = position;
 	auto X_shoot = abs(X_kaisa - X_ailta);
-	if (X_shoot <= 300)
+	if (X_shoot <= 250)
 	{
 		Attack();
 	}
-	else if (X_shoot > 300 && X_shoot < 400)
+	else if (X_shoot > 250 && X_shoot < 350)
 	{
 		Run();
 	}
@@ -190,7 +207,7 @@ void Kaisa_Monster::setStateKaiSa(float position)
 		Idle();
 	}
 	//Setturn
-	
+
 
 }
 

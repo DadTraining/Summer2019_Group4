@@ -36,25 +36,25 @@ bool SettingScene::init()
 	background->setScale(0.37);
 	addChild(background);
 	auto bg = Sprite::create("res/Setting_UI/bg.png");
-	bg->setAnchorPoint(Vec2(0.5,0));
-	bg->setScale(0.3);
-	bg->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/12+ origin.y));
+	bg->setAnchorPoint(Vec2(0,0));
+	bg->setScale(0.2);
+	bg->setPosition(Vec2(visibleSize.width/4 + origin.x, visibleSize.height/12+ origin.y));
 	addChild(bg,0);
 	auto bg1 = Sprite::create("res/Setting_UI/table.png");
-	bg1->setAnchorPoint(Vec2(0.5, 0));
-	bg1->setScale(0.3);
-	bg1->setPosition(Vec2(visibleSize.width / 2.05 + origin.x, visibleSize.height / 8 + origin.y));
+	bg1->setAnchorPoint(Vec2(0, 0));
+	bg1->setScale(0.2);
+	bg1->setPosition(bg->getPosition()+Vec2(10,15));
 	addChild(bg1,2);
 	auto bg2 = Sprite::create("res/Setting_UI/head.png");
-	bg2->setAnchorPoint(Vec2(0.5, 0));
-	bg2->setScale(0.3);
-	bg2->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height /1.5 + origin.y));
+	bg2->setAnchorPoint(Vec2(0, 0));
+	bg2->setScale(0.15);
+	bg2->setPosition(bg1->getPosition()+Vec2(50,120));
 	addChild(bg2,3);
 	
 	//BackButton
 	auto btnBack = ui::Button::create("res/Setting_UI/close.png");
-	btnBack->setPosition(Vec2(visibleSize.width-btnBack->getContentSize().width+30 ,visibleSize.height-30));
-	btnBack->setScale(0.3);
+	btnBack->setPosition(Vec2(visibleSize.width-btnBack->getContentSize().width -30,visibleSize.height-btnBack->getContentSize().height+30));
+	btnBack->setScale(0.2);
 	addChild(btnBack, 7);
 	btnBack->addClickEventListener([&](Ref* event) {
 		//sound click
@@ -74,14 +74,14 @@ bool SettingScene::init()
 	});
 
 	//Sound Checkbox
-	auto title = Label::createWithTTF("SOUND", "fonts/Marker Felt.ttf", 30);
-	title->setPosition(visibleSize.width / 3, visibleSize.height - 120);
+	auto title = Label::createWithTTF("SOUND", "fonts/Marker Felt.ttf", 20);
+	title->setPosition(visibleSize.width / 3, visibleSize.height - 180);
 	title->setColor(Color3B::BLACK);
 	addChild(title, 7);
 
 	checkboxSound = ui::CheckBox::create("res/Setting_UI/on.png","res/Setting_UI/off.png");
 	checkboxSound->retain();
-	checkboxSound->setScale(0.5);
+	checkboxSound->setScale(0.3);
 	checkboxSound->setSelected(true);
 	checkboxSound->addClickEventListener([&](Ref* event)
 	{
@@ -96,19 +96,19 @@ bool SettingScene::init()
 		}
 
 	});
-	checkboxSound->setPosition(Vec2(title->getPosition().x + 150, title->getPosition().y));
+	checkboxSound->setPosition(Vec2(title->getPosition().x + 120, title->getPosition().y));
 	checkboxSound->setEnabled(true);
 	addChild(checkboxSound, 10);
 
 	//Music checkbox
-	auto title1 = Label::createWithTTF("MUSIC", "fonts/Marker Felt.ttf", 30);
-	title1->setPosition(visibleSize.width / 3, visibleSize.height - 160);
+	auto title1 = Label::createWithTTF("MUSIC", "fonts/Marker Felt.ttf", 20);
+	title1->setPosition(Vec2(title->getPosition()-Vec2(0,30)));
 	title1->setColor(Color3B::BLACK);
 	addChild(title1, 7);
 
 	checkboxMusic = ui::CheckBox::create("res/Setting_UI/on.png", "res/Setting_UI/off.png");
 	checkboxMusic->retain();
-	checkboxMusic->setScale(0.5);
+	checkboxMusic->setScale(0.3);
 	checkboxMusic->setSelected(true);
 	checkboxMusic->addClickEventListener([&](Ref* event)
 	{
@@ -124,22 +124,22 @@ bool SettingScene::init()
 		}
 
 	});
-	checkboxMusic->setPosition(Vec2(title1->getPosition().x + 150, title1->getPosition().y));
+	checkboxMusic->setPosition(Vec2(title1->getPosition().x + 120, title1->getPosition().y));
 	checkboxMusic->setEnabled(true);
 	addChild(checkboxMusic, 10);
 
 	//Volume Slider
-	auto title2 = Label::createWithTTF("VOLUME", "fonts/Marker Felt.ttf", 30);
-	title2->setPosition(visibleSize.width / 3, visibleSize.height - 200);
+	auto title2 = Label::createWithTTF("VOLUME", "fonts/Marker Felt.ttf", 20);
+	title2->setPosition(Vec2(title1->getPosition() - Vec2(0,30)));
 	title2->setColor(Color3B::BLACK);
 	addChild(title2, 7);
 
 	volumeSlider = ui::Slider::create();
-	volumeSlider->setScale(0.2);
+	volumeSlider->setScale(0.15);
 	volumeSlider->loadBarTexture("res/Setting_UI/volume1.png");
-	volumeSlider->loadSlidBallTextures("res/Setting_UI/rate.png", "res/Setting_UI/less.png", "res/Setting_UI/less.png");
+	volumeSlider->loadSlidBallTextures("res/Setting_UI/rate.png", "res/Setting_UI/rate.png", "res/Setting_UI/less.png");
 	volumeSlider->loadProgressBarTexture("res/Setting_UI/volume2.png");
-	volumeSlider->setPosition(Vec2(title2->getPosition().x + 150, title2->getPosition().y));
+	volumeSlider->setPosition(Vec2(title2->getPosition().x + 115, title2->getPosition().y));
 	//volumeSlider->setPercent();
 	volumeSlider->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type) {
 		switch (type)
