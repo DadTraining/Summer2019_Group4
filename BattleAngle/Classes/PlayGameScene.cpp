@@ -1,9 +1,15 @@
 #include "PlayGameScene.h"
 #include "ui\UIButton.h"
+#include "SimpleAudioEngine.h"
+#include "PauseScene.h"
+#include "MenuScene.h"
 
+
+using namespace CocosDenshion;
 USING_NS_CC;
 
 Size visibleSize;
+cocos2d::Sprite* mPauseLayer;
 Scene* PlayGameScene::createScene()
 {
 	auto scene = Scene::createWithPhysics();
@@ -28,6 +34,9 @@ bool PlayGameScene::init()
 	createController();
 	createCamera();
 	createHub();
+	createPause();
+	
+
 
 	//Kaisa_Monster *kaisa = new Kaisa_Monster(this);
 	//Murad_Monster *murad = new Murad_Monster(this);
@@ -136,15 +145,16 @@ void PlayGameScene::createMonsters() {
 }
 void PlayGameScene::createHub()
 {
+
 	hud_bg = Sprite::create("res/BloodMc/hud_bg.png");
 	hud_bg->setAnchorPoint(Vec2(0, 0.5));
-	//hud_bg->setScale(0.4);
+	hud_bg->setScale(0.5);
 	hud_bg->setPosition(Vec2(50, visibleSize.height - 30));
 	addChild(hud_bg);
 
 	mMcHudBlood = ui::LoadingBar::create("res/BloodMc/hud_blood.png");
 	mMcHudBlood->setAnchorPoint(Vec2(0, 0.5));
-	//mMcHudBlood->setScale(0.5);
+	mMcHudBlood->setScale(0.5);
 	mMcHudBlood->setPosition(hud_bg->getPosition());
 	mMcHudBlood->setDirection(ui::LoadingBar::Direction::LEFT);
 	mMcHudBlood->setPercent((m_Alita->getHP()*100)/mHP);
@@ -152,9 +162,71 @@ void PlayGameScene::createHub()
 
 	hud = Sprite::create("res/BloodMc/hud.png");
 	hud->setAnchorPoint(Vec2(0, 0.5));
-//	hud->setScale(0.5);
-	hud->setPosition(hud_bg->getPosition() - Vec2(24, 0));
+	hud->setScale(0.5);
+	hud->setPosition(hud_bg->getPosition() - Vec2(12, 0));
 	addChild(hud);
+}
+void PlayGameScene::createPause()
+{
+	mPauseLayer = Sprite::create("res/Pause_UI/alpha.png");
+	mPauseLayer->setContentSize(visibleSize);
+	mPauseLayer->setAnchorPoint(Vec2(0.5, 0.5));
+	mPauseLayer->setPosition(visibleSize / 2);
+	mPauseLayer->setVisible(false);
+	addChild(mPauseLayer,30);
+
+	auto bg = Sprite::create("res/Setting_UI/bg.png");
+	bg->setAnchorPoint(Vec2(0.5, 0.5));
+	bg->setScale(0.2);
+	bg->setPosition(visibleSize/2);
+	mPauseLayer-> addChild(bg, 0);
+	auto bg1 = Sprite::create("res/Setting_UI/table.png");
+	bg1->setAnchorPoint(Vec2(0.5, 0.5));
+	bg1->setScale(0.2);
+	bg1->setPosition(bg->getPosition() );
+	mPauseLayer->addChild(bg1, 2);
+	auto bg2 = Sprite::create("res/Pause_UI/header.png");
+	bg2->setAnchorPoint(Vec2(0.5, 0.5));
+	bg2->setScale(0.15);
+	bg2->setPosition(bg1->getPosition()+Vec2(0,70));
+	mPauseLayer->addChild(bg2, 3);
+	auto text = Sprite::create("res/Pause_UI/text.png");
+	text->setAnchorPoint(Vec2(0.5,0.5));
+	text->setScale(0.2);
+	text->setPosition(bg2->getPosition()-Vec2(0,70));
+	mPauseLayer->addChild(text,3);
+	//Button Ok
+
+	auto btnOk = ui::Button::create("res/Pause_UI/ok.png");
+	btnOk->setAnchorPoint(Vec2(0.5, 0.5));
+	btnOk->setPosition(text->getPosition()-Vec2(50,50));
+	btnOk->setScale(0.2);
+	mPauseLayer->addChild(btnOk, 7);
+	btnOk->addClickEventListener([&](Ref* event) {
+		auto audio = SimpleAudioEngine::getInstance();
+		audio->playEffect("res/Music/buttonclick.mp3", false);
+		SimpleAudioEngine::getInstance()->resumeAllEffects();
+		SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+		Director::getInstance()->resume();
+		mPauseLayer->setVisible(false);
+	});
+	//Button Menu
+
+	auto btnMenu = ui::Button::create("res/Pause_UI/menu.png");
+	btnMenu->setAnchorPoint(Vec2(0.5, 0.5));
+	btnMenu->setPosition(btnOk->getPosition() + Vec2(100,0));
+	btnMenu->setScale(0.2);
+	mPauseLayer->addChild(btnMenu, 7);
+	btnMenu->addClickEventListener([&](Ref* event) {
+		auto audio = SimpleAudioEngine::getInstance();
+		audio->playEffect("res/Music/buttonclick.mp3", false);
+		SimpleAudioEngine::getInstance()->resumeAllEffects();
+		SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+		Director::getInstance()->resume();
+		Director::getInstance()->replaceScene(MenuScene::createScene());
+	});
+
+	
 }
 void PlayGameScene::UpdateMonster(float x_alita)
 {
@@ -207,6 +279,8 @@ void PlayGameScene::updateCenterView()
 		hud_bg->setPosition(Vec2(hud_bg->getPosition().x + (x_alita - x_positon_Alita), hud_bg->getPosition().y));
 		hud->setPosition(hud_bg->getPosition() - Vec2(24, 0));
 		mMcHudBlood->setPosition(hud_bg->getPosition());
+		btnPause->setPosition(Vec2(btnPause->getPosition().x + (x_alita - x_positon_Alita), btnPause->getPosition().y));
+		mPauseLayer->setPosition(Vec2(mPauseLayer->getPosition().x + (x_alita - x_positon_Alita), mPauseLayer->getPosition().y));
 		
 		x_positon_Alita = x_alita;
 	}
@@ -280,6 +354,13 @@ void PlayGameScene::createController()
 	mThrowController->setPosition(Vec2(visibleSize.width - mJumpController->getContentSize().width - 60, mJumpController->getContentSize().height));
 	mThrowController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::throws, this));
 	addChild(mThrowController, 10);
+	//Pause
+	btnPause = ui::Button::create("res/Pause_UI/pause.png");
+	btnPause->setAnchorPoint(Vec2(0, 0.5));
+	btnPause->setScale(0.2);
+	btnPause->setPosition(Vec2(visibleSize.width - 50, visibleSize.height- 30));
+	btnPause->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::pause, this));
+	addChild(btnPause);
 }
 
 void PlayGameScene::createMC()
@@ -361,6 +442,27 @@ void PlayGameScene::throws(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 		m_Alita->Throw();
 		break;
 	case ui::Widget::TouchEventType::ENDED:
+		break;
+	}
+}
+
+void PlayGameScene::pause(Ref* sender, ui::Widget::TouchEventType type)
+{
+	switch (type)
+	{
+	case ui::Widget::TouchEventType::ENDED:
+		auto funcPause = CallFunc::create([]() {
+			SimpleAudioEngine::getInstance()->pauseAllEffects();
+			SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+			Director::getInstance()->pause();
+			auto audio = SimpleAudioEngine::getInstance();
+			audio->playEffect("res/Music/buttonclick.mp3", false);
+			//Director::getInstance()->replaceScene(PauseScene::createScene());
+		});
+		mPauseLayer->setOpacity(0);
+		mPauseLayer->setVisible(true);
+		auto fadeIn = FadeIn::create(0.3f);
+		mPauseLayer->runAction(Sequence::create(fadeIn, funcPause, nullptr));
 		break;
 	}
 }
