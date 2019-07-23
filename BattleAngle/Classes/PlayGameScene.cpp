@@ -1,8 +1,8 @@
 #include "PlayGameScene.h"
 #include "ui\UIButton.h"
 #include "SimpleAudioEngine.h"
-#include "PauseScene.h"
 #include "MenuScene.h"
+#include "OverScene.h"
 
 
 using namespace CocosDenshion;
@@ -10,10 +10,14 @@ USING_NS_CC;
 
 Size visibleSize;
 cocos2d::Sprite* mPauseLayer;
+
+
 Scene* PlayGameScene::createScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setGravity(Vec2(0, -500));
+	//scene->getPhysicsWorld()->setSpeed(3);
 	auto layer = PlayGameScene::create();
 	layer->setPhysicsWorld(scene->getPhysicsWorld());
 	scene->addChild(layer, 0);
@@ -35,8 +39,8 @@ bool PlayGameScene::init()
 	createCamera();
 	createHub();
 	createPause();
-	
 
+	
 
 	//Kaisa_Monster *kaisa = new Kaisa_Monster(this);
 	//Murad_Monster *murad = new Murad_Monster(this);
@@ -55,6 +59,11 @@ void PlayGameScene::update(float deltaTime) {
 	setTurn_Monster(x_alita);
 	UpdateMonster(x_alita);
 	mMcHudBlood->setPercent((m_Alita->getHP() * 100) / mHP);
+	if (m_Alita->getHP()<=0)
+	{
+		createLose();
+	}
+	
 }
 
 
@@ -85,8 +94,9 @@ void PlayGameScene::createPhysics()
 			if (tileSet != NULL)
 			{
 				auto physics = PhysicsBody::createBox(tileSet->getContentSize(), PhysicsMaterial(1.0f, 0.0f, 1.0f));
-				/*physics->setCollisionBitmask(Model::BITMASK_GROUND);
-				physics->setContactTestBitmask(true);*/
+				physics->setCategoryBitmask(3);
+				physics->setCollisionBitmask(Objects::BITMASK_GROUND);
+				physics->setContactTestBitmask(true);
 				physics->setDynamic(false);
 				//physics->setMass(100);
 				tileSet->setPhysicsBody(physics);
@@ -96,6 +106,7 @@ void PlayGameScene::createPhysics()
 	addChild(map, -1);
 	auto egdeBody = PhysicsBody::createEdgeBox(map->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT, 3);
 	egdeBody->setDynamic(false);
+	//egdeBody->;
 	egdeNode = Node::create();
 	egdeNode->setPosition(map->getContentSize().width / 2, map->getContentSize().height / 2);
 	egdeNode->setPhysicsBody(egdeBody);
@@ -132,6 +143,7 @@ void PlayGameScene::createMonsters() {
 			kaisa = new Kaisa_Monster(this);
 			kaisa->getSprite()->setPosition(Vec2(posX, posY));
 			kaisa->setIndex(kaisa_count++);
+			//kaisa->getBullet()->setIndex(kaisa_count);
 			mKaisa.push_back(kaisa);
 		}
 		else if (type == 2)
@@ -145,7 +157,6 @@ void PlayGameScene::createMonsters() {
 }
 void PlayGameScene::createHub()
 {
-
 	hud_bg = Sprite::create("res/BloodMc/hud_bg.png");
 	hud_bg->setAnchorPoint(Vec2(0, 0.5));
 	hud_bg->setScale(0.5);
@@ -157,7 +168,7 @@ void PlayGameScene::createHub()
 	mMcHudBlood->setScale(0.5);
 	mMcHudBlood->setPosition(hud_bg->getPosition());
 	mMcHudBlood->setDirection(ui::LoadingBar::Direction::LEFT);
-	mMcHudBlood->setPercent((m_Alita->getHP()*100)/mHP);
+	mMcHudBlood->setPercent(m_Alita->getHP());
 	addChild(mMcHudBlood);
 
 	hud = Sprite::create("res/BloodMc/hud.png");
@@ -173,33 +184,33 @@ void PlayGameScene::createPause()
 	mPauseLayer->setAnchorPoint(Vec2(0.5, 0.5));
 	mPauseLayer->setPosition(visibleSize / 2);
 	mPauseLayer->setVisible(false);
-	addChild(mPauseLayer,30);
+	addChild(mPauseLayer, 30);
 
 	auto bg = Sprite::create("res/Setting_UI/bg.png");
 	bg->setAnchorPoint(Vec2(0.5, 0.5));
 	bg->setScale(0.2);
-	bg->setPosition(visibleSize/2);
-	mPauseLayer-> addChild(bg, 0);
+	bg->setPosition(visibleSize / 2);
+	mPauseLayer->addChild(bg, 0);
 	auto bg1 = Sprite::create("res/Setting_UI/table.png");
 	bg1->setAnchorPoint(Vec2(0.5, 0.5));
 	bg1->setScale(0.2);
-	bg1->setPosition(bg->getPosition() );
+	bg1->setPosition(bg->getPosition());
 	mPauseLayer->addChild(bg1, 2);
 	auto bg2 = Sprite::create("res/Pause_UI/header.png");
 	bg2->setAnchorPoint(Vec2(0.5, 0.5));
 	bg2->setScale(0.15);
-	bg2->setPosition(bg1->getPosition()+Vec2(0,70));
+	bg2->setPosition(bg1->getPosition() + Vec2(0, 70));
 	mPauseLayer->addChild(bg2, 3);
 	auto text = Sprite::create("res/Pause_UI/text.png");
-	text->setAnchorPoint(Vec2(0.5,0.5));
+	text->setAnchorPoint(Vec2(0.5, 0.5));
 	text->setScale(0.2);
-	text->setPosition(bg2->getPosition()-Vec2(0,70));
-	mPauseLayer->addChild(text,3);
+	text->setPosition(bg2->getPosition() - Vec2(0, 70));
+	mPauseLayer->addChild(text, 3);
 	//Button Ok
 
 	auto btnOk = ui::Button::create("res/Pause_UI/ok.png");
 	btnOk->setAnchorPoint(Vec2(0.5, 0.5));
-	btnOk->setPosition(text->getPosition()-Vec2(50,50));
+	btnOk->setPosition(text->getPosition() - Vec2(50, 50));
 	btnOk->setScale(0.2);
 	mPauseLayer->addChild(btnOk, 7);
 	btnOk->addClickEventListener([&](Ref* event) {
@@ -214,7 +225,7 @@ void PlayGameScene::createPause()
 
 	auto btnMenu = ui::Button::create("res/Pause_UI/menu.png");
 	btnMenu->setAnchorPoint(Vec2(0.5, 0.5));
-	btnMenu->setPosition(btnOk->getPosition() + Vec2(100,0));
+	btnMenu->setPosition(btnOk->getPosition() + Vec2(100, 0));
 	btnMenu->setScale(0.2);
 	mPauseLayer->addChild(btnMenu, 7);
 	btnMenu->addClickEventListener([&](Ref* event) {
@@ -226,7 +237,14 @@ void PlayGameScene::createPause()
 		Director::getInstance()->replaceScene(MenuScene::createScene());
 	});
 
+
+
+}
+void PlayGameScene::createLose()
+{
 	
+	Director::getInstance()->replaceScene(OverScene::createScene());
+
 }
 void PlayGameScene::UpdateMonster(float x_alita)
 {
@@ -242,17 +260,60 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 {
 	PhysicsBody* a = contact.getShapeA()->getBody();
 	PhysicsBody* b = contact.getShapeB()->getBody();
+
 	if ((a->getCollisionBitmask() == Objects::BITMASK_DART && b->getCollisionBitmask() == Objects::BITMASK_KAISA)
 		|| (a->getCollisionBitmask() == Objects::BITMASK_KAISA && b->getCollisionBitmask() == Objects::BITMASK_DART))
 	{
 		if (a->getCollisionBitmask() == Objects::BITMASK_DART)
 		{
 			mKaisa.at(b->getGroup())->DarkCollision();
+
 		}
 		else if (b->getCollisionBitmask() == Objects::BITMASK_DART)
 		{
 			mKaisa.at(a->getGroup())->DarkCollision();
 		}
+	}
+
+	//dark vs mMurad
+	if ((a->getCollisionBitmask() == Objects::BITMASK_DART && b->getCollisionBitmask() == Objects::BITMASK_MURAD)
+		|| (a->getCollisionBitmask() == Objects::BITMASK_MURAD && b->getCollisionBitmask() == Objects::BITMASK_DART))
+	{
+		if (a->getCollisionBitmask() == Objects::BITMASK_DART)
+		{
+			mMurad.at(b->getGroup())->DarkCollision();
+		}
+		else if (b->getCollisionBitmask() == Objects::BITMASK_DART)
+		{
+			mMurad.at(a->getGroup())->DarkCollision();
+		}
+	}
+
+	//bullet vs Alita 
+	if ((a->getCollisionBitmask() == Objects::BITMASK_BULLET && b->getCollisionBitmask() == Objects::BITMASK_ALITA)
+		|| (a->getCollisionBitmask() == Objects::BITMASK_ALITA && b->getCollisionBitmask() == Objects::BITMASK_BULLET))
+	{
+		if (a->getCollisionBitmask() == Objects::BITMASK_BULLET)
+		{
+			m_Alita->BulletCollision();
+			
+
+			//mKaisa.at(a->getGroup())->getBullet()->getSprite()->setVisible(false);
+		}
+		else if (b->getCollisionBitmask() == Objects::BITMASK_BULLET)
+		{
+			m_Alita->BulletCollision();
+			
+			//mKaisa.at(a->getGroup())->getBullet()->getSprite()->setVisible(false);
+		}
+	}
+	//Attack Murad vs Alita
+
+	//Alita vs Round
+	if ((a->getCollisionBitmask() == Objects::BITMASK_GROUND && b->getCollisionBitmask() == Objects::BITMASK_ALITA)
+		|| (a->getCollisionBitmask() == Objects::BITMASK_ALITA && b->getCollisionBitmask() == Objects::BITMASK_GROUND))
+	{
+		m_Alita->setJumping(false);
 	}
 	return true;
 }
@@ -277,11 +338,11 @@ void PlayGameScene::updateCenterView()
 		mAttackController->setPosition(Vec2(mAttackController->getPosition().x + (x_alita - x_positon_Alita), mAttackController->getPosition().y));
 		mThrowController->setPosition(Vec2(mThrowController->getPosition().x + (x_alita - x_positon_Alita), mThrowController->getPosition().y));
 		hud_bg->setPosition(Vec2(hud_bg->getPosition().x + (x_alita - x_positon_Alita), hud_bg->getPosition().y));
-		hud->setPosition(hud_bg->getPosition() - Vec2(24, 0));
+		hud->setPosition(hud_bg->getPosition() - Vec2(15, 0));
 		mMcHudBlood->setPosition(hud_bg->getPosition());
 		btnPause->setPosition(Vec2(btnPause->getPosition().x + (x_alita - x_positon_Alita), btnPause->getPosition().y));
 		mPauseLayer->setPosition(Vec2(mPauseLayer->getPosition().x + (x_alita - x_positon_Alita), mPauseLayer->getPosition().y));
-		
+
 		x_positon_Alita = x_alita;
 	}
 }
@@ -358,7 +419,8 @@ void PlayGameScene::createController()
 	btnPause = ui::Button::create("res/Pause_UI/pause.png");
 	btnPause->setAnchorPoint(Vec2(0, 0.5));
 	btnPause->setScale(0.2);
-	btnPause->setPosition(Vec2(visibleSize.width - 50, visibleSize.height- 30));
+	btnPause->setOpacity(80);
+	btnPause->setPosition(Vec2(visibleSize.width - 50, visibleSize.height - 30));
 	btnPause->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::pause, this));
 	addChild(btnPause);
 }
@@ -366,7 +428,6 @@ void PlayGameScene::createController()
 void PlayGameScene::createMC()
 {
 	m_Alita = new Alita(this);
-	mHP = m_Alita->getHP();
 	STATIC_Position_Alita = m_Alita->getSprite()->getPosition().x;
 	x_positon_Alita = m_Alita->getSprite()->getPosition().x;
 }
@@ -415,7 +476,6 @@ void PlayGameScene::jump(Ref* sender, ui::Widget::TouchEventType type)
 	{
 	case ui::Widget::TouchEventType::BEGAN:
 		m_Alita->Jump();
-		m_Alita->setHP(m_Alita->getHP() - 20);
 		break;
 	case ui::Widget::TouchEventType::ENDED:
 		break;
@@ -445,7 +505,6 @@ void PlayGameScene::throws(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 		break;
 	}
 }
-
 void PlayGameScene::pause(Ref* sender, ui::Widget::TouchEventType type)
 {
 	switch (type)

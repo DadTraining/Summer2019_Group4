@@ -29,7 +29,7 @@ private:
 	/*Another Attribute */
 	float STATIC_Position_Alita;
 	float x_positon_Alita;
-	int mHP;
+	int mHP = Objects::ALITA_HP;
 
 public:
 	/*Methods in cocos2dx default*/
@@ -48,6 +48,7 @@ public:
 	void createMonsters();
 	void createHub();
 	void createPause();
+	void createLose();
 
 	/* Methods using for controller game*/
 	cocos2d::ui::Button* mMoveLeftController;
