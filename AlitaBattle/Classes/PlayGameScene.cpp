@@ -26,6 +26,7 @@ bool PlayGameScene::init()
 	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
 	mCurrentTouchPoint = Point(-1, -1);
 	createMC();
+	createHub();
 	createMapPhysics();
 	addListener();
 	createController();
@@ -45,6 +46,7 @@ void PlayGameScene::update(float deltaTime) {
 	auto x_alita = m_Alita->getSprite()->getPosition().x;
 	m_Alita->Update(deltaTime);
 	updateCenterView();
+	mMcHudBlood->setPercent((m_Alita->getHP() * 100) / mHP);
 	setTurn_Monster(x_alita);
 	UpdateMonster(x_alita);
 }
@@ -59,7 +61,7 @@ void PlayGameScene::createMapPhysics() {
 void PlayGameScene::createMap()
 {
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	map = TMXTiledMap::create("res/map/alita.tmx");
+	map = TMXTiledMap::create("res/map/ok.tmx");
 	map->setAnchorPoint(Vec2(0, 0));
 	map->setPosition(0, 0);
 
@@ -126,7 +128,7 @@ void PlayGameScene::createMonsters() {
 			kaisa = new Kaisa_Monster(this);
 			kaisa->getSprite()->setPosition(Vec2(posX, posY));
 			kaisa->setIndex(kaisa_count++);
-			kaisa->getBullet()->setIndex(kaisa_count);
+			//kaisa->getBullet()->setIndex(kaisa_count);
 			mKaisa.push_back(kaisa);
 		}
 		else if (type == 2)
@@ -137,6 +139,28 @@ void PlayGameScene::createMonsters() {
 			mMurad.push_back(murad);
 		}
 	}
+}
+void PlayGameScene::createHub()
+{
+	hud_bg = Sprite::create("res/BloodMc/hud_bg.png");
+	hud_bg->setAnchorPoint(Vec2(0, 0.5));
+	hud_bg->setScale(0.5);
+	hud_bg->setPosition(Vec2(50, visibleSize.height - 30));
+	addChild(hud_bg);
+
+	mMcHudBlood = ui::LoadingBar::create("res/BloodMc/hud_blood.png");
+	mMcHudBlood->setAnchorPoint(Vec2(0, 0.5));
+	mMcHudBlood->setScale(0.5);
+	mMcHudBlood->setPosition(hud_bg->getPosition());
+	mMcHudBlood->setDirection(ui::LoadingBar::Direction::LEFT);
+	mMcHudBlood->setPercent(m_Alita->getHP());
+	addChild(mMcHudBlood);
+
+	hud = Sprite::create("res/BloodMc/hud.png");
+	hud->setAnchorPoint(Vec2(0, 0.5));
+	hud->setScale(0.5);
+	hud->setPosition(hud_bg->getPosition() - Vec2(12, 0));
+	addChild(hud);
 }
 void PlayGameScene::UpdateMonster(float x_alita)
 {
@@ -153,16 +177,19 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 	PhysicsBody* a = contact.getShapeA()->getBody();
 	PhysicsBody* b = contact.getShapeB()->getBody();
 
+	//dark vs mKaisa
 	if ((a->getCollisionBitmask() == Objects::BITMASK_DART && b->getCollisionBitmask() == Objects::BITMASK_KAISA)
 		|| (a->getCollisionBitmask() == Objects::BITMASK_KAISA && b->getCollisionBitmask() == Objects::BITMASK_DART))
 	{
 		if (a->getCollisionBitmask() == Objects::BITMASK_DART)
 		{
 			mKaisa.at(b->getGroup())->DarkCollision();
+			m_Alita->getDarts()->setAlive(false);
 		}
 		else if (b->getCollisionBitmask() == Objects::BITMASK_DART)
 		{
 			mKaisa.at(a->getGroup())->DarkCollision();
+			m_Alita->getDarts()->setAlive(false);
 		}
 	}
 
@@ -170,14 +197,23 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 	if ((a->getCollisionBitmask() == Objects::BITMASK_DART && b->getCollisionBitmask() == Objects::BITMASK_MURAD)
 		|| (a->getCollisionBitmask() == Objects::BITMASK_MURAD && b->getCollisionBitmask() == Objects::BITMASK_DART))
 	{
-		if (a->getCollisionBitmask() == Objects::BITMASK_DART)
+		if (a->getCollisionBitmask() == Objects::BITMASK_DART&& b->getContactTestBitmask()==3)
 		{
 			mMurad.at(b->getGroup())->DarkCollision();
+			m_Alita->getDarts()->setAlive(false);
 		}
-		else if (b->getCollisionBitmask() == Objects::BITMASK_DART)
+		else if (b->getCollisionBitmask() == Objects::BITMASK_DART &&a->getContactTestBitmask()==3)
 		{
 			mMurad.at(a->getGroup())->DarkCollision();
+			m_Alita->getDarts()->setAlive(false);
 		}
+	}
+
+	//dark vs ground
+	if ((a->getCollisionBitmask() == Objects::BITMASK_DART && b->getCollisionBitmask() == Objects::BITMASK_GROUND)
+		|| (a->getCollisionBitmask() == Objects::BITMASK_GROUND && b->getCollisionBitmask() == Objects::BITMASK_DART))
+	{
+			m_Alita->getDarts()->setAlive(false);
 	}
 
 	//bullet vs Alita 
@@ -225,6 +261,12 @@ void PlayGameScene::updateCenterView()
 		mJumpController->setPosition(Vec2(mJumpController->getPosition().x + (x_alita - x_positon_Alita), mJumpController->getPosition().y));
 		mAttackController->setPosition(Vec2(mAttackController->getPosition().x + (x_alita - x_positon_Alita), mAttackController->getPosition().y));
 		mThrowController->setPosition(Vec2(mThrowController->getPosition().x + (x_alita - x_positon_Alita), mThrowController->getPosition().y));
+		
+		hud_bg->setPosition(Vec2(hud_bg->getPosition().x + (x_alita - x_positon_Alita), hud_bg->getPosition().y));
+		hud->setPosition(hud_bg->getPosition() - Vec2(15, 0));
+		mMcHudBlood->setPosition(hud_bg->getPosition());
+		//btnPause->setPosition(Vec2(btnPause->getPosition().x + (x_alita - x_positon_Alita), btnPause->getPosition().y));
+		//mPauseLayer->setPosition(Vec2(mPauseLayer->getPosition().x + (x_alita - x_positon_Alita), mPauseLayer->getPosition().y));
 		x_positon_Alita = x_alita;
 	}
 }

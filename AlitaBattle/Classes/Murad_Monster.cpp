@@ -82,7 +82,7 @@ void Murad_Monster::Init() {
 	m_sprite->setScale(0.12);
 	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
 	mPhysicBody->setCollisionBitmask(Objects::BITMASK_MURAD);
-	mPhysicBody->setContactTestBitmask(true);
+	mPhysicBody->setContactTestBitmask(3);
 	mPhysicBody->setCategoryBitmask(1);
 	mPhysicBody->setDynamic(true);
 	mPhysicBody->setRotationEnable(false);

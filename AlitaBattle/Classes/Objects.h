@@ -56,7 +56,4 @@ public:
 	Sprite* DuplicateSprite(Sprite * sprite);
 
 };
-
-
-
 #endif 

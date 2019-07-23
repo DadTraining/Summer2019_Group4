@@ -128,7 +128,7 @@ void Alita::Jump()
 
 void Alita::Attack()
 {
-	m_sprite->stopAllActions();
+	//m_sprite->stopAllActions();
 	m_sprite->runAction(mAnimation[ANIM_ATTACK]);
 }
 
@@ -154,6 +154,7 @@ void Alita::Update(float deltaTime)
 		//m_sprite->stopAllActions();
 		//m_sprite->runAction(mAnimation[ANIM_IDLE]);
 	}
+	this->darts->Update(deltaTime);
 }
 
 void Alita::Idle()
@@ -185,6 +186,7 @@ void Alita::setRunning(bool run)
 {
 	if (run == false) {
 		isRun = run;
+		Idle();
 	}
 }
 
@@ -196,15 +198,18 @@ bool Alita::isJumping()
 
 void Alita::setJumping(bool jump)
 {
-	isJump = jump;
-	if (!jump) {
-		if (isRun) {
-			m_sprite->stopAllActions();
-			m_sprite->runAction(mAnimation[ANIM_RUN]);
+	if (jump==false) {
+		if (isJump != jump) {
+			isJump = jump;
+			if (isRun) {
+				m_sprite->stopAllActions();
+				m_sprite->runAction(mAnimation[ANIM_RUN]);
+			}
+			else {
+				Idle();
+			}
 		}
-		else {
-			Idle();
-		}
+		
 	}
 }
 

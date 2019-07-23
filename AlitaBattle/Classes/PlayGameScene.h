@@ -25,7 +25,11 @@ private:
 	Murad_Monster *murad;
 	std::vector<Murad_Monster*> mMurad;
 	std::vector<Kaisa_Monster*> mKaisa;
-	
+	Sprite * hud;
+	Sprite * hud_bg;
+	cocos2d::ui::LoadingBar *mMcHudBlood;
+	int mHP = Objects::ALITA_HP;
+
 	/*Another Attribute */
 	float STATIC_Position_Alita;
 	float x_positon_Alita;
@@ -45,6 +49,7 @@ public:
 	void createMC();
 	void addListener();
 	void createMonsters();
+	void createHub();
 
 	/* Methods using for controller game*/
 	cocos2d::ui::Button* mMoveLeftController;
