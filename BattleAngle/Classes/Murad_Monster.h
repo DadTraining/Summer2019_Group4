@@ -10,9 +10,6 @@ public:
 	static const int ANIM_DIE = ANIM_ATTACK + 1;
 	static const int ANIM_TOTAl = ANIM_DIE + 1;
 
-	static const int HP_MURADMONSTER = 100;
-	static const int DAME_MURADMONSTER = 10;
-
 	Murad_Monster(Scene * scene);
 	~Murad_Monster();
 	void Init() override;
@@ -24,6 +21,7 @@ public:
 	void setTurnRight();
 	void setTurnLeft();
 	bool getm_LetftoRight();
+	void DarkCollision();
 	void setState_Murad(float position);
 	void setTurn_Murad(float position);
 	void Collision();

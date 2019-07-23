@@ -44,17 +44,7 @@ bool MenuScene::init()
 		auto audio = SimpleAudioEngine::getInstance();
 		audio->playEffect("res/Music/buttonclick.mp3", false);
 		//replace PlayScene
-		auto gotoNext = CallFunc::create([]() {
-
 			Director::getInstance()->replaceScene(PlayGameScene::createScene());
-
-		});
-
-		auto sequence = Sequence::create(DelayTime::create(0.2f), gotoNext,
-			nullptr);
-
-		runAction(sequence);
-
 	});
 	btnPlay->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2.5));
 	auto title = Label::createWithTTF("PLAY", "fonts/Marker Felt.ttf", 20);
@@ -105,17 +95,7 @@ bool MenuScene::init()
 		auto audio = SimpleAudioEngine::getInstance();
 		audio->playEffect("res/Music/buttonclick.mp3", false);
 		//replace SettingScene
-		auto gotoNext = CallFunc::create([]() {
-
-			Director::getInstance()->replaceScene(SettingScene::createScene());
-
-		});
-
-		auto sequence = Sequence::create(DelayTime::create(0.2f), gotoNext,
-			nullptr);
-
-		runAction(sequence);
-
+		Director::getInstance()->replaceScene(SettingScene::createScene());
 	});
 	btnSetting->setPosition(Vec2(visibleSize.width / 1.2, visibleSize.height / 6));
 	addChild(btnSetting);

@@ -4,25 +4,21 @@
 USING_NS_CC;
 Alita::Alita(Scene * scene)
 {
-	//set HP 
-	setHP(ALITA_HP);
-	//set Dame
-	setDame(ALITA_DAME);
 	m_sprite = Sprite::create("plist/Alita/Throw__000.png");
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	auto ScreenSize = Director::getInstance()->getVisibleSize();
 	m_sprite->setPosition(ScreenSize / 2);
 	m_sprite->setScale(0.2);
-
 	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
 	mPhysicBody->setGravityEnable(true);	//Gravity
 	mPhysicBody->setMass(200);
+	mPhysicBody->setRotationEnable(false);
 	mPhysicBody->setCollisionBitmask(Objects::BITMASK_ALITA);
 	mPhysicBody->setContactTestBitmask(true);
-	mPhysicBody->setRotationEnable(false);
-	//bodySprite1->setDynamic(true);		//setDynamic
+	mPhysicBody->setDynamic(true);	//setDynamic
+	mPhysicBody->setCategoryBitmask(1);
 	m_sprite->setPhysicsBody(mPhysicBody);
-	scene->addChild(m_sprite,10);
+	scene->addChild(m_sprite, 10);
 	this->darts = new Darts(scene);
 	Init();
 }
@@ -36,6 +32,7 @@ void Alita::Init()
 {
 	createAnimate();
 	Idle();
+	setHP(Objects::ALITA_HP);
 }
 
 void Alita::createAnimate()
@@ -67,7 +64,7 @@ void Alita::createAnimate()
 	model->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(model);
 	animate = Animate::create(createAnimation("Jump__00", 9, 0.05));
-	mAnimation[ANIM_JUMP] = Repeat::create(animate,1);
+	mAnimation[ANIM_JUMP] = Repeat::create(animate, 1);
 	CC_SAFE_RETAIN(mAnimation[ANIM_JUMP]);
 
 	/*Alita THROW*/
@@ -77,7 +74,7 @@ void Alita::createAnimate()
 	model->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(model);
 	animate = Animate::create(createAnimation("Throw__00", 9, 0.05));
-	mAnimation[ANIM_THROW] = Repeat::create(animate,1);
+	mAnimation[ANIM_THROW] = Repeat::create(animate, 1);
 	CC_SAFE_RETAIN(mAnimation[ANIM_THROW]);
 
 	/*Alita ATTACK*/
@@ -87,7 +84,7 @@ void Alita::createAnimate()
 	model->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(model);
 	animate = Animate::create(createAnimation("Attack__00", 9, 0.05));
-	mAnimation[ANIM_ATTACK] = Repeat::create(animate,1);
+	mAnimation[ANIM_ATTACK] = Repeat::create(animate, 1);
 	CC_SAFE_RETAIN(mAnimation[ANIM_ATTACK]);
 }
 
@@ -98,7 +95,9 @@ void Alita::MoveLeft()
 		isMoveRight = false;
 	}
 	m_sprite->stopAllActions();
-	m_sprite->runAction(mAnimation[ANIM_RUN]);
+	if (!isJump) {
+		m_sprite->runAction(mAnimation[ANIM_RUN]);
+	}
 	isRun = true;
 	//m_sprite->setPosition(Vec2(m_sprite->getPosition().x - 10, m_sprite->getPosition().y));
 }
@@ -111,20 +110,24 @@ void Alita::MoveRight()
 		isMoveRight = true;
 	}
 	m_sprite->stopAllActions();
-	m_sprite->runAction(mAnimation[ANIM_RUN]);
+	if (!isJump) {
+		m_sprite->runAction(mAnimation[ANIM_RUN]);
+	}
 	isRun = true;
 }
 
 void Alita::Jump()
 {
-	m_sprite->stopAllActions();
-	m_sprite->runAction(mAnimation[ANIM_JUMP]);
-	mPhysicBody->applyImpulse(Vec2(0, 25000));
+	if (!isJump) {
+		m_sprite->stopAllActions();
+		m_sprite->runAction(mAnimation[ANIM_JUMP]);
+		mPhysicBody->applyImpulse(Vec2(0, 60000));
+		isJump = true;
+	}
 }
 
 void Alita::Attack()
 {
-	
 	m_sprite->stopAllActions();
 	m_sprite->runAction(mAnimation[ANIM_ATTACK]);
 }
@@ -164,6 +167,16 @@ void Alita::Collision()
 
 }
 
+void Alita::BulletCollision()
+{
+	this->setHP(this->getHP() - Objects::KAISA_DAME);
+	if (this->getHP() <= 0) {
+		this->m_sprite->setVisible(false);
+		mPhysicBody->setEnabled(false);
+		this->setAlive(false);
+	}
+}
+
 bool Alita::isRunning()
 {
 	return isRun;
@@ -175,4 +188,29 @@ void Alita::setRunning(bool run)
 		isRun = run;
 		Idle();
 	}
+}
+
+bool Alita::isJumping()
+{
+	return isJump;
+}
+
+
+void Alita::setJumping(bool jump)
+{
+	isJump = jump;
+	if (!jump) {
+		if (isRun) {
+			m_sprite->stopAllActions();
+			m_sprite->runAction(mAnimation[ANIM_RUN]);
+		}
+		else {
+			Idle();
+		}
+	}
+}
+
+Darts * Alita::getDarts()
+{
+	return darts;
 }

@@ -3,8 +3,8 @@
 USING_NS_CC;
 Murad_Monster::Murad_Monster(Scene * scene)
 {
-	this->setHP(HP_MURADMONSTER);
-	this->setDame(DAME_MURADMONSTER);
+	this->setHP(Objects::MURAD_HP);
+	this->setDame(Objects::MURAD_DAME);
 	this->m_isAlive = true;
 	Init();
 	scene->addChild(m_sprite);
@@ -16,7 +16,7 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	spriteNode = SpriteBatchNode::create("plist/Murad/Idle_Murad.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Murad/Idle_Murad.plist");
 	//sprite = Sprite::createWithSpriteFrameName("Idle_000.png");
-	 spriteFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName("Idle_000.png");
+	spriteFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName("Idle_000.png");
 	sprite = Sprite::createWithSpriteFrame(spriteFrame);
 
 	sprite->setPosition(m_sprite->getPosition());
@@ -57,7 +57,7 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	spriteFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName("Dead_000.png");
 	sprite = Sprite::createWithSpriteFrame(spriteFrame);
 	//sprite = Sprite::createWithSpriteFrameName("Dead_000.png");
-	
+
 
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
@@ -80,10 +80,11 @@ void Murad_Monster::Init() {
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	m_sprite->setPosition(Vec2(visibleSize.width / 2, 0));
 	m_sprite->setScale(0.12);
-	mPhysicBody = PhysicsBody::createBox(Size(m_sprite->getContentSize().width*0.6, m_sprite->getContentSize().height));
-	mPhysicBody->setDynamic(true);
+	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
 	mPhysicBody->setCollisionBitmask(Objects::BITMASK_MURAD);
 	mPhysicBody->setContactTestBitmask(true);
+	mPhysicBody->setCategoryBitmask(1);
+	mPhysicBody->setDynamic(true);
 	mPhysicBody->setRotationEnable(false);
 	m_sprite->setPhysicsBody(mPhysicBody);
 }
@@ -104,11 +105,11 @@ void Murad_Monster::Run() {
 	m_sprite->runAction(mAnimation[ANIM_RUN]);
 	if (getm_LetftoRight() == true)
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x + 8, m_sprite->getPosition().y);
+		m_sprite->setPosition(m_sprite->getPosition().x + 1, m_sprite->getPosition().y);
 	}
 	else
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x - 8, m_sprite->getPosition().y);
+		m_sprite->setPosition(m_sprite->getPosition().x - 1, m_sprite->getPosition().y);
 	}
 }
 
@@ -120,6 +121,8 @@ void Murad_Monster::Die()
 {
 	m_sprite->stopAllActions();
 	m_sprite->runAction(mAnimation[ANIM_DIE]);
+	mPhysicBody->setEnabled(false);
+	m_sprite->setVisible(false);
 }
 
 
@@ -147,15 +150,23 @@ bool Murad_Monster::getm_LetftoRight()
 		return false;
 }
 
+void Murad_Monster::DarkCollision()
+{
+	this->setHP(this->getHP() - Objects::ALITA_DAME);
+	if (this->getHP() <= 0) {
+		this->Die();
+	}
+}
+
 void Murad_Monster::setState_Murad(float position)
 {
 	auto X_murad = m_sprite->getPosition().x;
 	auto X_distance = abs(X_murad - position);
-	if (X_distance <= 120)
+	if (X_distance <= 100)
 	{
 		Attack();
 	}
-	else if (X_distance > 120 && X_distance < 250)
+	else if (X_distance > 100 && X_distance < 250)
 	{
 		Run();
 	}

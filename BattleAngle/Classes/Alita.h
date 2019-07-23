@@ -43,11 +43,15 @@ public:
 	void Attack();
 	void Throw();
 	void Collision();
+	void BulletCollision();
 	bool isRunning();
 	void setRunning(bool run);
+	bool isJumping();
+	void setJumping(bool jump);
+	Darts* getDarts();
 private:
-	
-	bool isRun= false;
+	bool isJump = false;
+	bool isRun = false;
 	Action * mAnimation[ANIM_TOTAl];
 	bool isMoveRight = true;
 	Darts* darts;

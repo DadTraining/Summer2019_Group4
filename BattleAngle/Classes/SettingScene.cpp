@@ -31,30 +31,31 @@ bool SettingScene::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	//set background
+	auto visibleSize1 = Director::getInstance()->getVisibleSize();
 	auto background = Sprite::create("res/Menu_UI/bg.png");
-	background->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+	background->setAnchorPoint(Vec2(0.5, 0.5));
 	background->setScale(0.37);
-	addChild(background);
+	background->setPosition(visibleSize1 / 2);
+	addChild(background, -2);
 	auto bg = Sprite::create("res/Setting_UI/bg.png");
-	bg->setAnchorPoint(Vec2(0,0));
+	bg->setAnchorPoint(Vec2(0.5, 0.5));
 	bg->setScale(0.2);
-	bg->setPosition(Vec2(visibleSize.width/4 + origin.x, visibleSize.height/12+ origin.y));
-	addChild(bg,0);
+	bg->setPosition(visibleSize1 / 2);
+	addChild(bg, 0);
 	auto bg1 = Sprite::create("res/Setting_UI/table.png");
-	bg1->setAnchorPoint(Vec2(0, 0));
+	bg1->setAnchorPoint(Vec2(0.5, 0.5));
 	bg1->setScale(0.2);
-	bg1->setPosition(bg->getPosition()+Vec2(10,15));
-	addChild(bg1,2);
+	bg1->setPosition(bg->getPosition());
+	addChild(bg1, 2);
 	auto bg2 = Sprite::create("res/Setting_UI/head.png");
-	bg2->setAnchorPoint(Vec2(0, 0));
-	bg2->setScale(0.15);
-	bg2->setPosition(bg1->getPosition()+Vec2(50,120));
-	addChild(bg2,3);
-	
+	bg2->setAnchorPoint(Vec2(0.5, 0.5));
+	bg2->setScale(0.2);
+	bg2->setPosition(bg1->getPosition() + Vec2(0, 70));
+	addChild(bg2, 3);
 	//BackButton
 	auto btnBack = ui::Button::create("res/Setting_UI/close.png");
-	btnBack->setPosition(Vec2(visibleSize.width-btnBack->getContentSize().width -30,visibleSize.height-btnBack->getContentSize().height+30));
-	btnBack->setScale(0.2);
+	btnBack->setPosition(Vec2(visibleSize.width-btnBack->getContentSize().width -24,visibleSize.height-btnBack->getContentSize().height+70));
+	btnBack->setScale(0.23);
 	addChild(btnBack, 7);
 	btnBack->addClickEventListener([&](Ref* event) {
 		//sound click
@@ -75,7 +76,7 @@ bool SettingScene::init()
 
 	//Sound Checkbox
 	auto title = Label::createWithTTF("SOUND", "fonts/Marker Felt.ttf", 20);
-	title->setPosition(visibleSize.width / 3, visibleSize.height - 180);
+	title->setPosition(visibleSize.width / 2.7, visibleSize.height - 150);
 	title->setColor(Color3B::BLACK);
 	addChild(title, 7);
 
@@ -135,7 +136,7 @@ bool SettingScene::init()
 	addChild(title2, 7);
 
 	volumeSlider = ui::Slider::create();
-	volumeSlider->setScale(0.15);
+	volumeSlider->setScale(0.13);
 	volumeSlider->loadBarTexture("res/Setting_UI/volume1.png");
 	volumeSlider->loadSlidBallTextures("res/Setting_UI/rate.png", "res/Setting_UI/rate.png", "res/Setting_UI/less.png");
 	volumeSlider->loadProgressBarTexture("res/Setting_UI/volume2.png");
