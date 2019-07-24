@@ -1,5 +1,12 @@
 #include "Objects.h"
 #include "Alita.h"
+#include "SimpleAudioEngine.h"
+#include "MenuScene.h"
+#include "OverScene.h"
+
+
+using namespace CocosDenshion;
+
 
 USING_NS_CC;
 Alita::Alita(Scene * scene)
@@ -128,8 +135,10 @@ void Alita::Jump()
 
 void Alita::Attack()
 {
-	m_sprite->stopAllActions();
+	//m_sprite->stopAllActions();
 	m_sprite->runAction(mAnimation[ANIM_ATTACK]);
+	auto audio = SimpleAudioEngine::getInstance();
+	audio->playEffect("res/Music/knife.wav", false);
 }
 
 void Alita::Throw()
@@ -137,6 +146,8 @@ void Alita::Throw()
 	if (darts->Throw(m_sprite->getPosition(), this->isMoveRight)) {
 		m_sprite->stopAllActions();
 		m_sprite->runAction(mAnimation[ANIM_THROW]);
+		auto audio = SimpleAudioEngine::getInstance();
+		audio->playEffect("res/Music/attackAlita.wav", false);
 	}
 }
 
@@ -154,6 +165,7 @@ void Alita::Update(float deltaTime)
 		//m_sprite->stopAllActions();
 		//m_sprite->runAction(mAnimation[ANIM_IDLE]);
 	}
+	this->darts->Update(deltaTime);
 }
 
 void Alita::Idle()
@@ -173,7 +185,6 @@ void Alita::BulletCollision()
 	if (this->getHP() <= 0) {
 		this->m_sprite->setVisible(false);
 		mPhysicBody->setEnabled(false);
-		this->setAlive(false);
 	}
 }
 
@@ -198,15 +209,18 @@ bool Alita::isJumping()
 
 void Alita::setJumping(bool jump)
 {
-	isJump = jump;
-	if (!jump) {
-		if (isRun) {
-			m_sprite->stopAllActions();
-			m_sprite->runAction(mAnimation[ANIM_RUN]);
+	if (jump == false) {
+		if (isJump != jump) {
+			isJump = jump;
+			if (isRun) {
+				m_sprite->stopAllActions();
+				m_sprite->runAction(mAnimation[ANIM_RUN]);
+			}
+			else {
+				Idle();
+			}
 		}
-		else {
-			Idle();
-		}
+
 	}
 }
 

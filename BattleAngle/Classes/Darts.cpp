@@ -35,6 +35,10 @@ void Darts::Init()
 
 void Darts::Update(float deltaTime)
 {
+	if (!this->isAlive()) {
+		mPhysicBody->setEnabled(false);
+		m_sprite->setVisible(false);
+	}
 }
 
 void Darts::MoveBullet(bool isRight)
@@ -43,8 +47,9 @@ void Darts::MoveBullet(bool isRight)
 
 bool Darts::Throw(Vec2 PosAlita, bool AlitaTurnRight)
 {
-	if (!m_sprite->isVisible()) {
 
+	if (!Throwing) {
+		Throwing = true;
 		m_LefttoRight = AlitaTurnRight;
 		if (!m_LefttoRight) {
 			m_sprite->setPosition(Vec2(PosAlita.x - 20, PosAlita.y + 50));
@@ -71,6 +76,8 @@ bool Darts::Throw(Vec2 PosAlita, bool AlitaTurnRight)
 			});
 			auto disablePhysic = CallFunc::create([&]() {
 				mPhysicBody->setEnabled(false);
+				this->setAlive(true);
+				this->Throwing = false;
 			});
 			auto sequence = Sequence::create(moveBy, setVisibleSprite, disablePhysic, nullptr);
 			this->m_sprite->runAction(sequence);
@@ -84,6 +91,8 @@ bool Darts::Throw(Vec2 PosAlita, bool AlitaTurnRight)
 			});
 			auto disablePhysic = CallFunc::create([&]() {
 				mPhysicBody->setEnabled(false);
+				this->setAlive(true);
+				this->Throwing = false;
 			});
 			auto sequence = Sequence::create(moveBy, setVisibleSprite, disablePhysic, nullptr);
 			this->m_sprite->runAction(sequence);

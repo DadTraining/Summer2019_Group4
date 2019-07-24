@@ -27,7 +27,7 @@ bool OverScene::init()
 		return false;
 	}
 	auto visibleSize1 = Director::getInstance()->getVisibleSize();
-	auto background = Sprite::create("res/Menu_UI/bg.png");
+	auto background = Sprite::create("res/Menu_UI/bg1.png");
 	background->setAnchorPoint(Vec2(0.5, 0.5));
 	background->setScale(0.37);
 	background->setPosition(visibleSize1 / 2);

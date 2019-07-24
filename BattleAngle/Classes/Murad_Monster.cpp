@@ -80,9 +80,9 @@ void Murad_Monster::Init() {
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	m_sprite->setPosition(Vec2(visibleSize.width / 2, 0));
 	m_sprite->setScale(0.12);
-	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
+	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize()-Size(800,0));
 	mPhysicBody->setCollisionBitmask(Objects::BITMASK_MURAD);
-	mPhysicBody->setContactTestBitmask(true);
+	mPhysicBody->setContactTestBitmask(3);
 	mPhysicBody->setCategoryBitmask(1);
 	mPhysicBody->setDynamic(true);
 	mPhysicBody->setRotationEnable(false);
@@ -90,7 +90,7 @@ void Murad_Monster::Init() {
 }
 void Murad_Monster::Update(float xAlita) {
 	FPS++;
-	if (FPS == 150) {
+	if (FPS == 100) {
 		setState_Murad(xAlita);
 		FPS = 0;
 	}
@@ -105,11 +105,13 @@ void Murad_Monster::Run() {
 	m_sprite->runAction(mAnimation[ANIM_RUN]);
 	if (getm_LetftoRight() == true)
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x + 1, m_sprite->getPosition().y);
+		auto moveby = MoveBy::create(1.35, Vec2(50, 0));
+		m_sprite->runAction(moveby);
 	}
 	else
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x - 1, m_sprite->getPosition().y);
+		auto moveby = MoveBy::create(1.35, Vec2(-50, 0));
+		m_sprite->runAction(moveby);
 	}
 }
 

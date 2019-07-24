@@ -25,11 +25,14 @@ private:
 	Murad_Monster *murad;
 	std::vector<Murad_Monster*> mMurad;
 	std::vector<Kaisa_Monster*> mKaisa;
+	Sprite * hud;
+	Sprite * hud_bg;
+	cocos2d::ui::LoadingBar *mMcHudBlood;
+	int mHP = Objects::ALITA_HP;
 
 	/*Another Attribute */
 	float STATIC_Position_Alita;
 	float x_positon_Alita;
-	int mHP = Objects::ALITA_HP;
 
 public:
 	/*Methods in cocos2dx default*/
@@ -57,9 +60,6 @@ public:
 	cocos2d::ui::Button* mAttackController;
 	cocos2d::ui::Button* mThrowController;
 	cocos2d::ui::Button* btnPause;
-	cocos2d::ui::LoadingBar *mMcHudBlood;
-	Sprite * hud;
-	Sprite * hud_bg;
 	bool onTouchBegan(Touch* touch, Event  *event);
 	bool onTouchEnded(Touch* touch, Event  *event);
 	cocos2d::ui::Widget::TouchEventType mCurrentTouchState;
@@ -68,7 +68,7 @@ public:
 	void jump(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void attack(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void throws(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
-	void pause(Ref* sender, ui::Widget::TouchEventType type);
+	void pause(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 
 	/*Methods using logic game*/
 	void setPhysicsWorld(PhysicsWorld *m_world) {

@@ -27,7 +27,7 @@ bool MenuScene::init()
 	}
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
-	auto background = Sprite::create("res/Menu_UI/bg.png");
+	auto background = Sprite::create("res/Menu_UI/bg1.png");
 	background->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	background->setScale(0.37);
 	addChild(background);
@@ -39,6 +39,7 @@ bool MenuScene::init()
 	//Play button
 	auto btnPlay = ui::Button::create("res/Menu_UI/btn.png");
 	btnPlay->setScale(0.3);
+	btnPlay->setScaleX(0.4);
 	btnPlay->addClickEventListener([&](Ref* event) {
 		//sound click
 		auto audio = SimpleAudioEngine::getInstance();
@@ -56,6 +57,7 @@ bool MenuScene::init()
 	//Shop button
 	auto btnShop = ui::Button::create("res/Menu_UI/btn.png");
 	btnShop->setScale(0.3);
+	btnShop->setScaleX(0.4);
 	btnShop->addClickEventListener([&](Ref* event) {
 		//sound click
 		auto audio = SimpleAudioEngine::getInstance();
@@ -72,6 +74,7 @@ bool MenuScene::init()
 	//Exit button
 	auto btnExit = ui::Button::create("res/Menu_UI/btn.png");
 	btnExit->setScale(0.3);
+	btnExit->setScaleX(0.4);
 	btnExit->addClickEventListener([&](Ref* event) {
 		//sound click
 		auto audio = SimpleAudioEngine::getInstance();

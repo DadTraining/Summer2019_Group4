@@ -16,7 +16,7 @@ Bullet::Bullet(cocos2d::Scene* scene)
 	mPhysicBody->setMass(1);
 	mPhysicBody->setCategoryBitmask(1);
 	m_sprite->setPhysicsBody(mPhysicBody);
-	m_sprite->setScale(0.5);
+	m_sprite->setScale(0.35);
 	//add bullet in scene
 	scene->addChild(this->m_sprite, 0);
 	m_LefttoRight = false;
