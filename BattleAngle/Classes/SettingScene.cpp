@@ -34,7 +34,7 @@ bool SettingScene::init()
 	auto visibleSize1 = Director::getInstance()->getVisibleSize();
 	auto background = Sprite::create("res/Menu_UI/bg1.png");
 	background->setAnchorPoint(Vec2(0.5, 0.5));
-	background->setScale(0.37);
+	background->setScale(0.5);
 	background->setPosition(visibleSize1 / 2);
 	addChild(background, -2);
 	auto bg = Sprite::create("res/Setting_UI/bg.png");

@@ -245,7 +245,7 @@ void PlayGameScene::UpdateMonster(float x_alita)
 {
 	//	auto PositionAlita = m_Alita->getSprite()->getPositionX();
 	for (auto i : mMurad) {
-		i->Update(x_alita);
+		i->UpdateAttack(x_alita,m_Alita);
 	}
 	for (auto i : mKaisa) {
 		i->Update(x_alita);
@@ -270,7 +270,6 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 			mKaisa.at(a->getGroup())->DarkCollision();
 			m_Alita->getDarts()->setAlive(false);
 		}
-		//add effect
 		auto paricleEffect = ParticleSystemQuad::create("particles/collision.plist");
 		paricleEffect->setPosition(a->getPosition());
 		addChild(paricleEffect);
@@ -290,7 +289,6 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 			mMurad.at(a->getGroup())->DarkCollision();
 			m_Alita->getDarts()->setAlive(false);
 		}
-		//add effect
 		auto paricleEffect = ParticleSystemQuad::create("particles/collision.plist");
 		paricleEffect->setPosition(a->getPosition());
 		addChild(paricleEffect);
@@ -301,11 +299,8 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 		|| (a->getCollisionBitmask() == Objects::BITMASK_GROUND && b->getCollisionBitmask() == Objects::BITMASK_DART))
 	{
 		m_Alita->getDarts()->setAlive(false);
-		//add effect
-		auto paricleEffect = ParticleSystemQuad::create("particles/collision.plist");
-		paricleEffect->setPosition(a->getPosition());
-		addChild(paricleEffect);
 	}
+	
 
 	//bullet vs Alita 
 	if ((a->getCollisionBitmask() == Objects::BITMASK_BULLET && b->getCollisionBitmask() == Objects::BITMASK_ALITA)
@@ -321,12 +316,11 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 			m_Alita->BulletCollision();
 			//mKaisa.at(a->getGroup())->getBullet()->getSprite()->setVisible(false);
 		}
-		// add effect
-			auto paricleEffect = ParticleSystemQuad::create("particles/collision.plist");
+		auto paricleEffect = ParticleSystemQuad::create("particles/collision.plist");
 		paricleEffect->setPosition(a->getPosition());
 		addChild(paricleEffect);
 	}
-	//Attack Murad vs Alita
+	
 
 	//Alita vs Round
 	if ((a->getCollisionBitmask() == Objects::BITMASK_GROUND && b->getCollisionBitmask() == Objects::BITMASK_ALITA)
@@ -507,6 +501,20 @@ void PlayGameScene::attack(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 		m_Alita->Attack();
 		break;
 	case ui::Widget::TouchEventType::ENDED:
+		// Collision Alita vs Monster
+		rectAlita = m_Alita->getSprite()->getBoundingBox();
+		for (auto i : mMurad) {
+			rectMonster = i->getSprite()->getBoundingBox();
+			if (rectAlita.intersectsRect(rectMonster)) {
+				i->DarkCollision();
+			}
+		}
+		for (auto i : mKaisa) {
+			rectMonster = i->getSprite()->getBoundingBox();
+			if (rectAlita.intersectsRect(rectMonster)) {
+				i->DarkCollision();
+			}
+		}
 		
 		break;
 	}

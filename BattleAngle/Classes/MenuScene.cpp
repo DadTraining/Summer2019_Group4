@@ -29,7 +29,7 @@ bool MenuScene::init()
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	auto background = Sprite::create("res/Menu_UI/bg1.png");
 	background->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-	background->setScale(0.37);
+	background->setScale(0.5);
 	addChild(background);
 
 	//Music for Menu

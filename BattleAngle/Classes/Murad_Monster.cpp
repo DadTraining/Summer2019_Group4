@@ -1,4 +1,5 @@
 #include "Murad_Monster.h"
+#include "Alita.h"
 
 USING_NS_CC;
 Murad_Monster::Murad_Monster(Scene * scene)
@@ -36,7 +37,7 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	spriteNode->addChild(sprite);
 	auto animateRun = Animate::create(Murad_Monster::createAnimation("Run_00", 9, 0.15));
 	//animateRun->retain();
-	mAnimation[ANIM_RUN] = m_sprite->runAction(Repeat::create(animateRun, 1));
+	mAnimation[ANIM_RUN] = m_sprite->runAction(RepeatForever::create(animateRun));
 	CC_SAFE_RETAIN(mAnimation[ANIM_RUN]);
 
 	spriteNode = SpriteBatchNode::create("plist/Murad/attack_Murad.png");
@@ -49,7 +50,8 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	spriteNode->addChild(sprite);
 	auto animateAttack = Animate::create(Murad_Monster::createAnimation("Attack_00", 9, 0.5));
 	//animateAttack->retain();
-	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create(animateAttack, 1));
+
+	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create(animateAttack, 1.2));
 	CC_SAFE_RETAIN(mAnimation[ANIM_ATTACK]);
 
 	spriteNode = SpriteBatchNode::create("plist/Murad/Dead_Murad.png");
@@ -80,7 +82,7 @@ void Murad_Monster::Init() {
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	m_sprite->setPosition(Vec2(visibleSize.width / 2, 0));
 	m_sprite->setScale(0.12);
-	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize()-Size(800,0));
+	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
 	mPhysicBody->setCollisionBitmask(Objects::BITMASK_MURAD);
 	mPhysicBody->setContactTestBitmask(3);
 	mPhysicBody->setCategoryBitmask(1);
@@ -88,12 +90,20 @@ void Murad_Monster::Init() {
 	mPhysicBody->setRotationEnable(false);
 	m_sprite->setPhysicsBody(mPhysicBody);
 }
-void Murad_Monster::Update(float xAlita) {
+void Murad_Monster::UpdateAttack(float xAlita, Alita * alita) {
 	FPS++;
-	if (FPS == 100) {
+	if (FPS == 120) {
 		setState_Murad(xAlita);
 		FPS = 0;
 	}
+	if (attacked == true) {
+		alita->BulletCollision();
+		attacked = false;
+	}
+
+}
+void Murad_Monster::Update(float deltaTime)
+{
 }
 void Murad_Monster::Idle()
 {
@@ -164,11 +174,12 @@ void Murad_Monster::setState_Murad(float position)
 {
 	auto X_murad = m_sprite->getPosition().x;
 	auto X_distance = abs(X_murad - position);
-	if (X_distance <= 100)
+	if (X_distance <= 70)
 	{
 		Attack();
+		attacked = true;
 	}
-	else if (X_distance > 100 && X_distance < 250)
+	else if (X_distance > 70 && X_distance < 250)
 	{
 		Run();
 	}

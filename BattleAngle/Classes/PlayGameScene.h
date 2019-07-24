@@ -29,6 +29,8 @@ private:
 	Sprite * hud_bg;
 	cocos2d::ui::LoadingBar *mMcHudBlood;
 	int mHP = Objects::ALITA_HP;
+	Rect rectMonster;
+	Rect rectAlita;
 
 	/*Another Attribute */
 	float STATIC_Position_Alita;

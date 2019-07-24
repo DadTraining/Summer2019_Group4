@@ -1,5 +1,6 @@
 #pragma once
 #include "Objects.h"
+#include "Alita.h"
 class Murad_Monster : public Objects
 {
 public:
@@ -12,8 +13,10 @@ public:
 
 	Murad_Monster(Scene * scene);
 	~Murad_Monster();
+	bool attacked = false;
 	void Init() override;
-	void Update(float xAlita) override;
+	void UpdateAttack(float xAlita, Alita * alita);
+	void Update(float deltaTime) override;
 	void Idle();
 	void Run();
 	void Attack();
