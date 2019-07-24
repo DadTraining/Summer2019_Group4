@@ -13,10 +13,11 @@ public:
 	static const int BITMASK_ALITA = BITMASK_WOLRD + 1;
 	static const int BITMASK_KAISA = BITMASK_ALITA + 1;
 	static const int BITMASK_GROUND = BITMASK_KAISA + 1;
-	static const int BITMASK_MURAD = 5 + 1;
-	static const int BITMASK_DART = 4 + 1;
-	static const int BITMASK_BULLET = BITMASK_DART + 1;
-
+	static const int BITMASK_BULLET = BITMASK_GROUND + 1;
+	static const int BITMASK_DART = BITMASK_BULLET + 1;
+	static const int BITMASK_MURAD = BITMASK_DART + 1;
+	
+	
 	static const int ALITA_DAME = 10;
 	static const int ALITA_HP = 400;
 	static const int KAISA_DAME= 10;

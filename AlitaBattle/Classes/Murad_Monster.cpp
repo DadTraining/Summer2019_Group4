@@ -1,4 +1,5 @@
 #include "Murad_Monster.h"
+#include "Alita.h"
 
 USING_NS_CC;
 Murad_Monster::Murad_Monster(Scene * scene)
@@ -49,7 +50,8 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	spriteNode->addChild(sprite);
 	auto animateAttack = Animate::create(Murad_Monster::createAnimation("Attack_00", 9, 0.5));
 	//animateAttack->retain();
-	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create(animateAttack, 1));
+	
+	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create( animateAttack,1.2));
 	CC_SAFE_RETAIN(mAnimation[ANIM_ATTACK]);
 
 	spriteNode = SpriteBatchNode::create("plist/Murad/Dead_Murad.png");
@@ -88,12 +90,20 @@ void Murad_Monster::Init() {
 	mPhysicBody->setRotationEnable(false);
 	m_sprite->setPhysicsBody(mPhysicBody);
 }
-void Murad_Monster::Update(float xAlita) {
+void Murad_Monster::UpdateAttack(float xAlita, Alita * alita) {
 	FPS++;
 	if (FPS == 150) {
 		setState_Murad(xAlita);
 		FPS = 0;
 	}
+	if (attacked == true) {
+		alita->BulletCollision();
+		attacked = false;
+	}
+
+}
+void Murad_Monster::Update(float deltaTime)
+{
 }
 void Murad_Monster::Idle()
 {
@@ -105,11 +115,11 @@ void Murad_Monster::Run() {
 	m_sprite->runAction(mAnimation[ANIM_RUN]);
 	if (getm_LetftoRight() == true)
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x + 1, m_sprite->getPosition().y);
+		m_sprite->setPosition(m_sprite->getPosition().x + 3, m_sprite->getPosition().y);
 	}
 	else
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x - 1, m_sprite->getPosition().y);
+		m_sprite->setPosition(m_sprite->getPosition().x - 3, m_sprite->getPosition().y);
 	}
 }
 
@@ -162,11 +172,12 @@ void Murad_Monster::setState_Murad(float position)
 {
 	auto X_murad = m_sprite->getPosition().x;
 	auto X_distance = abs(X_murad - position);
-	if (X_distance <= 100)
+	if (X_distance <= 70)
 	{
 		Attack();
+		attacked = true;
 	}
-	else if (X_distance > 100 && X_distance < 250)
+	else if (X_distance > 70 && X_distance < 250)
 	{
 		Run();
 	}
