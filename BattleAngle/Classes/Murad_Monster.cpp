@@ -35,7 +35,7 @@ Murad_Monster::Murad_Monster(Scene * scene)
 
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
-	auto animateRun = Animate::create(Murad_Monster::createAnimation("Run_00", 9, 0.15));
+	auto animateRun = Animate::create(Murad_Monster::createAnimation("Run_00", 9, 0.1));
 	//animateRun->retain();
 	mAnimation[ANIM_RUN] = m_sprite->runAction(RepeatForever::create(animateRun));
 	CC_SAFE_RETAIN(mAnimation[ANIM_RUN]);
@@ -48,7 +48,7 @@ Murad_Monster::Murad_Monster(Scene * scene)
 
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
-	auto animateAttack = Animate::create(Murad_Monster::createAnimation("Attack_00", 9, 0.5));
+	auto animateAttack = Animate::create(Murad_Monster::createAnimation("Attack_00", 9, 0.15));
 	//animateAttack->retain();
 
 	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create(animateAttack, 1.2));
@@ -92,7 +92,7 @@ void Murad_Monster::Init() {
 }
 void Murad_Monster::UpdateAttack(float xAlita, Alita * alita) {
 	FPS++;
-	if (FPS == 120) {
+	if (FPS == 50) {
 		setState_Murad(xAlita);
 		FPS = 0;
 	}
@@ -179,7 +179,7 @@ void Murad_Monster::setState_Murad(float position)
 		Attack();
 		attacked = true;
 	}
-	else if (X_distance > 70 && X_distance < 250)
+	else if (X_distance > 70 && X_distance < 350)
 	{
 		Run();
 	}

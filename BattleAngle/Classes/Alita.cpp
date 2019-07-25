@@ -172,10 +172,10 @@ void Alita::Update(float deltaTime)
 {
 	if (isRun) {
 		if (!isMoveRight) {
-			m_sprite->setPosition(m_sprite->getPosition() + Vec2(-2, 0));
+			m_sprite->setPosition(m_sprite->getPosition() + Vec2(-4, 0));
 		}
 		else {
-			m_sprite->setPosition(m_sprite->getPosition() + Vec2(+2, 0));
+			m_sprite->setPosition(m_sprite->getPosition() + Vec2(+4, 0));
 		}
 	}
 	else {

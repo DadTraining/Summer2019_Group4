@@ -139,7 +139,7 @@ void PlayGameScene::createMonsters() {
 			kaisa = new Kaisa_Monster(this);
 			kaisa->getSprite()->setPosition(Vec2(posX, posY));
 			kaisa->setIndex(kaisa_count++);
-			//kaisa->getBullet()->setIndex(kaisa_count);
+			kaisa->getBullet()->setIndex(kaisa_count);
 			mKaisa.push_back(kaisa);
 		}
 		else if (type == 2)
@@ -320,7 +320,6 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 		paricleEffect->setPosition(a->getPosition());
 		addChild(paricleEffect);
 	}
-	
 
 	//Alita vs Round
 	if ((a->getCollisionBitmask() == Objects::BITMASK_GROUND && b->getCollisionBitmask() == Objects::BITMASK_ALITA)
