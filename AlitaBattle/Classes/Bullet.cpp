@@ -36,6 +36,10 @@ void Bullet::Init()
 
 void Bullet::Update(float deltaTime)
 {
+	if (!this->isAlive()) {
+		mPhysicBody->setEnabled(false);
+		m_sprite->setVisible(false);
+	}
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	auto outHeight = visibleSize.height / 1.3;

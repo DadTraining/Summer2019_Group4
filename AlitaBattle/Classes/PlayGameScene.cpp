@@ -223,31 +223,13 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 		if (a->getCollisionBitmask() == Objects::BITMASK_BULLET)
 		{
 			m_Alita->BulletCollision();
-			//mKaisa.at(a->getGroup())->getBullet()->getSprite()->setVisible(false);
+
+			mKaisa.at(a->getGroup())->getBullet()->setAlive(false);
 		}
 		else if(b->getCollisionBitmask() == Objects::BITMASK_BULLET)
 		{
 			m_Alita->BulletCollision();
-			//mKaisa.at(a->getGroup())->getBullet()->getSprite()->setVisible(false);
-		}
-	}
-	//Attack Murad vs Alita
-	if ((a->getCollisionBitmask() == Objects::BITMASK_MURAD && b->getCollisionBitmask() == Objects::BITMASK_ALITA)
-		|| (a->getCollisionBitmask() == Objects::BITMASK_ALITA && b->getCollisionBitmask() == Objects::BITMASK_MURAD))
-	{
-		if (a->getCollisionBitmask() == Objects::BITMASK_MURAD)
-		{
-			if (mMurad.at(a->getGroup())->attacked) {
-				m_Alita->BulletCollision();
-				mMurad.at(a->getGroup())->attacked = false;
-			}
-		}
-		else if (b->getCollisionBitmask() == Objects::BITMASK_MURAD)
-		{
-			if (mMurad.at(b->getGroup())->attacked) {
-				m_Alita->BulletCollision();
-				mMurad.at(b->getGroup())->attacked = false;
-			}
+			mKaisa.at(b->getGroup())->getBullet()->setAlive(false);
 		}
 	}
 
@@ -421,21 +403,22 @@ void PlayGameScene::attack(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 	switch (type)
 	{
 	case ui::Widget::TouchEventType::BEGAN:
-		m_Alita->Attack();
 		break;
 	case ui::Widget::TouchEventType::ENDED:
-		// Collision Alita vs Monster
-		rectAlita = m_Alita->getSprite()->getBoundingBox();
-		for (auto i : mMurad) {
-			rectMonster = i->getSprite()->getBoundingBox();
-			if (rectAlita.intersectsRect(rectMonster)) {
-				i->DarkCollision();
+		if (m_Alita->Attack()) {
+			// Collision Alita vs Monster
+			rectAlita = m_Alita->getSprite()->getBoundingBox();
+			for (auto i : mMurad) {
+				rectMonster = i->getSprite()->getBoundingBox();
+				if (rectAlita.intersectsRect(rectMonster)) {
+					i->DarkCollision();
+				}
 			}
-		}
-		for (auto i : mKaisa) {
-			rectMonster = i->getSprite()->getBoundingBox();
-			if (rectAlita.intersectsRect(rectMonster)) {
-				i->DarkCollision();
+			for (auto i : mKaisa) {
+				rectMonster = i->getSprite()->getBoundingBox();
+				if (rectAlita.intersectsRect(rectMonster)) {
+					i->DarkCollision();
+				}
 			}
 		}
 		break;

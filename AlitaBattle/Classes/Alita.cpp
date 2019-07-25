@@ -119,6 +119,7 @@ void Alita::MoveRight()
 void Alita::Jump()
 {
 	if (!isJump) {
+		attacking = false;
 		m_sprite->stopAllActions();
 		m_sprite->runAction(mAnimation[ANIM_JUMP]);
 		mPhysicBody->applyImpulse(Vec2(0, 60000));
@@ -126,10 +127,11 @@ void Alita::Jump()
 	}
 }
 
-void Alita::Attack()
+bool Alita::Attack()
 {
 	//m_sprite->stopAllActions();
 	if (!attacking&&!isJump) {
+		m_sprite->stopAllActions();
 		m_sprite->runAction(mAnimation[ANIM_ATTACK]);
 		auto setAttackingTrue = CallFunc::create([&]() {
 			this->attacking = true;
@@ -138,21 +140,25 @@ void Alita::Attack()
 			this->attacking = false;
 		});
 		// Set Already for next Attack
-		auto sequence = Sequence::create(setAttackingTrue, DelayTime::create(1), setAttackingFalse, nullptr);
-		this->m_sprite->runAction(sequence);
+		/*auto sequence = Sequence::create(setAttackingTrue, DelayTime::create(1), setAttackingFalse, nullptr);
+		this->m_sprite->runAction(sequence);*/
+		return true;
 	}
+	return false;
 }
 
 void Alita::Throw()
 {
 	if (darts->Throw(m_sprite->getPosition(), this->isMoveRight)) {
-		m_sprite->stopAllActions();
+		if (!isRun) {
+			m_sprite->stopAllActions();
+		}
 		attacking = false;
 		m_sprite->runAction(mAnimation[ANIM_THROW]);
-		if (isRunning()) {
+		/*if (isRunning()) {
 			auto sequence = Sequence::create(DelayTime::create(1), this->mAnimation[ANIM_RUN], nullptr);
 			this->m_sprite->runAction(sequence);
-		}
+		}*/
 	}
 }
 
@@ -222,7 +228,7 @@ void Alita::setJumping(bool jump)
 				m_sprite->stopAllActions();
 				m_sprite->runAction(mAnimation[ANIM_RUN]);
 			}
-			else{
+			else if(!attacking){
 				Idle();
 			}
 		}

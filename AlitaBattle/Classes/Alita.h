@@ -40,7 +40,7 @@ public:
 	void MoveLeft();
 	void MoveRight();
 	void Jump();
-	void Attack();
+	bool Attack();
 	void Throw();
 	void Collision();
 	void BulletCollision();
