@@ -165,77 +165,77 @@ void PlayGameScene::createHub()
 	mMcHudBlood->setPosition(hud_bg->getPosition());
 	mMcHudBlood->setDirection(ui::LoadingBar::Direction::LEFT);
 	mMcHudBlood->setPercent(m_Alita->getHP());
-	addChild(mMcHudBlood,20);
+	addChild(mMcHudBlood, 20);
 
 	hud = Sprite::create("res/BloodMc/hud.png");
 	hud->setAnchorPoint(Vec2(0, 0.5));
 	hud->setScale(0.5);
 	hud->setPosition(hud_bg->getPosition() - Vec2(12, 0));
-	addChild(hud,20);
+	addChild(hud, 20);
 }
 void PlayGameScene::createPause()
 {
-		mPauseLayer = Sprite::create("res/Pause_UI/alpha.png");
-		mPauseLayer->setContentSize(visibleSize);
-		mPauseLayer->setAnchorPoint(Vec2(0.5, 0.5));
-		mPauseLayer->setPosition(visibleSize / 2);
+	mPauseLayer = Sprite::create("res/Pause_UI/alpha.png");
+	mPauseLayer->setContentSize(visibleSize);
+	mPauseLayer->setAnchorPoint(Vec2(0.5, 0.5));
+	mPauseLayer->setPosition(visibleSize / 2);
+	mPauseLayer->setVisible(false);
+	addChild(mPauseLayer, 30);
+
+	auto bg = Sprite::create("res/Setting_UI/bg.png");
+	bg->setAnchorPoint(Vec2(0.5, 0.5));
+	bg->setScale(0.2);
+	bg->setPosition(visibleSize / 2);
+	mPauseLayer->addChild(bg, 0);
+	auto bg1 = Sprite::create("res/Setting_UI/table.png");
+	bg1->setAnchorPoint(Vec2(0.5, 0.5));
+	bg1->setScale(0.2);
+	bg1->setPosition(bg->getPosition());
+	mPauseLayer->addChild(bg1, 2);
+	auto bg2 = Sprite::create("res/Pause_UI/header.png");
+	bg2->setAnchorPoint(Vec2(0.5, 0.5));
+	bg2->setScale(0.15);
+	bg2->setPosition(bg1->getPosition() + Vec2(0, 70));
+	mPauseLayer->addChild(bg2, 3);
+	auto text = Sprite::create("res/Pause_UI/text.png");
+	text->setAnchorPoint(Vec2(0.5, 0.5));
+	text->setScale(0.2);
+	text->setPosition(bg2->getPosition() - Vec2(0, 70));
+	mPauseLayer->addChild(text, 3);
+	//Button Ok
+
+	auto btnOk = ui::Button::create("res/Pause_UI/ok.png");
+	btnOk->setAnchorPoint(Vec2(0.5, 0.5));
+	btnOk->setPosition(text->getPosition() - Vec2(50, 50));
+	btnOk->setScale(0.2);
+	mPauseLayer->addChild(btnOk, 7);
+	btnOk->addClickEventListener([&](Ref* event) {
+		auto audio = SimpleAudioEngine::getInstance();
+		audio->playEffect("res/Music/buttonclick.mp3", false);
+		SimpleAudioEngine::getInstance()->resumeAllEffects();
+		SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+		Director::getInstance()->resume();
 		mPauseLayer->setVisible(false);
-		addChild(mPauseLayer, 30);
+	});
+	//Button Menu
 
-		auto bg = Sprite::create("res/Setting_UI/bg.png");
-		bg->setAnchorPoint(Vec2(0.5, 0.5));
-		bg->setScale(0.2);
-		bg->setPosition(visibleSize / 2);
-		mPauseLayer->addChild(bg, 0);
-		auto bg1 = Sprite::create("res/Setting_UI/table.png");
-		bg1->setAnchorPoint(Vec2(0.5, 0.5));
-		bg1->setScale(0.2);
-		bg1->setPosition(bg->getPosition());
-		mPauseLayer->addChild(bg1, 2);
-		auto bg2 = Sprite::create("res/Pause_UI/header.png");
-		bg2->setAnchorPoint(Vec2(0.5, 0.5));
-		bg2->setScale(0.15);
-		bg2->setPosition(bg1->getPosition() + Vec2(0, 70));
-		mPauseLayer->addChild(bg2, 3);
-		auto text = Sprite::create("res/Pause_UI/text.png");
-		text->setAnchorPoint(Vec2(0.5, 0.5));
-		text->setScale(0.2);
-		text->setPosition(bg2->getPosition() - Vec2(0, 70));
-		mPauseLayer->addChild(text, 3);
-		//Button Ok
-
-		auto btnOk = ui::Button::create("res/Pause_UI/ok.png");
-		btnOk->setAnchorPoint(Vec2(0.5, 0.5));
-		btnOk->setPosition(text->getPosition() - Vec2(50, 50));
-		btnOk->setScale(0.2);
-		mPauseLayer->addChild(btnOk, 7);
-		btnOk->addClickEventListener([&](Ref* event) {
-			auto audio = SimpleAudioEngine::getInstance();
-			audio->playEffect("res/Music/buttonclick.mp3", false);
-			SimpleAudioEngine::getInstance()->resumeAllEffects();
-			SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-			Director::getInstance()->resume();
-			mPauseLayer->setVisible(false);
-		});
-		//Button Menu
-
-		auto btnMenu = ui::Button::create("res/Pause_UI/menu.png");
-		btnMenu->setAnchorPoint(Vec2(0.5, 0.5));
-		btnMenu->setPosition(btnOk->getPosition() + Vec2(100, 0));
-		btnMenu->setScale(0.2);
-		mPauseLayer->addChild(btnMenu, 7);
-		btnMenu->addClickEventListener([&](Ref* event) {
-			auto audio = SimpleAudioEngine::getInstance();
-			audio->playEffect("res/Music/buttonclick.mp3", false);
-			SimpleAudioEngine::getInstance()->resumeAllEffects();
-			SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-			Director::getInstance()->resume();
-			Director::getInstance()->replaceScene(MenuScene::createScene());
-		});
+	auto btnMenu = ui::Button::create("res/Pause_UI/menu.png");
+	btnMenu->setAnchorPoint(Vec2(0.5, 0.5));
+	btnMenu->setPosition(btnOk->getPosition() + Vec2(100, 0));
+	btnMenu->setScale(0.2);
+	mPauseLayer->addChild(btnMenu, 7);
+	btnMenu->addClickEventListener([&](Ref* event) {
+		auto audio = SimpleAudioEngine::getInstance();
+		audio->playEffect("res/Music/buttonclick.mp3", false);
+		SimpleAudioEngine::getInstance()->resumeAllEffects();
+		SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+		Director::getInstance()->resume();
+		Director::getInstance()->replaceScene(MenuScene::createScene());
+	});
 
 
 
-	
+
 }
 void PlayGameScene::createLose()
 {
@@ -245,7 +245,7 @@ void PlayGameScene::UpdateMonster(float x_alita)
 {
 	//	auto PositionAlita = m_Alita->getSprite()->getPositionX();
 	for (auto i : mMurad) {
-		i->UpdateAttack(x_alita,m_Alita);
+		i->UpdateAttack(x_alita, m_Alita);
 	}
 	for (auto i : mKaisa) {
 		i->Update(x_alita);
@@ -300,7 +300,7 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 	{
 		m_Alita->getDarts()->setAlive(false);
 	}
-	
+
 
 	//bullet vs Alita 
 	if ((a->getCollisionBitmask() == Objects::BITMASK_BULLET && b->getCollisionBitmask() == Objects::BITMASK_ALITA)
@@ -409,7 +409,7 @@ void PlayGameScene::createController()
 	mJumpController = ui::Button::create("res/Main_UI/jump.png", "res/Main_UI/jump.png");
 	mJumpController->setScale(0.7);
 	mJumpController->setOpacity(160);
-	mJumpController->setPosition(Vec2(visibleSize.width - mJumpController->getContentSize().width +20, mJumpController->getContentSize().height +20));
+	mJumpController->setPosition(Vec2(visibleSize.width - mJumpController->getContentSize().width + 20, mJumpController->getContentSize().height + 20));
 	mJumpController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::jump, this));
 	addChild(mJumpController, 10);
 	//Attack
@@ -423,7 +423,7 @@ void PlayGameScene::createController()
 	mThrowController = ui::Button::create("res/Main_UI/skill.png", "res/Main_UI/skill.png");
 	mThrowController->setScale(0.7);
 	mThrowController->setOpacity(160);
-	mThrowController->setPosition(Vec2(visibleSize.width - mJumpController->getContentSize().width - 32, mJumpController->getContentSize().height-5));
+	mThrowController->setPosition(Vec2(visibleSize.width - mJumpController->getContentSize().width - 32, mJumpController->getContentSize().height - 5));
 	mThrowController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::throws, this));
 	addChild(mThrowController, 10);
 	//Pause
@@ -497,24 +497,25 @@ void PlayGameScene::attack(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 	switch (type)
 	{
 	case ui::Widget::TouchEventType::BEGAN:
-		m_Alita->Attack();
 		break;
 	case ui::Widget::TouchEventType::ENDED:
-		// Collision Alita vs Monster
-		rectAlita = m_Alita->getSprite()->getBoundingBox();
-		for (auto i : mMurad) {
-			rectMonster = i->getSprite()->getBoundingBox();
-			if (rectAlita.intersectsRect(rectMonster)) {
-				i->DarkCollision();
+		if (m_Alita->Attack()) {
+			// Collision Alita vs Monster
+			rectAlita = m_Alita->getSprite()->getBoundingBox();
+			for (auto i : mMurad) {
+				rectMonster = i->getSprite()->getBoundingBox();
+				if (rectAlita.intersectsRect(rectMonster)) {
+					i->DarkCollision();
+				}
+			}
+			for (auto i : mKaisa) {
+				rectMonster = i->getSprite()->getBoundingBox();
+				if (rectAlita.intersectsRect(rectMonster)) {
+					i->DarkCollision();
+				}
 			}
 		}
-		for (auto i : mKaisa) {
-			rectMonster = i->getSprite()->getBoundingBox();
-			if (rectAlita.intersectsRect(rectMonster)) {
-				i->DarkCollision();
-			}
-		}
-		
+		break;
 		break;
 	}
 }
@@ -525,11 +526,11 @@ void PlayGameScene::throws(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 	{
 	case ui::Widget::TouchEventType::BEGAN:
 		m_Alita->Throw();
-		
+
 		break;
 	case ui::Widget::TouchEventType::ENDED:
-			
-		
+
+
 		break;
 	}
 }

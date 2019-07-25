@@ -1,6 +1,7 @@
 #include "Objects.h"
 #include "Kaisa_Monster.h"
 #include "Bullet.h"
+#include "ui/CocosGUI.h"
 
 USING_NS_CC;
 Kaisa_Monster::Kaisa_Monster(Scene * scene)
@@ -16,6 +17,20 @@ Kaisa_Monster::Kaisa_Monster(Scene * scene)
 
 	Init();
 	scene->addChild(m_sprite);
+	//// Blood hud
+	//auto hud_bg = Sprite::create("res/BloodMc/hud_bg.png");
+	//hud_bg->setAnchorPoint(Vec2(0, 0.5));
+	//hud_bg->setScale(0.5);
+	//hud_bg->setPosition(m_sprite->getPosition()+m_sprite->getContentSize());
+	//scene->addChild(hud_bg,30);
+	//auto mMcHudBlood = ui::LoadingBar::create("res/BloodMc/hud_blood.png");
+	//mMcHudBlood->setAnchorPoint(Vec2(0, 0.5));
+	//mMcHudBlood->setScale(0.5);
+	//mMcHudBlood->setPosition(hud_bg->getPosition());
+	//mMcHudBlood->setDirection(ui::LoadingBar::Direction::LEFT);
+	//mMcHudBlood->setPercent(100);
+	//scene->addChild(mMcHudBlood, 30);
+
 
 	//Create Bullet
 	bullet = new Bullet(scene);
@@ -85,6 +100,9 @@ void Kaisa_Monster::Init()
 	mPhysicBody->setContactTestBitmask(true);
 	mPhysicBody->setCategoryBitmask(1);
 	m_sprite->setPhysicsBody(mPhysicBody);
+	
+
+
 }
 
 

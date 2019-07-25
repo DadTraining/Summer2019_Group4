@@ -1,13 +1,8 @@
 #include "Objects.h"
 #include "Alita.h"
 #include "SimpleAudioEngine.h"
-#include "MenuScene.h"
-#include "OverScene.h"
-
 
 using namespace CocosDenshion;
-
-
 USING_NS_CC;
 Alita::Alita(Scene * scene)
 {
@@ -126,6 +121,7 @@ void Alita::MoveRight()
 void Alita::Jump()
 {
 	if (!isJump) {
+		attacking = false;
 		m_sprite->stopAllActions();
 		m_sprite->runAction(mAnimation[ANIM_JUMP]);
 		mPhysicBody->applyImpulse(Vec2(0, 60000));
@@ -133,10 +129,13 @@ void Alita::Jump()
 	}
 }
 
-void Alita::Attack()
+bool Alita::Attack()
 {
 	//m_sprite->stopAllActions();
 	if (!attacking && !isJump) {
+		if (!isRun) {
+			m_sprite->stopAllActions();
+		}
 		m_sprite->runAction(mAnimation[ANIM_ATTACK]);
 		auto setAttackingTrue = CallFunc::create([&]() {
 			this->attacking = true;
@@ -149,22 +148,28 @@ void Alita::Attack()
 		this->m_sprite->runAction(sequence);
 		auto audio = SimpleAudioEngine::getInstance();
 		audio->playEffect("res/Music/knife.wav", false);
+		return true;
 	}
-	
+	return false;
 }
 
 void Alita::Throw()
 {
 	if (darts->Throw(m_sprite->getPosition(), this->isMoveRight)) {
-		m_sprite->stopAllActions();
-		attacking = false;
-		m_sprite->runAction(mAnimation[ANIM_THROW]);
-		if (isRunning()) {
-			auto sequence = Sequence::create(DelayTime::create(1), this->mAnimation[ANIM_RUN], nullptr);
-			this->m_sprite->runAction(sequence);
+		if (!darts->Throwing) {
+			if (!isRun) {
+				m_sprite->stopAllActions();
+			}
+			attacking = false;
+			m_sprite->runAction(mAnimation[ANIM_THROW]);
+			if (isRunning()) {
+				auto sequence = Sequence::create(DelayTime::create(1), this->mAnimation[ANIM_RUN], nullptr);
+				this->m_sprite->runAction(sequence);
+			}
+			auto audio = SimpleAudioEngine::getInstance();
+			audio->playEffect("res/Music/attackAlita.wav", false);
 		}
-		auto audio = SimpleAudioEngine::getInstance();
-		audio->playEffect("res/Music/attackAlita.wav", false);
+		
 	}
 }
 
@@ -234,12 +239,12 @@ void Alita::setJumping(bool jump)
 				m_sprite->stopAllActions();
 				m_sprite->runAction(mAnimation[ANIM_RUN]);
 			}
-			else {
+			else if (!attacking) {
 				Idle();
 			}
 		}
-
 	}
+	isJump = jump;
 }
 
 Darts * Alita::getDarts()
