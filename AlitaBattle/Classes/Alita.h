@@ -49,10 +49,10 @@ public:
 	bool isJumping();
 	void setJumping(bool jump);
 	Darts* getDarts();
-	bool attacking= false;
+	bool attacking = false;
 private:
-	bool isJump= false;
-	bool isRun= false;
+	bool isJump = false;
+	bool isRun = false;
 	Action * mAnimation[ANIM_TOTAl];
 	bool isMoveRight = true;
 	Darts* darts;

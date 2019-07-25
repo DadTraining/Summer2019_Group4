@@ -1,6 +1,8 @@
 #include "Objects.h"
 #include "Alita.h"
+#include "SimpleAudioEngine.h"
 
+using namespace CocosDenshion;
 USING_NS_CC;
 Alita::Alita(Scene * scene)
 {
@@ -18,7 +20,7 @@ Alita::Alita(Scene * scene)
 	mPhysicBody->setDynamic(true);	//setDynamic
 	mPhysicBody->setCategoryBitmask(1);
 	m_sprite->setPhysicsBody(mPhysicBody);
-	scene->addChild(m_sprite,10);
+	scene->addChild(m_sprite, 10);
 	this->darts = new Darts(scene);
 	Init();
 }
@@ -64,7 +66,7 @@ void Alita::createAnimate()
 	model->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(model);
 	animate = Animate::create(createAnimation("Jump__00", 9, 0.05));
-	mAnimation[ANIM_JUMP] = Repeat::create(animate,1);
+	mAnimation[ANIM_JUMP] = Repeat::create(animate, 1);
 	CC_SAFE_RETAIN(mAnimation[ANIM_JUMP]);
 
 	/*Alita THROW*/
@@ -74,7 +76,7 @@ void Alita::createAnimate()
 	model->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(model);
 	animate = Animate::create(createAnimation("Throw__00", 9, 0.05));
-	mAnimation[ANIM_THROW] = Repeat::create(animate,1);
+	mAnimation[ANIM_THROW] = Repeat::create(animate, 1);
 	CC_SAFE_RETAIN(mAnimation[ANIM_THROW]);
 
 	/*Alita ATTACK*/
@@ -84,7 +86,7 @@ void Alita::createAnimate()
 	model->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(model);
 	animate = Animate::create(createAnimation("Attack__00", 9, 0.05));
-	mAnimation[ANIM_ATTACK] = Repeat::create(animate,1);
+	mAnimation[ANIM_ATTACK] = Repeat::create(animate, 1);
 	CC_SAFE_RETAIN(mAnimation[ANIM_ATTACK]);
 }
 
@@ -130,8 +132,10 @@ void Alita::Jump()
 bool Alita::Attack()
 {
 	//m_sprite->stopAllActions();
-	if (!attacking&&!isJump) {
-		m_sprite->stopAllActions();
+	if (!attacking && !isJump) {
+		if (!isRun) {
+			m_sprite->stopAllActions();
+		}
 		m_sprite->runAction(mAnimation[ANIM_ATTACK]);
 		auto setAttackingTrue = CallFunc::create([&]() {
 			this->attacking = true;
@@ -140,8 +144,10 @@ bool Alita::Attack()
 			this->attacking = false;
 		});
 		// Set Already for next Attack
-		/*auto sequence = Sequence::create(setAttackingTrue, DelayTime::create(1), setAttackingFalse, nullptr);
-		this->m_sprite->runAction(sequence);*/
+		auto sequence = Sequence::create(setAttackingTrue, DelayTime::create(1), setAttackingFalse, nullptr);
+		this->m_sprite->runAction(sequence);
+		auto audio = SimpleAudioEngine::getInstance();
+		audio->playEffect("res/Music/knife.wav", false);
 		return true;
 	}
 	return false;
@@ -155,10 +161,12 @@ void Alita::Throw()
 		}
 		attacking = false;
 		m_sprite->runAction(mAnimation[ANIM_THROW]);
-		/*if (isRunning()) {
-			auto sequence = Sequence::create(DelayTime::create(1), this->mAnimation[ANIM_RUN], nullptr);
-			this->m_sprite->runAction(sequence);
-		}*/
+		if (isRunning()) {
+		auto sequence = Sequence::create(DelayTime::create(1), this->mAnimation[ANIM_RUN], nullptr);
+		this->m_sprite->runAction(sequence);
+		}
+		auto audio = SimpleAudioEngine::getInstance();
+		audio->playEffect("res/Music/attackAlita.wav", false);
 	}
 }
 
@@ -166,10 +174,10 @@ void Alita::Update(float deltaTime)
 {
 	if (isRun) {
 		if (!isMoveRight) {
-			m_sprite->setPosition(m_sprite->getPosition() + Vec2(-2, 0));
+			m_sprite->setPosition(m_sprite->getPosition() + Vec2(-4, 0));
 		}
 		else {
-			m_sprite->setPosition(m_sprite->getPosition() + Vec2(+2, 0));
+			m_sprite->setPosition(m_sprite->getPosition() + Vec2(+4, 0));
 		}
 	}
 	else {
@@ -221,19 +229,19 @@ bool Alita::isJumping()
 
 void Alita::setJumping(bool jump)
 {
-	if (jump==false) {
+	if (jump == false) {
 		if (isJump != jump) {
 			isJump = jump;
 			if (isRun) {
 				m_sprite->stopAllActions();
 				m_sprite->runAction(mAnimation[ANIM_RUN]);
 			}
-			else if(!attacking){
+			else if (!attacking) {
 				Idle();
 			}
 		}
-		
 	}
+	isJump = jump;
 }
 
 Darts * Alita::getDarts()

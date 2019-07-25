@@ -17,7 +17,7 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	spriteNode = SpriteBatchNode::create("plist/Murad/Idle_Murad.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Murad/Idle_Murad.plist");
 	//sprite = Sprite::createWithSpriteFrameName("Idle_000.png");
-	 spriteFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName("Idle_000.png");
+	spriteFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName("Idle_000.png");
 	sprite = Sprite::createWithSpriteFrame(spriteFrame);
 
 	sprite->setPosition(m_sprite->getPosition());
@@ -35,9 +35,9 @@ Murad_Monster::Murad_Monster(Scene * scene)
 
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
-	auto animateRun = Animate::create(Murad_Monster::createAnimation("Run_00", 9, 0.15));
+	auto animateRun = Animate::create(Murad_Monster::createAnimation("Run_00", 9, 0.1));
 	//animateRun->retain();
-	mAnimation[ANIM_RUN] = m_sprite->runAction(Repeat::create(animateRun, 1));
+	mAnimation[ANIM_RUN] = m_sprite->runAction(RepeatForever::create(animateRun));
 	CC_SAFE_RETAIN(mAnimation[ANIM_RUN]);
 
 	spriteNode = SpriteBatchNode::create("plist/Murad/attack_Murad.png");
@@ -48,10 +48,10 @@ Murad_Monster::Murad_Monster(Scene * scene)
 
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
-	auto animateAttack = Animate::create(Murad_Monster::createAnimation("Attack_00", 9, 0.5));
+	auto animateAttack = Animate::create(Murad_Monster::createAnimation("Attack_00", 9, 0.15));
 	//animateAttack->retain();
-	
-	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create( animateAttack,1.2));
+
+	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create(animateAttack, 1.2));
 	CC_SAFE_RETAIN(mAnimation[ANIM_ATTACK]);
 
 	spriteNode = SpriteBatchNode::create("plist/Murad/Dead_Murad.png");
@@ -59,7 +59,7 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	spriteFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName("Dead_000.png");
 	sprite = Sprite::createWithSpriteFrame(spriteFrame);
 	//sprite = Sprite::createWithSpriteFrameName("Dead_000.png");
-	
+
 
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
@@ -92,7 +92,7 @@ void Murad_Monster::Init() {
 }
 void Murad_Monster::UpdateAttack(float xAlita, Alita * alita) {
 	FPS++;
-	if (FPS == 150) {
+	if (FPS == 50) {
 		setState_Murad(xAlita);
 		FPS = 0;
 	}
@@ -115,11 +115,13 @@ void Murad_Monster::Run() {
 	m_sprite->runAction(mAnimation[ANIM_RUN]);
 	if (getm_LetftoRight() == true)
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x + 3, m_sprite->getPosition().y);
+		auto moveby = MoveBy::create(1.35, Vec2(50, 0));
+		m_sprite->runAction(moveby);
 	}
 	else
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x - 3, m_sprite->getPosition().y);
+		auto moveby = MoveBy::create(1.35, Vec2(-50, 0));
+		m_sprite->runAction(moveby);
 	}
 }
 
@@ -177,7 +179,7 @@ void Murad_Monster::setState_Murad(float position)
 		Attack();
 		attacked = true;
 	}
-	else if (X_distance > 70 && X_distance < 250)
+	else if (X_distance > 70 && X_distance < 350)
 	{
 		Run();
 	}

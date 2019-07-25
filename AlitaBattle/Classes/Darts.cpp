@@ -16,7 +16,7 @@ Darts::Darts(cocos2d::Scene * scene)
 	mPhysicBody->setCategoryBitmask(3);
 	mPhysicBody->setEnabled(false);
 	m_sprite->setPhysicsBody(mPhysicBody);
-	m_sprite->setScale(0.5);
+	m_sprite->setScale(0.3);
 	//add bullet in scene
 	scene->addChild(this->m_sprite, 0);
 	m_LefttoRight = true;
@@ -52,11 +52,11 @@ bool Darts::Throw(Vec2 PosAlita, bool AlitaTurnRight)
 		Throwing = true;
 		m_LefttoRight = AlitaTurnRight;
 		if (!m_LefttoRight) {
-			m_sprite->setPosition(Vec2(PosAlita.x-20, PosAlita.y + 50));
+			m_sprite->setPosition(Vec2(PosAlita.x - 20, PosAlita.y + 50));
 			m_sprite->setFlipX(true);
 		}
 		else {
-			m_sprite->setPosition(Vec2(PosAlita.x+20, PosAlita.y + 50));
+			m_sprite->setPosition(Vec2(PosAlita.x + 20, PosAlita.y + 50));
 			m_sprite->setFlipX(false);
 		}
 
@@ -79,7 +79,7 @@ bool Darts::Throw(Vec2 PosAlita, bool AlitaTurnRight)
 				this->setAlive(true);
 				this->Throwing = false;
 			});
-			auto sequence = Sequence::create(moveBy, setVisibleSprite, disablePhysic,nullptr);
+			auto sequence = Sequence::create(moveBy, setVisibleSprite, disablePhysic, nullptr);
 			this->m_sprite->runAction(sequence);
 		}
 		else

@@ -52,6 +52,8 @@ public:
 	void addListener();
 	void createMonsters();
 	void createHub();
+	void createPause();
+	void createLose();
 
 	/* Methods using for controller game*/
 	cocos2d::ui::Button* mMoveLeftController;
@@ -59,6 +61,7 @@ public:
 	cocos2d::ui::Button* mJumpController;
 	cocos2d::ui::Button* mAttackController;
 	cocos2d::ui::Button* mThrowController;
+	cocos2d::ui::Button* btnPause;
 	bool onTouchBegan(Touch* touch, Event  *event);
 	bool onTouchEnded(Touch* touch, Event  *event);
 	cocos2d::ui::Widget::TouchEventType mCurrentTouchState;
@@ -67,7 +70,8 @@ public:
 	void jump(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void attack(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void throws(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
-	
+	void pause(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
+
 	/*Methods using logic game*/
 	void setPhysicsWorld(PhysicsWorld *m_world) {
 		world = m_world;

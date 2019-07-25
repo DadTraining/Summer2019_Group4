@@ -78,7 +78,7 @@ void Kaisa_Monster::Init()
 	m_sprite->setPosition(Vec2(visibleSize.width / 1.1, visibleSize.height / 2));
 	m_sprite->setScale(0.08);
 	//PhysicBody
-	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
+	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize()-Size(1000,0));
 	mPhysicBody->setDynamic(true);
 	mPhysicBody->setRotationEnable(false);
 	mPhysicBody->setCollisionBitmask(Objects::BITMASK_KAISA);
@@ -90,19 +90,17 @@ void Kaisa_Monster::Init()
 
 void Kaisa_Monster::Update(float deltaTime)
 {
-	
+
 	if (bullet->getSprite()->isVisible() == false)
 	{
 		bullet->m_LefttoRight = (!m_LefttoRight);
 	}
 	FPSKaisa++;
-	if (FPSKaisa == 150) {
+	if (FPSKaisa == 120) {
 		setStateKaiSa(deltaTime);
 		FPSKaisa = 0;
 	}
 }
-
-
 
 void Kaisa_Monster::Run()
 {
@@ -111,11 +109,13 @@ void Kaisa_Monster::Run()
 	m_sprite->runAction(mAnimation[ANIM_RUN]);
 	if (getm_LetftoRight() == true)
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x + 5, m_sprite->getPosition().y);
+		auto moveby = MoveBy::create(0.6, Vec2(5, 0));
+		m_sprite->runAction(moveby);
 	}
 	else
 	{
-		m_sprite->setPosition(m_sprite->getPosition().x - 5, m_sprite->getPosition().y);
+		auto moveby1 = MoveBy::create(0.6, Vec2(-5, 0));
+		m_sprite->runAction(moveby1);
 	}
 
 }
@@ -133,7 +133,7 @@ void Kaisa_Monster::Shoot()
 	{
 		bullet->getSprite()->setPosition(Vec2(this->m_sprite->getPosition().x - 20, this->m_sprite->getPosition().y + 60));
 		/*if (bullet->isAlive()) {
-			bullet->getSprite()->setVisible(true);
+		bullet->getSprite()->setVisible(true);
 		}*/
 		bullet->Update(3);
 	}

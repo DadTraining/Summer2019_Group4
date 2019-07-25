@@ -16,7 +16,7 @@ Bullet::Bullet(cocos2d::Scene* scene)
 	mPhysicBody->setMass(1);
 	mPhysicBody->setCategoryBitmask(1);
 	m_sprite->setPhysicsBody(mPhysicBody);
-	m_sprite->setScale(0.5);
+	m_sprite->setScale(0.35);
 	//add bullet in scene
 	scene->addChild(this->m_sprite, 0);
 	m_LefttoRight = false;
@@ -36,10 +36,6 @@ void Bullet::Init()
 
 void Bullet::Update(float deltaTime)
 {
-	if (!this->isAlive()) {
-		mPhysicBody->setEnabled(false);
-		m_sprite->setVisible(false);
-	}
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	auto outHeight = visibleSize.height / 1.3;

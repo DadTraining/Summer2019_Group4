@@ -7,7 +7,7 @@
 class Darts :public Objects
 {
 private:
-	
+
 public:
 	bool Throwing = false;
 	Darts(cocos2d::Scene* scene);
