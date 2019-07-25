@@ -39,6 +39,10 @@ void Bullet::Update(float deltaTime)
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	auto outHeight = visibleSize.height / 1.3;
+	if (!this->isAlive()) {
+		this->m_sprite->setVisible(false);
+		this->mPhysicBody->setEnabled(false);
+	}
 	if (this->isAlive()) {
 		this->m_sprite->setVisible(true);
 		this->mPhysicBody->setEnabled(true);
@@ -67,7 +71,6 @@ void Bullet::Update(float deltaTime)
 		this->m_sprite->runAction(sequence);
 	}
 }
-
 void Bullet::MoveBullet(bool isRight)
 {
 

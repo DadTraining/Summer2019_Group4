@@ -14,7 +14,7 @@ cocos2d::Sprite* mPauseLayer;
 Scene* PlayGameScene::createScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, -500));
 	//scene->getPhysicsWorld()->setSpeed(3);
 	auto layer = PlayGameScene::create();
@@ -42,9 +42,7 @@ bool PlayGameScene::init()
 	//Kaisa_Monster *kaisa = new Kaisa_Monster(this);
 	//Murad_Monster *murad = new Murad_Monster(this);
 
-
 	createMonsters();
-	//this->schedule(CC_SCHEDULE_SELECTOR(PlayGameScene::UpdateMonster, 3));
 	scheduleUpdate();
 	return true;
 }
@@ -138,9 +136,10 @@ void PlayGameScene::createMonsters() {
 		{
 			kaisa = new Kaisa_Monster(this);
 			kaisa->getSprite()->setPosition(Vec2(posX, posY));
-			kaisa->setIndex(kaisa_count++);
+			kaisa->setIndex(kaisa_count);
 			kaisa->getBullet()->setIndex(kaisa_count);
 			mKaisa.push_back(kaisa);
+			kaisa_count++;
 		}
 		else if (type == 2)
 		{
@@ -309,11 +308,13 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 		if (a->getCollisionBitmask() == Objects::BITMASK_BULLET)
 		{
 			m_Alita->BulletCollision();
+			mKaisa.at(a->getGroup())->getBullet()->getSprite()->setVisible(false);
 			//mKaisa.at(a->getGroup())->getBullet()->getSprite()->setVisible(false);
 		}
 		else if (b->getCollisionBitmask() == Objects::BITMASK_BULLET)
 		{
 			m_Alita->BulletCollision();
+			mKaisa.at(b->getGroup())->getBullet()->getSprite()->setVisible(false);
 			//mKaisa.at(a->getGroup())->getBullet()->getSprite()->setVisible(false);
 		}
 		auto paricleEffect = ParticleSystemQuad::create("particles/collision.plist");

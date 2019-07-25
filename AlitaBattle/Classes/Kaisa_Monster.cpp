@@ -100,6 +100,7 @@ void Kaisa_Monster::Update(float deltaTime)
 		setStateKaiSa(deltaTime);
 		FPSKaisa = 0;
 	}
+	//bullet->UpdateAlive();
 }
 
 void Kaisa_Monster::Run()
@@ -165,7 +166,6 @@ void Kaisa_Monster::setTurnRight()
 
 void Kaisa_Monster::setTurnLeft()
 {
-
 	this->m_sprite->setFlippedX(true);
 	Update(3);
 	m_LefttoRight = false;

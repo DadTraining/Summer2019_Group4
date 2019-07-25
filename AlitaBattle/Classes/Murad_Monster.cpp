@@ -91,16 +91,17 @@ void Murad_Monster::Init() {
 	m_sprite->setPhysicsBody(mPhysicBody);
 }
 void Murad_Monster::UpdateAttack(float xAlita, Alita * alita) {
-	FPS++;
-	if (FPS == 50) {
-		setState_Murad(xAlita);
-		FPS = 0;
+	if (getHP() > 0) {
+		FPS++;
+		if (FPS == 20) {
+			setState_Murad(xAlita);
+			FPS = 0;
+		}
+		if (attacked == true) {
+			alita->BulletCollision();
+			attacked = false;
+		}
 	}
-	if (attacked == true) {
-		alita->BulletCollision();
-		attacked = false;
-	}
-
 }
 void Murad_Monster::Update(float deltaTime)
 {

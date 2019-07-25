@@ -97,6 +97,7 @@ void Alita::MoveLeft()
 		isMoveRight = false;
 	}
 	m_sprite->stopAllActions();
+	attacking = false;
 	if (!isJump) {
 		m_sprite->runAction(mAnimation[ANIM_RUN]);
 	}
@@ -112,6 +113,7 @@ void Alita::MoveRight()
 		isMoveRight = true;
 	}
 	m_sprite->stopAllActions();
+	attacking = false;
 	if (!isJump) {
 		m_sprite->runAction(mAnimation[ANIM_RUN]);
 	}
@@ -155,19 +157,19 @@ bool Alita::Attack()
 
 void Alita::Throw()
 {
-	if (darts->Throw(m_sprite->getPosition(), this->isMoveRight)) {
+	if (darts->Throw(m_sprite->getPosition(), this->isMoveRight)) {	// already throw
 		if (!isRun) {
 			m_sprite->stopAllActions();
 		}
 		attacking = false;
 		m_sprite->runAction(mAnimation[ANIM_THROW]);
-		if (isRunning()) {
-		auto sequence = Sequence::create(DelayTime::create(1), this->mAnimation[ANIM_RUN], nullptr);
-		this->m_sprite->runAction(sequence);
-		}
+		/*if (isRunning()) {
+			auto sequence = Sequence::create(DelayTime::create(1.2), this->mAnimation[ANIM_RUN], nullptr);
+			this->m_sprite->runAction(sequence);
+		}*/
 		auto audio = SimpleAudioEngine::getInstance();
 		audio->playEffect("res/Music/attackAlita.wav", false);
-	}
+		}
 }
 
 void Alita::Update(float deltaTime)
@@ -216,9 +218,9 @@ bool Alita::isRunning()
 void Alita::setRunning(bool run)
 {
 	if (run == false) {
-		isRun = run;
 		Idle();
 	}
+	isRun = run;
 }
 
 bool Alita::isJumping()
