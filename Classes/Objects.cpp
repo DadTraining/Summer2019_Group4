@@ -66,6 +66,25 @@ Animation* Objects::createAnimation(std::string prerfixName, int pFrameOrder, fl
 	animation = Animation::createWithSpriteFrames(animFrame, delay);
 	return animation;
 }
+void Objects::setIndex(int index)
+{
+	mPhysicBody->setGroup(index);
+}
+
+int Objects::getIndex()
+{
+	return mPhysicBody->getGroup();
+}
+
+bool Objects::isAlive()
+{
+	return m_isAlive;
+}
+
+void Objects::setAlive(bool alive)
+{
+	m_isAlive = alive;
+}
 
 Sprite* Objects::DuplicateSprite(Sprite * sprite)
 {

@@ -4,12 +4,17 @@
 #include<iostream>
 
 
-class Bullet :public Objects
+class Darts :public Objects
 {
+private:
+
 public:
-	Bullet(cocos2d::Scene* scene);
-	~Bullet();
+	bool Throwing = false;
+	Darts(cocos2d::Scene* scene);
+	~Darts();
+	PhysicsBody * mPhysicBody;
 	void Init() override;
 	void Update(float deltaTime) override;
 	void MoveBullet(bool isRight);
+	bool Throw(Vec2 PosAlita, bool AlitaTurnRight);
 };
