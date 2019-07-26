@@ -1,6 +1,7 @@
 #include "Objects.h"
 #include "Alita.h"
 #include "SimpleAudioEngine.h"
+#include "AnimationHelper.h"
 
 using namespace CocosDenshion;
 USING_NS_CC;
@@ -99,7 +100,7 @@ void Alita::MoveLeft()
 	m_sprite->stopAllActions();
 	attacking = false;
 	if (!isJump) {
-		m_sprite->runAction(mAnimation[ANIM_RUN]);
+		m_sprite->runAction(AnimationHelper::GetInstance()->mAnimationAlita[ANIM_RUN]);
 	}
 	isRun = true;
 	//m_sprite->setPosition(Vec2(m_sprite->getPosition().x - 10, m_sprite->getPosition().y));
@@ -115,7 +116,8 @@ void Alita::MoveRight()
 	m_sprite->stopAllActions();
 	attacking = false;
 	if (!isJump) {
-		m_sprite->runAction(mAnimation[ANIM_RUN]);
+		//m_sprite->runAction(mAnimation[ANIM_RUN]);
+		m_sprite->runAction(AnimationHelper::GetInstance()->mAnimationAlita[ANIM_RUN]);
 	}
 	isRun = true;
 }

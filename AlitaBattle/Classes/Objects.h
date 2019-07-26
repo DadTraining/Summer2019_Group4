@@ -24,6 +24,14 @@ public:
 	static const int KAISA_HP = 30;
 	static const int MURAD_DAME = 10;
 	static const int MURAD_HP = 40;
+
+	static const int RUN_STEP = 10;
+	static const int ANIM_IDLE = 0;
+	static const int ANIM_RUN = 1;
+	static const int ANIM_DIE = 2;
+	static const int ANIM_ATTACK = 3;
+	static const int ANIM_JUMP = 4;
+	static const int ANIM_THROW = 5;
 protected:
 	Sprite* m_sprite;
 	Sprite* loadingBarMonsterBG;

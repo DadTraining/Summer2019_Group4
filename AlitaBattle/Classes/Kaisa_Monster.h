@@ -10,17 +10,10 @@ USING_NS_CC;
 
 class Kaisa_Monster : public Objects
 {
-
-public:
-	static const int ANIM_IDLE = 0;
-	static const int ANIM_RUN = ANIM_IDLE + 1;
-	static const int ANIM_ATTACK = ANIM_RUN + 1;
-	static const int ANIM_DIE = ANIM_ATTACK + 1;
-	static const int ANIM_TOTAl = ANIM_DIE + 1;
 private:
 	int FPSKaisa = 0;
 	Bullet* bullet;
-	cocos2d::Action* mAnimation[ANIM_TOTAl];
+	cocos2d::Action* mAnimation[4];
 public:
 	Kaisa_Monster(Scene* scene);
 	~Kaisa_Monster();

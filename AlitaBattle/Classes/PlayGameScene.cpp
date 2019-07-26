@@ -280,6 +280,9 @@ void PlayGameScene::updateKillLabel()
 	}
 	tempCount = CCString::createWithFormat("Kill: %i / %i", countMonster, sizeMonster);
 	labelMonster->setString(tempCount->getCString());
+	if (countMonster == 1) {
+		labelMonster->setColor(Color3B::BLUE);
+	}
 }
 bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 {

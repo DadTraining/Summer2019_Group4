@@ -4,13 +4,6 @@
 class Murad_Monster : public Objects
 {
 public:
-
-	static const int ANIM_IDLE = 0;
-	static const int ANIM_RUN = ANIM_IDLE + 1;
-	static const int ANIM_ATTACK = ANIM_RUN + 1;
-	static const int ANIM_DIE = ANIM_ATTACK + 1;
-	static const int ANIM_TOTAl = ANIM_DIE + 1;
-
 	Murad_Monster(Scene * scene);
 	~Murad_Monster();
 	bool attacked = false;
@@ -30,7 +23,7 @@ public:
 	void Collision();
 
 private:
-	cocos2d::Action* mAnimation[ANIM_TOTAl];
+	cocos2d::Action* mAnimation[4];
 	int FPS = 0;
 };
 

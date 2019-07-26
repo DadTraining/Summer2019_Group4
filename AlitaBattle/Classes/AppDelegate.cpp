@@ -4,6 +4,7 @@
 #include "LoadingScene.h"
 #include "SettingScene.h"
 #include "OverScene.h"
+#include "AnimationHelper.h"
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -29,6 +30,7 @@ static cocos2d::Size designResolutionSize = cocos2d::Size(568, 320);
 
 AppDelegate::AppDelegate()
 {
+
 }
 
 AppDelegate::~AppDelegate() 
@@ -96,7 +98,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //}
 
     register_all_packages();
-
+	AnimationHelper::GetInstance()->Init();
     // create a scene. it's an autorelease object
 	auto scene = LoadingScene ::createScene();
 

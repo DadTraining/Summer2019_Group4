@@ -12,21 +12,17 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	scene->addChild(loadingBarMonsterBG, 10);
 	scene->addChild(loadingMonster, 15);
 
-
 	SpriteBatchNode *spriteNode;
 	Sprite* sprite;
 	SpriteFrame* spriteFrame;
 
 	spriteNode = SpriteBatchNode::create("plist/Murad/Idle_Murad.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Murad/Idle_Murad.plist");
-	//sprite = Sprite::createWithSpriteFrameName("Idle_000.png");
 	spriteFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName("Idle_000.png");
 	sprite = Sprite::createWithSpriteFrame(spriteFrame);
-
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
 	auto animateIdle = Animate::create(Murad_Monster::createAnimation("Idle_00", 9, 0.15));
-	//animateIdle->retain();
 	mAnimation[ANIM_IDLE] = m_sprite->runAction(Repeat::create(animateIdle, 1));
 	CC_SAFE_RETAIN(mAnimation[ANIM_IDLE]);
 
@@ -35,7 +31,6 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	//sprite = Sprite::createWithSpriteFrameName("Run_000.png");
 	spriteFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName("Run_000.png");
 	sprite = Sprite::createWithSpriteFrame(spriteFrame);
-
 	sprite->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(sprite);
 	auto animateRun = Animate::create(Murad_Monster::createAnimation("Run_00", 9, 0.1));
