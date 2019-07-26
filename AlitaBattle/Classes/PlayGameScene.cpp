@@ -505,18 +505,37 @@ void PlayGameScene::attack(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 			rectAlita = m_Alita->getSprite()->getBoundingBox();
 			for (auto i : mMurad) {
 				rectMonster = i->getSprite()->getBoundingBox();
-				if (rectAlita.intersectsRect(rectMonster)) {
-					i->DarkCollision();
-				}
+				//if (rectAlita.intersectsRect(rectMonster)) {
+				//	// Attack from Left to Right
+				//	if (!m_Alita->m_LefttoRight) {
+				//		if (m_Alita->getSprite()->getPositionX() < i->getSprite()->getPositionX()) {
+				//			i->DarkCollision();
+				//		}
+				//	}
+				//	else {
+						//if (m_Alita->getSprite()->getPositionX() > i->getSprite()->getPositionX()) {
+							i->DarkCollision();
+					/*	}
+					}
+				}*/
 			}
 			for (auto i : mKaisa) {
 				rectMonster = i->getSprite()->getBoundingBox();
 				if (rectAlita.intersectsRect(rectMonster)) {
-					i->DarkCollision();
+					// Attack from Right to Left
+					/*if (m_Alita->m_LefttoRight) {
+						if (m_Alita->getSprite()->getPositionX() < i->getSprite()->getPositionX()) {
+							i->DarkCollision();
+						}
+					}
+					else {*/
+						//if (m_Alita->getSprite()->getPositionX() > i->getSprite()->getPositionX()) {
+							i->DarkCollision();
+						//}
+					//}
 				}
 			}
 		}
-		break;
 		break;
 	}
 }

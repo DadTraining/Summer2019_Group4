@@ -18,7 +18,7 @@ public:
 	static const int BITMASK_MURAD = BITMASK_DART + 1;
 
 	static const int ALITA_DAME = 10;
-	static const int ALITA_HP = 400;
+	static const int ALITA_HP = 4000;
 	static const int KAISA_DAME = 10;
 	static const int KAISA_HP = 30;
 	static const int MURAD_DAME = 10;

@@ -4,7 +4,7 @@
 
 #include "cocos2d.h"
 
-class SettingScene :public cocos2d:: Scene {
+class SettingScene :public cocos2d::Scene {
 
 public:
 	static cocos2d::Scene* createScene();

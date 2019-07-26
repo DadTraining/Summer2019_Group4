@@ -3,7 +3,7 @@
 #include "PlayGameScene.h"
 #include "SimpleAudioEngine.h"
 #include "SettingScene.h"
-
+#include "ControlMusic.h"
 using namespace CocosDenshion;
 
 USING_NS_CC;
@@ -33,8 +33,12 @@ bool MenuScene::init()
 	addChild(background);
 
 	//Music for Menu
-	auto audio = SimpleAudioEngine::getInstance();
-	audio->playBackgroundMusic("res/Music/soundMenu.mp3", true);
+	if(ControlMusic::GetInstance()->isMusic())
+	{ 
+		auto audio = SimpleAudioEngine::getInstance();
+		audio->playBackgroundMusic("res/Music/soundMenu.mp3", true);
+	}
+	
 	//Play button
 	auto btnPlay = ui::Button::create("res/Menu_UI/btn.png");
 	btnPlay->setScale(0.5);
