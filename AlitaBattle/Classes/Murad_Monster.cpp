@@ -9,6 +9,9 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	this->m_isAlive = true;
 	Init();
 	scene->addChild(m_sprite);
+	scene->addChild(loadingBarMonsterBG, 10);
+	scene->addChild(loadingMonster, 15);
+
 
 	SpriteBatchNode *spriteNode;
 	Sprite* sprite;
@@ -89,6 +92,15 @@ void Murad_Monster::Init() {
 	mPhysicBody->setDynamic(true);
 	mPhysicBody->setRotationEnable(false);
 	m_sprite->setPhysicsBody(mPhysicBody);
+	//LoadingBar
+	loadingBarMonsterBG = Sprite::create("loading_bg.png");
+	loadingBarMonsterBG->setAnchorPoint(Vec2(0.5, 0));
+	loadingBarMonsterBG->setScale(0.2);
+	loadingMonster = ui::LoadingBar::create("progress.png");
+	loadingMonster->setAnchorPoint(Vec2(0.5, 0));
+	loadingMonster->setScale(0.2);
+	loadingMonster->setPercent(Objects::MURAD_HP);
+	loadingMonster->setDirection(ui::LoadingBar::Direction::LEFT);
 }
 void Murad_Monster::UpdateAttack(float xAlita, Alita * alita) {
 	if (getHP() > 0) {
@@ -105,6 +117,10 @@ void Murad_Monster::UpdateAttack(float xAlita, Alita * alita) {
 }
 void Murad_Monster::Update(float deltaTime)
 {
+	//update LoadingMonster
+	loadingBarMonsterBG->setPosition(m_sprite->getPosition().x, m_sprite->getPosition().y + m_sprite->getContentSize().height*0.1);
+	loadingMonster->setPosition(loadingBarMonsterBG->getPosition());
+	loadingMonster->setPercent(getHP() * 100 / Objects::MURAD_HP);
 }
 void Murad_Monster::Idle()
 {
@@ -136,6 +152,8 @@ void Murad_Monster::Die()
 	m_sprite->runAction(mAnimation[ANIM_DIE]);
 	mPhysicBody->setEnabled(false);
 	m_sprite->setVisible(false);
+	loadingBarMonsterBG->setVisible(false);
+	loadingMonster->setVisible(false);
 }
 
 

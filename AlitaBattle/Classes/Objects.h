@@ -2,6 +2,7 @@
 #define __OBJECTS__
 
 #include "cocos2d.h"
+#include"ui\CocosGUI.h"
 
 USING_NS_CC;
 
@@ -25,7 +26,8 @@ public:
 	static const int MURAD_HP = 40;
 protected:
 	Sprite* m_sprite;
-
+	Sprite* loadingBarMonsterBG;
+	ui::LoadingBar * loadingMonster;
 	int m_hp;
 	int m_dame;
 	bool m_isAlive;
@@ -36,6 +38,7 @@ public:
 	void setEnablePhySicBody(bool temp) {
 		mPhysicBody->setEnabled(temp);
 	}
+	bool getKill=false;
 	bool m_LefttoRight;
 	Objects();
 	~Objects();

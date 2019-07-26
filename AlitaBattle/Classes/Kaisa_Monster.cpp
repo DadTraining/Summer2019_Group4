@@ -13,9 +13,11 @@ Kaisa_Monster::Kaisa_Monster(Scene * scene)
 
 	//KaisaMonster is live
 	this->m_isAlive = true;
-
 	Init();
 	scene->addChild(m_sprite);
+	scene->addChild(loadingBarMonsterBG, 10);
+	scene->addChild(loadingMonster, 15);
+
 
 	//Create Bullet
 	bullet = new Bullet(scene);
@@ -85,6 +87,16 @@ void Kaisa_Monster::Init()
 	mPhysicBody->setContactTestBitmask(true);
 	mPhysicBody->setCategoryBitmask(1);
 	m_sprite->setPhysicsBody(mPhysicBody);
+
+	//LoadingBar
+	loadingBarMonsterBG = Sprite::create("loading_bg.png");
+	loadingBarMonsterBG->setAnchorPoint(Vec2(0.5, 0));
+	loadingBarMonsterBG->setScale(0.2);
+	loadingMonster = ui::LoadingBar::create("progress.png");
+	loadingMonster->setAnchorPoint(Vec2(0.5, 0));
+	loadingMonster->setScale(0.2);
+	loadingMonster->setPercent(Objects::KAISA_HP);
+	loadingMonster->setDirection(ui::LoadingBar::Direction::LEFT);
 }
 
 
@@ -101,6 +113,10 @@ void Kaisa_Monster::Update(float deltaTime)
 		FPSKaisa = 0;
 	}
 	//bullet->UpdateAlive();
+	//update LoadingMonster
+	loadingBarMonsterBG->setPosition(m_sprite->getPosition().x, m_sprite->getPosition().y + m_sprite->getContentSize().height*0.1);
+	loadingMonster->setPosition(loadingBarMonsterBG->getPosition());
+	loadingMonster->setPercent(getHP() * 100 / Objects::KAISA_HP);
 }
 
 void Kaisa_Monster::Run()
@@ -155,6 +171,8 @@ void Kaisa_Monster::Die()
 	bullet->mPhysicBody->setEnabled(false);
 	bullet->getSprite()->setVisible(false);
 	bullet->setAlive(false);
+	loadingBarMonsterBG->setVisible(false);
+	loadingMonster->setVisible(false);
 }
 
 void Kaisa_Monster::setTurnRight()

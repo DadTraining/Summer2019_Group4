@@ -43,7 +43,7 @@ void Alita::createAnimate()
 	SpriteBatchNode *spriteNode = SpriteBatchNode::create("plist/Alita/runAlita.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/runAlita.plist");
 	auto model = Sprite::createWithSpriteFrameName("Run__000.png");
-	model->setPosition(m_sprite->getPosition());
+	//model->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(model);
 	auto animate = Animate::create(createAnimation("Run__00", 9, 0.05));
 	mAnimation[ANIM_RUN] = RepeatForever::create(animate);

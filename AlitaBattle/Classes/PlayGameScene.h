@@ -27,10 +27,10 @@ private:
 	std::vector<Kaisa_Monster*> mKaisa;
 	Sprite * hud;
 	Sprite * hud_bg;
-	cocos2d::ui::LoadingBar *mMcHudBlood;
 	int mHP = Objects::ALITA_HP;
 	Rect rectMonster;
 	Rect rectAlita;
+	cocos2d::ui::LoadingBar *mMcHudBlood;
 
 	/*Another Attribute */
 	float STATIC_Position_Alita;
@@ -51,6 +51,7 @@ public:
 	void createMC();
 	void addListener();
 	void createMonsters();
+	void createKillLabel();
 	void createHub();
 	void createPause();
 	void createLose();
@@ -62,6 +63,11 @@ public:
 	cocos2d::ui::Button* mAttackController;
 	cocos2d::ui::Button* mThrowController;
 	cocos2d::ui::Button* btnPause;
+	cocos2d::Label* labelMonster;
+	CCString* tempCount;
+	int sizeMonster = 0;
+	int countMonster = 0;
+
 	bool onTouchBegan(Touch* touch, Event  *event);
 	bool onTouchEnded(Touch* touch, Event  *event);
 	cocos2d::ui::Widget::TouchEventType mCurrentTouchState;
@@ -82,6 +88,7 @@ public:
 	void setTurn_Monster(float xAlita);
 	void updateCenterView();
 	void UpdateMonster(float x_alita);
+	void updateKillLabel();
 
 	CREATE_FUNC(PlayGameScene);
 };

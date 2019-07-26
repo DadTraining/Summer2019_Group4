@@ -14,7 +14,7 @@ cocos2d::Sprite* mPauseLayer;
 Scene* PlayGameScene::createScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, -500));
 	//scene->getPhysicsWorld()->setSpeed(3);
 	auto layer = PlayGameScene::create();
@@ -43,6 +43,7 @@ bool PlayGameScene::init()
 	//Murad_Monster *murad = new Murad_Monster(this);
 
 	createMonsters();
+	createKillLabel();
 	scheduleUpdate();
 	return true;
 }
@@ -50,6 +51,7 @@ bool PlayGameScene::init()
 void PlayGameScene::update(float deltaTime) {
 	auto x_alita = m_Alita->getSprite()->getPosition().x;
 	m_Alita->Update(deltaTime);
+	updateKillLabel();
 	updateCenterView();
 	mMcHudBlood->setPercent((m_Alita->getHP() * 100) / mHP);
 	setTurn_Monster(x_alita);
@@ -63,7 +65,6 @@ void PlayGameScene::update(float deltaTime) {
 
 
 void PlayGameScene::createMapPhysics() {
-
 	createMap();
 	createPhysics();
 }
@@ -140,6 +141,7 @@ void PlayGameScene::createMonsters() {
 			kaisa->getBullet()->setIndex(kaisa_count);
 			mKaisa.push_back(kaisa);
 			kaisa_count++;
+			sizeMonster++;
 		}
 		else if (type == 2)
 		{
@@ -147,9 +149,20 @@ void PlayGameScene::createMonsters() {
 			murad->getSprite()->setPosition(Vec2(posX, posY));
 			murad->setIndex(murad_count++);
 			mMurad.push_back(murad);
+			sizeMonster++;
 		}
 	}
 }
+
+void PlayGameScene::createKillLabel()
+{
+	tempCount = CCString::createWithFormat("Kill: %i / %i", countMonster, sizeMonster);
+	labelMonster = Label::createWithTTF(tempCount->getCString(), "fonts/Marker Felt.ttf", 24);
+	labelMonster->setColor(Color3B::RED);
+	labelMonster->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 1.2));
+	addChild(labelMonster, 20);
+}
+
 void PlayGameScene::createHub()
 {
 	hud_bg = Sprite::create("res/BloodMc/hud_bg.png");
@@ -245,10 +258,28 @@ void PlayGameScene::UpdateMonster(float x_alita)
 	//	auto PositionAlita = m_Alita->getSprite()->getPositionX();
 	for (auto i : mMurad) {
 		i->UpdateAttack(x_alita,m_Alita);
+		i->Update(0);
 	}
 	for (auto i : mKaisa) {
 		i->Update(x_alita);
 	}
+}
+void PlayGameScene::updateKillLabel()
+{
+	for (auto i : mMurad) {
+		if (i->getHP() <=0 && i->getKill==false) {
+			countMonster++;
+			i->getKill = true;
+		}
+	}
+	for (auto i : mKaisa) {
+		if (i->getHP() <= 0 && i->getKill==false) {
+			countMonster++;
+			i->getKill = true;
+		}
+	}
+	tempCount = CCString::createWithFormat("Kill: %i / %i", countMonster, sizeMonster);
+	labelMonster->setString(tempCount->getCString());
 }
 bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 {
@@ -300,7 +331,6 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 		m_Alita->getDarts()->setAlive(false);
 	}
 	
-
 	//bullet vs Alita 
 	if ((a->getCollisionBitmask() == Objects::BITMASK_BULLET && b->getCollisionBitmask() == Objects::BITMASK_ALITA)
 		|| (a->getCollisionBitmask() == Objects::BITMASK_ALITA && b->getCollisionBitmask() == Objects::BITMASK_BULLET))
@@ -356,6 +386,9 @@ void PlayGameScene::updateCenterView()
 		mMcHudBlood->setPosition(hud_bg->getPosition());
 		btnPause->setPosition(Vec2(btnPause->getPosition().x + (x_alita - x_positon_Alita), btnPause->getPosition().y));
 		mPauseLayer->setPosition(Vec2(mPauseLayer->getPosition().x + (x_alita - x_positon_Alita), mPauseLayer->getPosition().y));
+		
+		//Update Kill Label 
+		labelMonster->setPosition(Vec2(labelMonster->getPosition().x + (x_alita - x_positon_Alita), labelMonster->getPosition().y));
 		x_positon_Alita = x_alita;
 	}
 }
@@ -505,7 +538,7 @@ void PlayGameScene::attack(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 			rectAlita = m_Alita->getSprite()->getBoundingBox();
 			for (auto i : mMurad) {
 				rectMonster = i->getSprite()->getBoundingBox();
-				//if (rectAlita.intersectsRect(rectMonster)) {
+				if (rectAlita.intersectsRect(rectMonster)) {
 				//	// Attack from Left to Right
 				//	if (!m_Alita->m_LefttoRight) {
 				//		if (m_Alita->getSprite()->getPositionX() < i->getSprite()->getPositionX()) {
@@ -513,11 +546,11 @@ void PlayGameScene::attack(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 				//		}
 				//	}
 				//	else {
-						//if (m_Alita->getSprite()->getPositionX() > i->getSprite()->getPositionX()) {
+						// (m_Alita->getSprite()->getPositionX() > i->getSprite()->getPositionX()) {
 							i->DarkCollision();
 					/*	}
-					}
-				}*/
+					}*/
+				}
 			}
 			for (auto i : mKaisa) {
 				rectMonster = i->getSprite()->getBoundingBox();
