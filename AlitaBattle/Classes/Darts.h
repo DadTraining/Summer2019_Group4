@@ -2,13 +2,15 @@
 #include "cocos2d.h"
 #include "Objects.h"
 #include<iostream>
-
+#include <MyItems.h>
+using namespace std;
 
 class Darts :public Objects
 {
 private:
 
 public:
+	bool hadDart = false;
 	bool Throwing = false;
 	Darts(cocos2d::Scene* scene);
 	~Darts();

@@ -1,29 +1,27 @@
-#include "PlayGameScene.h"
+#include "PlayGameScene2.h"
 #include "ui\UIButton.h"
 #include "SimpleAudioEngine.h"
 #include "MenuScene.h"
 #include "OverScene.h"
-#include "PlayGameScene2.h"
-
 
 using namespace CocosDenshion;
 
 USING_NS_CC;
 
-Size visibleSize;
-cocos2d::Sprite* mPauseLayer;
-Scene* PlayGameScene::createScene()
+
+
+Scene* PlayGameScene2::createScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, -500));
 	//scene->getPhysicsWorld()->setSpeed(3);
-	auto layer = PlayGameScene::create();
+	auto layer = PlayGameScene2::create();
 	layer->setPhysicsWorld(scene->getPhysicsWorld());
 	scene->addChild(layer, 0);
 	return scene;
 }
-bool PlayGameScene::init()
+bool PlayGameScene2::init()
 {
 	if (!Scene::init())
 	{
@@ -49,7 +47,7 @@ bool PlayGameScene::init()
 	return true;
 }
 
-void PlayGameScene::update(float deltaTime) {
+void PlayGameScene2::update(float deltaTime) {
 	auto x_alita = m_Alita->getSprite()->getPosition().x;
 	m_Alita->Update(deltaTime);
 	updateKillLabel();
@@ -65,20 +63,21 @@ void PlayGameScene::update(float deltaTime) {
 
 
 
-void PlayGameScene::createMapPhysics() {
+void PlayGameScene2::createMapPhysics() {
 	createMap();
 	createPhysics();
 }
-void PlayGameScene::createMap()
+void PlayGameScene2::createMap()
 {
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	//map = TMXTiledMap::create("res/map/ok.tmx");
-	map = TMXTiledMap::create("res/map/ok.tmx"); 
+	map = TMXTiledMap::create("map/map3.tmx"); 
 	map->setAnchorPoint(Vec2(0, 0));
+	map->setScale(0.5);
 	map->setPosition(0, 0);
 
 }
-void PlayGameScene::createPhysics()
+void PlayGameScene2::createPhysics()
 {
 	mObjectGroup = map->getObjectGroup("Monster");
 	auto mPhysicsLayer = map->getLayer("Lane");
@@ -101,21 +100,21 @@ void PlayGameScene::createPhysics()
 		}
 	}
 	addChild(map, -1);
-	auto egdeBody = PhysicsBody::createEdgeBox(map->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT, 3);
+	auto egdeBody = PhysicsBody::createEdgeBox(map->getContentSize()/2, PHYSICSBODY_MATERIAL_DEFAULT, 3);
 	egdeBody->setDynamic(false);
 	//egdeBody->;
 	egdeNode = Node::create();
-	egdeNode->setPosition(map->getContentSize().width / 2, map->getContentSize().height / 2);
+	egdeNode->setPosition(map->getContentSize().width / 4, map->getContentSize().height / 4);
 	egdeNode->setPhysicsBody(egdeBody);
 	addChild(egdeNode);
 }
-void PlayGameScene::createCamera()
+void PlayGameScene2::createCamera()
 {
 	camera = this->getDefaultCamera();
 	camera->setAnchorPoint(Vec2(1, 1));
 	camera->setPosition(visibleSize.width / 2, visibleSize.height / 2);
 }
-void PlayGameScene::createMonsters() {
+void PlayGameScene2::createMonsters() {
 
 	//add effect
 	auto paricleEffect = ParticleSnow::create();
@@ -160,7 +159,7 @@ void PlayGameScene::createMonsters() {
 	}
 }
 
-void PlayGameScene::createKillLabel()
+void PlayGameScene2::createKillLabel()
 {
 	tempCount = CCString::createWithFormat("Kill: %i / %i", countMonster, sizeMonster);
 	labelMonster = Label::createWithTTF(tempCount->getCString(), "fonts/Marker Felt.ttf", 24);
@@ -169,7 +168,7 @@ void PlayGameScene::createKillLabel()
 	addChild(labelMonster, 20);
 }
 
-void PlayGameScene::createHub()
+void PlayGameScene2::createHub()
 {
 	hud_bg = Sprite::create("res/BloodMc/hud_bg.png");
 	hud_bg->setAnchorPoint(Vec2(0, 0.5));
@@ -191,7 +190,7 @@ void PlayGameScene::createHub()
 	hud->setPosition(hud_bg->getPosition() - Vec2(12, 0));
 	addChild(hud,20);
 }
-void PlayGameScene::createPause()
+void PlayGameScene2::createPause()
 {
 		mPauseLayer = Sprite::create("res/Pause_UI/alpha.png");
 		mPauseLayer->setContentSize(visibleSize);
@@ -255,13 +254,13 @@ void PlayGameScene::createPause()
 
 	
 }
-void PlayGameScene::createLose()
+void PlayGameScene2::createLose()
 {
 	Director::getInstance()->replaceScene(OverScene::createScene());
 }
-void PlayGameScene::UpdateMonster(float x_alita)
+void PlayGameScene2::UpdateMonster(float x_alita)
 {
-	//	auto PositionAlita = m_Alita->getSprite()->getPositionX();
+	//	auto PositionAlita = m_Alita->getSprite()->();
 	for (auto i : mMurad) {
 		i->UpdateAttack(x_alita,m_Alita);
 		i->Update(0);
@@ -270,11 +269,8 @@ void PlayGameScene::UpdateMonster(float x_alita)
 		i->Update(x_alita);
 	}
 }
-void PlayGameScene::updateKillLabel()
+void PlayGameScene2::updateKillLabel()
 {
-	if (countMonster >= 1) {
-		Director::getInstance()->replaceScene(PlayGameScene2::createScene());
-	}
 	for (auto i : mMurad) {
 		if (i->getHP() <=0 && i->getKill==false) {
 			countMonster++;
@@ -290,7 +286,7 @@ void PlayGameScene::updateKillLabel()
 	tempCount = CCString::createWithFormat("Kill: %i / %i", countMonster, sizeMonster);
 	labelMonster->setString(tempCount->getCString());
 }
-bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
+bool PlayGameScene2::onContactBegin(cocos2d::PhysicsContact & contact)
 {
 	PhysicsBody* a = contact.getShapeA()->getBody();
 	PhysicsBody* b = contact.getShapeB()->getBody();
@@ -339,7 +335,7 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 	{
 		m_Alita->getDarts()->setAlive(false);
 	}
-	
+
 	//bullet vs Alita 
 	if ((a->getCollisionBitmask() == Objects::BITMASK_BULLET && b->getCollisionBitmask() == Objects::BITMASK_ALITA)
 		|| (a->getCollisionBitmask() == Objects::BITMASK_ALITA && b->getCollisionBitmask() == Objects::BITMASK_BULLET))
@@ -369,7 +365,7 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 	}
 	return true;
 }
-void PlayGameScene::setTurn_Monster(float xAlita)
+void PlayGameScene2::setTurn_Monster(float xAlita)
 {
 	for (auto i : mMurad) {
 		i->setTurn_Murad(xAlita);
@@ -378,10 +374,10 @@ void PlayGameScene::setTurn_Monster(float xAlita)
 		i->setTurnKaisa(xAlita);
 	}
 }
-void PlayGameScene::updateCenterView()
+void PlayGameScene2::updateCenterView()
 {
 	auto x_alita = m_Alita->getSprite()->getPosition().x;
-	if (x_alita>STATIC_Position_Alita && x_alita<(map->getContentSize().width - visibleSize.width / 2)) {
+	if (x_alita>STATIC_Position_Alita && x_alita<(map->getContentSize().width/2 - visibleSize.width / 2)) {
 		camera->setPosition(camera->getPosition().x + (x_alita - x_positon_Alita), visibleSize.height / 2);
 		//egdeNode->setPosition(egdeNode->getPosition().x + (x_alita - x_positon_Alita), visibleSize.height / 2);
 		mMoveLeftController->setPosition(Vec2(mMoveLeftController->getPosition().x + (x_alita - x_positon_Alita), mMoveLeftController->getPosition().y));
@@ -395,26 +391,27 @@ void PlayGameScene::updateCenterView()
 		mMcHudBlood->setPosition(hud_bg->getPosition());
 		btnPause->setPosition(Vec2(btnPause->getPosition().x + (x_alita - x_positon_Alita), btnPause->getPosition().y));
 		mPauseLayer->setPosition(Vec2(mPauseLayer->getPosition().x + (x_alita - x_positon_Alita), mPauseLayer->getPosition().y));
+		
 		//Update Kill Label 
 		labelMonster->setPosition(Vec2(labelMonster->getPosition().x + (x_alita - x_positon_Alita), labelMonster->getPosition().y));
 		x_positon_Alita = x_alita;
 	}
 }
-void PlayGameScene::addListener()
+void PlayGameScene2::addListener()
 {
 	//touch
 	auto touchListener = EventListenerTouchOneByOne::create();
 	touchListener->setSwallowTouches(true);
-	touchListener->onTouchBegan = CC_CALLBACK_2(PlayGameScene::onTouchBegan, this);
-	touchListener->onTouchEnded = CC_CALLBACK_2(PlayGameScene::onTouchEnded, this);
+	touchListener->onTouchBegan = CC_CALLBACK_2(PlayGameScene2::onTouchBegan, this);
+	touchListener->onTouchEnded = CC_CALLBACK_2(PlayGameScene2::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
 	//add contact event listener
 	auto contactListener = EventListenerPhysicsContact::create();
-	contactListener->onContactBegin = CC_CALLBACK_1(PlayGameScene::onContactBegin, this);
+	contactListener->onContactBegin = CC_CALLBACK_1(PlayGameScene2::onContactBegin, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 }
-bool PlayGameScene::onTouchBegan(Touch* touch, Event  *event)
+bool PlayGameScene2::onTouchBegan(Touch* touch, Event  *event)
 {
 	//mCurrentTouchState = ui::Widget::TouchEventType::BEGAN;
 	mCurrentTouchPoint = touch->getLocation();
@@ -422,14 +419,14 @@ bool PlayGameScene::onTouchBegan(Touch* touch, Event  *event)
 }
 
 
-bool PlayGameScene::onTouchEnded(Touch* touch, Event  *event)
+bool PlayGameScene2::onTouchEnded(Touch* touch, Event  *event)
 {
 	//mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
 	mCurrentTouchPoint = Point(-1, -1);
 	return true;
 }
 
-void PlayGameScene::createController()
+void PlayGameScene2::createController()
 {
 	auto ScreenSize = Director::getInstance()->getVisibleSize();
 	//MoveLeft
@@ -437,7 +434,7 @@ void PlayGameScene::createController()
 	mMoveLeftController->setPosition(Vec2(50, 50));
 	mMoveLeftController->setScale(0.7);
 	mMoveLeftController->setOpacity(160);
-	mMoveLeftController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::moveLeft, this));
+	mMoveLeftController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene2::moveLeft, this));
 	addChild(mMoveLeftController, 10);
 	//MoveRight
 	mMoveRightController = ui::Button::create("res/Main_UI/left.png", "res/Main_UI/left.png");
@@ -445,46 +442,46 @@ void PlayGameScene::createController()
 	mMoveRightController->setPosition(mMoveLeftController->getPosition() + Vec2(mMoveLeftController->getContentSize().width, 0));
 	mMoveRightController->setScale(0.7);
 	mMoveRightController->setOpacity(160);
-	mMoveRightController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::moveRight, this));
+	mMoveRightController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene2::moveRight, this));
 	addChild(mMoveRightController, 10);
 	//Jump
 	mJumpController = ui::Button::create("res/Main_UI/jump.png", "res/Main_UI/jump.png");
 	mJumpController->setScale(0.7);
 	mJumpController->setOpacity(160);
 	mJumpController->setPosition(Vec2(visibleSize.width - mJumpController->getContentSize().width +20, mJumpController->getContentSize().height +20));
-	mJumpController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::jump, this));
+	mJumpController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene2::jump, this));
 	addChild(mJumpController, 10);
 	//Attack
 	mAttackController = ui::Button::create("res/Main_UI/attack.png", "res/Main_UI/attack.png");
 	mAttackController->setScale(0.7);
 	mAttackController->setOpacity(160);
 	mAttackController->setPosition(Vec2(visibleSize.width - mJumpController->getContentSize().width + 20, mJumpController->getContentSize().height - 40));
-	mAttackController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::attack, this));
+	mAttackController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene2::attack, this));
 	addChild(mAttackController, 10);
 	//Throw
 	mThrowController = ui::Button::create("res/Main_UI/skill.png", "res/Main_UI/skill.png");
 	mThrowController->setScale(0.7);
 	mThrowController->setOpacity(160);
 	mThrowController->setPosition(Vec2(visibleSize.width - mJumpController->getContentSize().width - 32, mJumpController->getContentSize().height-5));
-	mThrowController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::throws, this));
+	mThrowController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene2::throws, this));
 	addChild(mThrowController, 10);
 	//Pause
 	btnPause = ui::Button::create("res/Pause_UI/pause.png");
 	btnPause->setAnchorPoint(Vec2(0, 0.5));
 	btnPause->setScale(0.2);
 	btnPause->setPosition(Vec2(visibleSize.width - 50, visibleSize.height - 30));
-	btnPause->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::pause, this));
+	btnPause->addTouchEventListener(CC_CALLBACK_2(PlayGameScene2::pause, this));
 	addChild(btnPause, 20);
 }
 
-void PlayGameScene::createMC()
+void PlayGameScene2::createMC()
 {
 	m_Alita = new Alita(this);
 	STATIC_Position_Alita = m_Alita->getSprite()->getPosition().x;
 	x_positon_Alita = m_Alita->getSprite()->getPosition().x;
 }
 
-void PlayGameScene::moveRight(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
+void PlayGameScene2::moveRight(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
 	switch (type)
 	{
 	case ui::Widget::TouchEventType::BEGAN:
@@ -503,7 +500,7 @@ void PlayGameScene::moveRight(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEv
 	}
 }
 
-void PlayGameScene::moveLeft(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
+void PlayGameScene2::moveLeft(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
 
 	switch (type)
 	{
@@ -522,7 +519,7 @@ void PlayGameScene::moveLeft(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEve
 		break;
 	}
 }
-void PlayGameScene::jump(Ref* sender, ui::Widget::TouchEventType type)
+void PlayGameScene2::jump(Ref* sender, ui::Widget::TouchEventType type)
 {
 	switch (type)
 	{
@@ -534,7 +531,7 @@ void PlayGameScene::jump(Ref* sender, ui::Widget::TouchEventType type)
 	}
 }
 
-void PlayGameScene::attack(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEventType type)
+void PlayGameScene2::attack(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEventType type)
 {
 	switch (type)
 	{
@@ -581,7 +578,7 @@ void PlayGameScene::attack(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 	}
 }
 
-void PlayGameScene::throws(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEventType type)
+void PlayGameScene2::throws(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEventType type)
 {
 	switch (type)
 	{
@@ -595,7 +592,7 @@ void PlayGameScene::throws(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 		break;
 	}
 }
-void PlayGameScene::pause(Ref* sender, ui::Widget::TouchEventType type)
+void PlayGameScene2::pause(Ref* sender, ui::Widget::TouchEventType type)
 {
 	switch (type)
 	{

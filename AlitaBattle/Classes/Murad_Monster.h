@@ -24,14 +24,13 @@ public:
 	void setTurnRight();
 	void setTurnLeft();
 	bool getm_LetftoRight();
-	void DarkCollision();
+	void DarkCollision(int dame);
 	void setState_Murad(float position);
 	void setTurn_Murad(float position);
 	void Collision();
-
+	int FPSMurad = 0;
 private:
 	cocos2d::Action* mAnimation[ANIM_TOTAl];
-	int FPS = 0;
 };
 
 #pragma once

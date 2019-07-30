@@ -54,7 +54,7 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	auto animateAttack = Animate::create(Murad_Monster::createAnimation("Attack_00", 9, 0.15));
 	//animateAttack->retain();
 
-	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create(animateAttack, 1.2));
+	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create(animateAttack, 1));
 	CC_SAFE_RETAIN(mAnimation[ANIM_ATTACK]);
 
 	spriteNode = SpriteBatchNode::create("plist/Murad/Dead_Murad.png");
@@ -104,10 +104,10 @@ void Murad_Monster::Init() {
 }
 void Murad_Monster::UpdateAttack(float xAlita, Alita * alita) {
 	if (getHP() > 0) {
-		FPS++;
-		if (FPS == 20) {
+		FPSMurad++;
+		if (FPSMurad == 20) {
 			setState_Murad(xAlita);
-			FPS = 0;
+			FPSMurad = 0;
 		}
 		if (attacked == true) {
 			alita->BulletCollision();
@@ -181,9 +181,9 @@ bool Murad_Monster::getm_LetftoRight()
 		return false;
 }
 
-void Murad_Monster::DarkCollision()
+void Murad_Monster::DarkCollision(int dame)
 {
-	this->setHP(this->getHP() - Objects::ALITA_DAME);
+	this->setHP(this->getHP() - dame);
 	if (this->getHP() <= 0) {
 		this->Die();
 	}

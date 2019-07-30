@@ -18,7 +18,6 @@ Kaisa_Monster::Kaisa_Monster(Scene * scene)
 	scene->addChild(loadingBarMonsterBG, 10);
 	scene->addChild(loadingMonster, 15);
 
-
 	//Create Bullet
 	bullet = new Bullet(scene);
 	bullet->getSprite()->setVisible(false);
@@ -198,9 +197,9 @@ bool Kaisa_Monster::getm_LetftoRight()
 		return false;
 }
 
-void Kaisa_Monster::DarkCollision()
+void Kaisa_Monster::DarkCollision(int dame)
 {
-	this->setHP(this->getHP() - Objects::ALITA_DAME);
+	this->setHP(this->getHP() - dame);
 	if (this->getHP() <= 0) {
 		this->Die();
 	}
