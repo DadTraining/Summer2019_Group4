@@ -14,7 +14,7 @@ cocos2d::Sprite* mPauseLayer;
 Scene* PlayGameScene::createScene()
 {
 	auto scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, -500));
 	//scene->getPhysicsWorld()->setSpeed(3);
 	auto layer = PlayGameScene::create();
@@ -54,6 +54,8 @@ void PlayGameScene::update(float deltaTime) {
 	mMcHudBlood->setPercent((m_Alita->getHP() * 100) / mHP);
 	setTurn_Monster(x_alita);
 	UpdateMonster(x_alita);
+	updateController();
+
 	if (m_Alita->getHP() <= 0)
 	{
 		createLose();
@@ -366,6 +368,7 @@ void PlayGameScene::addListener()
 	auto touchListener = EventListenerTouchOneByOne::create();
 	touchListener->setSwallowTouches(true);
 	touchListener->onTouchBegan = CC_CALLBACK_2(PlayGameScene::onTouchBegan, this);
+	touchListener->onTouchMoved = CC_CALLBACK_2(PlayGameScene::onTouchMoved, this);
 	touchListener->onTouchEnded = CC_CALLBACK_2(PlayGameScene::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
@@ -376,37 +379,60 @@ void PlayGameScene::addListener()
 }
 bool PlayGameScene::onTouchBegan(Touch* touch, Event  *event)
 {
-	//mCurrentTouchState = ui::Widget::TouchEventType::BEGAN;
+	mCurrentTouchState = ui::Widget::TouchEventType::BEGAN;
 	mCurrentTouchPoint = touch->getLocation();
 	return true;
 }
 
-
-bool PlayGameScene::onTouchEnded(Touch* touch, Event  *event)
+void PlayGameScene::onTouchMoved(Touch* touch, Event  *event)
 {
-	//mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
+	mCurrentTouchState = ui::Widget::TouchEventType::MOVED;
+	mCurrentTouchPoint = touch->getLocation();
+	//log("Touch Moved (%f, %f)", touch->getLocation().x, touch->getLocation().y);
+}
+
+void PlayGameScene::onTouchEnded(Touch* touch, Event  *event)
+{
+	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
 	mCurrentTouchPoint = Point(-1, -1);
-	return true;
+	
 }
 
 void PlayGameScene::createController()
 {
 	auto ScreenSize = Director::getInstance()->getVisibleSize();
 	//MoveLeft
-	mMoveLeftController = ui::Button::create("res/Main_UI/left.png", "res/Main_UI/left.png");
+	mMoveLeftController = Sprite::create("res/Main_UI/left.png");
 	mMoveLeftController->setPosition(Vec2(50, 50));
-	mMoveLeftController->setScale(0.7);
+	//mMoveLeftController->setScale(0.7);
 	mMoveLeftController->setOpacity(160);
-	mMoveLeftController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::moveLeft, this));
 	addChild(mMoveLeftController, 10);
+
+	mMoveLeftControllerPressed = Sprite::create("res/Main_UI/left.png");
+	//mMoveLeftControllerPressed->setScale(0.7);
+	mMoveLeftController->setOpacity(160);
+	mMoveLeftControllerPressed->setPosition(mMoveLeftController->getPosition());
+	mMoveLeftControllerPressed->setVisible(false);
+	addChild(mMoveLeftControllerPressed);
+	
+	
 	//MoveRight
-	mMoveRightController = ui::Button::create("res/Main_UI/left.png", "res/Main_UI/left.png");
+	mMoveRightController = Sprite::create("res/Main_UI/left.png");
 	mMoveRightController->setFlippedX(true);
 	mMoveRightController->setPosition(mMoveLeftController->getPosition() + Vec2(mMoveLeftController->getContentSize().width, 0));
-	mMoveRightController->setScale(0.7);
+	//mMoveRightController->setScale(0.7);
 	mMoveRightController->setOpacity(160);
-	mMoveRightController->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::moveRight, this));
 	addChild(mMoveRightController, 10);
+
+	mMoveRightControllerPressed = Sprite::create("res/Main_UI/left.png");
+	mMoveRightControllerPressed->setFlippedX(true);
+	mMoveRightControllerPressed->setPosition(mMoveRightController->getPosition());
+	//mMoveRightControllerPressed->setScale(0.7);
+	mMoveRightController->setOpacity(160);
+	mMoveRightControllerPressed->setVisible(false);
+	addChild(mMoveRightControllerPressed);
+
+	
 	//Jump
 	mJumpController = ui::Button::create("res/Main_UI/jump.png", "res/Main_UI/jump.png");
 	mJumpController->setScale(0.7);
@@ -437,6 +463,57 @@ void PlayGameScene::createController()
 	addChild(btnPause, 20);
 }
 
+void PlayGameScene::enablePressedControl(bool isLeft, bool pressed)
+{
+	if (isLeft) {
+		mMoveLeftController->setVisible(!pressed);
+		mMoveLeftControllerPressed->setVisible(pressed);
+	}
+	else {
+		mMoveRightController->setVisible(!pressed);
+		mMoveRightControllerPressed->setVisible(pressed);
+	}
+}
+
+void PlayGameScene::updateController() {
+	switch (mCurrentTouchState)
+	{
+	case ui::Widget::TouchEventType::BEGAN:
+	case ui::Widget::TouchEventType::MOVED:
+
+		if (Rect(mMoveLeftController->getPosition().x, mMoveLeftController->getPosition().y,
+			mMoveLeftController->getContentSize().width, mMoveLeftController->getContentSize().height).containsPoint(mCurrentTouchPoint)) //move left
+		{
+			enablePressedControl(true, true);
+			moveLeft();
+		}
+		else
+		{
+			enablePressedControl(true, false);
+		}
+
+		if (Rect(mMoveRightController->getPosition().x, mMoveRightController->getPosition().y,
+			mMoveRightController->getContentSize().width, mMoveRightController->getContentSize().height).containsPoint(mCurrentTouchPoint)) //move right		
+		{
+			enablePressedControl(false, true);
+			moveRight();
+		}
+		else
+		{
+			enablePressedControl(false, false);
+		}
+
+		break;
+	case ui::Widget::TouchEventType::ENDED:
+		enablePressedControl(true, false);
+		enablePressedControl(false, false);
+		m_Alita->Idle();
+		//m_Alita->setState(Alita::STATE_IDLE);
+		//mPlayer->setState(Player::STATE_IDLE);		
+		break;
+	}
+}
+
 void PlayGameScene::createMC()
 {
 	m_Alita = new Alita(this);
@@ -444,43 +521,12 @@ void PlayGameScene::createMC()
 	x_positon_Alita = m_Alita->getSprite()->getPosition().x;
 }
 
-void PlayGameScene::moveRight(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
-	switch (type)
-	{
-	case ui::Widget::TouchEventType::BEGAN:
+void PlayGameScene::moveRight() {
 		m_Alita->MoveRight();
-		break;
-	case ui::Widget::TouchEventType::MOVED:
-		/*if (!Rect(mMoveRightController->getPositionX(), mMoveRightController->getPositionY(), mMoveRightController->getContentSize().width*3, mMoveRightController->getContentSize().height*3).containsPoint(mCurrentTouchPoint)) {
-		m_Alita->getSprite()->stopAllActions();
-		m_Alita->setRunning(false);
-		}*/
-		break;
-	case ui::Widget::TouchEventType::ENDED:
-		m_Alita->getSprite()->stopAllActions();
-		m_Alita->setRunning(false);
-		break;
-	}
 }
 
-void PlayGameScene::moveLeft(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
-
-	switch (type)
-	{
-	case ui::Widget::TouchEventType::BEGAN:
+void PlayGameScene::moveLeft() {
 		m_Alita->MoveLeft();
-		break;
-	case ui::Widget::TouchEventType::MOVED:
-		/*if (!Rect(mMoveRightController->getPositionX(), mMoveRightController->getPositionY(), mMoveRightController->getContentSize().width*3, mMoveRightController->getContentSize().height*3).containsPoint(mCurrentTouchPoint)) {
-		m_Alita->getSprite()->stopAllActions();
-		m_Alita->setRunning(false);
-		}*/
-		break;
-	case ui::Widget::TouchEventType::ENDED:
-		m_Alita->getSprite()->stopAllActions();
-		m_Alita->setRunning(false);
-		break;
-	}
 }
 void PlayGameScene::jump(Ref* sender, ui::Widget::TouchEventType type)
 {

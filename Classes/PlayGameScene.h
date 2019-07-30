@@ -48,6 +48,8 @@ public:
 	void createPhysics();
 	void createCamera();
 	void createController();
+	void updateController();
+	void enablePressedControl(bool isLeft, bool pressed);
 	void createMC();
 	void addListener();
 	void createMonsters();
@@ -56,17 +58,20 @@ public:
 	void createLose();
 
 	/* Methods using for controller game*/
-	cocos2d::ui::Button* mMoveLeftController;
-	cocos2d::ui::Button* mMoveRightController;
+	cocos2d::Sprite* mMoveLeftController;
+	cocos2d::Sprite* mMoveLeftControllerPressed;
+	cocos2d::Sprite* mMoveRightController;
+	cocos2d::Sprite* mMoveRightControllerPressed;
 	cocos2d::ui::Button* mJumpController;
 	cocos2d::ui::Button* mAttackController;
 	cocos2d::ui::Button* mThrowController;
 	cocos2d::ui::Button* btnPause;
-	bool onTouchBegan(Touch* touch, Event  *event);
-	bool onTouchEnded(Touch* touch, Event  *event);
+	virtual bool onTouchBegan(Touch* touch, Event  *event);
+	virtual void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event  *event);
+	virtual void onTouchEnded(Touch* touch, Event  *event);
 	cocos2d::ui::Widget::TouchEventType mCurrentTouchState;
-	void moveLeft(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
-	void moveRight(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
+	void moveLeft();
+	void moveRight();
 	void jump(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void attack(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void throws(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);

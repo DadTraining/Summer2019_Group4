@@ -24,6 +24,13 @@ public:
 	static const int KAISA_HP = 30;
 	static const int MURAD_DAME = 10;
 	static const int MURAD_HP = 40;
+
+	static const int ID_DART1 = 1;
+	static const int ID_DART2 = 2;
+	static const int ID_DART3 = 3;
+	static const int ID_DART4 = 4;
+	static const int ID_BottleBlood = 5;
+	static const int ITEM_TOTAL = 5;
 protected:
 	Sprite* m_sprite;
 	Sprite* loadingBarMonsterBG;
