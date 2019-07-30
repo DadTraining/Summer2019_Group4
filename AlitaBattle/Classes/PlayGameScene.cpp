@@ -3,10 +3,6 @@
 #include "SimpleAudioEngine.h"
 #include "MenuScene.h"
 #include "OverScene.h"
-#include "WinScene.h"
-#include "ControlMusic.h"
-#include "SaveBloodGold.h"
-
 
 
 using namespace CocosDenshion;
@@ -18,7 +14,7 @@ cocos2d::Sprite* mPauseLayer;
 Scene* PlayGameScene::createScene()
 {
 	auto scene = Scene::createWithPhysics();
-	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vec2(0, -500));
 	//scene->getPhysicsWorld()->setSpeed(3);
 	auto layer = PlayGameScene::create();
@@ -32,19 +28,8 @@ bool PlayGameScene::init()
 	{
 		return false;
 	}
-
-	flag = Sprite::create("flag.png");
-	flag->setScale(0.05);
-	addChild(flag, 10);
-	rectFlag = flag->getBoundingBox();
 	visibleSize = Director::getInstance()->getVisibleSize();
 	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
-	auto turn = ControlMusic::GetInstance()->isMusic();
-	if (turn == true)
-	{
-		auto audio = SimpleAudioEngine::getInstance();
-		audio->playBackgroundMusic("res/Music/ingame.mp3", true);
-	}
 	mCurrentTouchPoint = Point(-1, -1);
 	createMC();
 	createHub();
@@ -53,8 +38,6 @@ bool PlayGameScene::init()
 	createController();
 	createCamera();
 	createPause();
-	createLabel();
-	createGoldLabel();
 
 	//Kaisa_Monster *kaisa = new Kaisa_Monster(this);
 	//Murad_Monster *murad = new Murad_Monster(this);
@@ -75,10 +58,8 @@ void PlayGameScene::update(float deltaTime) {
 	{
 		createLose();
 	}
-	updateKillLabel();
-	updateGoldLabel();
-	UpdateGotoFlag();
 }
+
 
 
 void PlayGameScene::createMapPhysics() {
@@ -88,10 +69,8 @@ void PlayGameScene::createMapPhysics() {
 }
 void PlayGameScene::createMap()
 {
-	visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	map = TMXTiledMap::create("res/map/ok.tmx");
-	//map->setScaleX(0.5);
 	map->setAnchorPoint(Vec2(0, 0));
 	map->setPosition(0, 0);
 
@@ -142,7 +121,6 @@ void PlayGameScene::createMonsters() {
 	auto objects = mObjectGroup->getObjects();
 	int kaisa_count = 0;
 	int murad_count = 0;
-	int gold_count = 0;
 	for (int i = 0; i < objects.size(); i++)
 	{
 		auto object = objects.at(i);
@@ -162,7 +140,6 @@ void PlayGameScene::createMonsters() {
 			kaisa->getBullet()->setIndex(kaisa_count);
 			mKaisa.push_back(kaisa);
 			kaisa_count++;
-			sizeMonster++;
 		}
 		else if (type == 2)
 		{
@@ -170,23 +147,9 @@ void PlayGameScene::createMonsters() {
 			murad->getSprite()->setPosition(Vec2(posX, posY));
 			murad->setIndex(murad_count++);
 			mMurad.push_back(murad);
-			sizeMonster++;
-		} 
-		else if(type == 3)
-		{
-			gold = new Gold(this);
-			gold->getSprite()->setPosition(Vec2(posX, posY));
-			gold->setIndex(gold_count++);
-			mGold.push_back(gold);
-		}
-		else if (type == 4)
-		{
-			flag->setPosition(Vec2(posX, posY));
-			flag->setVisible(false);
 		}
 	}
 }
-
 void PlayGameScene::createHub()
 {
 	hud_bg = Sprite::create("res/BloodMc/hud_bg.png");
@@ -277,87 +240,14 @@ void PlayGameScene::createLose()
 {
 	Director::getInstance()->replaceScene(OverScene::createScene());
 }
-void PlayGameScene::createWin()
-{
-	SaveBloodGold::GetInstance()->setGold(countGold);
-	SaveBloodGold::GetInstance()->setBlood(m_Alita->getHP());
-	Director::getInstance()->replaceScene(WinScene::createScene(((m_Alita->getHP())*100)/mHP));
-}
-void PlayGameScene::createLabel()
-{
-	monsterFrame = Sprite::create("icon.png");
-	monsterFrame->setPosition(Vec2(visibleSize.width / 1.4, visibleSize.height / 1.1));
-	monsterFrame->setScale(0.8);
-	tempCount = CCString::createWithFormat(" %i / %i", countMonster, sizeMonster);
-	labelMonster = Label::createWithTTF(tempCount->getCString(), "fonts/Marker Felt.ttf", 20);
-	labelMonster->setColor(Color3B::RED);
-	labelMonster->setPosition(monsterFrame->getPosition()+Vec2(15,0));
-	addChild(labelMonster, 21);
-	addChild(monsterFrame, 20);
-}
-void PlayGameScene::updateKillLabel()
-{
-	for (auto i : mMurad) {
-		if (i->getHP() <= 0 && i->getKill == false) {
-			countMonster++;
-			countGold += 30;
-			i->getKill = true;
-		}
-	}
-	for (auto i : mKaisa) {
-		if (i->getHP() <= 0 && i->getKill == false) {
-			countMonster++;
-			countGold += 20;
-			i->getKill = true;
-		}
-	}
-		tempCount = CCString::createWithFormat("%i / %i", countMonster, sizeMonster);
-		labelMonster->setString(tempCount->getCString());
-	
-}
-void PlayGameScene::createGoldLabel()
-{
-	goldFrame = Sprite::create("goldFrame.png");
-	goldFrame->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 1.1));
-	goldFrame->setScale(0.7);
-	tempCount1 = CCString::createWithFormat("%i",countGold);
-	labelGold = Label::createWithTTF(tempCount1->getCString(), "fonts/Marker Felt.ttf", 20);
-	labelGold->setColor(Color3B::YELLOW);
-	labelGold->setPosition(goldFrame->getPosition()+Vec2(10,0));
-	addChild(labelGold, 21);
-	addChild(goldFrame, 20);
-}
-void PlayGameScene::updateGoldLabel()
-{
-	for (auto i : mGold) {
-		if  (i->getKill == false && i->getSprite()->isVisible() == false) {
-		countGold+=100;
-		i->getKill = true;
-		}
-	}
-	tempCount1 = CCString::createWithFormat("%i",countGold);
-	labelGold->setString(tempCount1->getCString());
-}
 void PlayGameScene::UpdateMonster(float x_alita)
 {
 	//	auto PositionAlita = m_Alita->getSprite()->getPositionX();
 	for (auto i : mMurad) {
 		i->UpdateAttack(x_alita,m_Alita);
-		i->Update(x_alita);
-	
 	}
 	for (auto i : mKaisa) {
 		i->Update(x_alita);
-	}
-}
-void PlayGameScene::UpdateGotoFlag()
-{
-	rectAlita = m_Alita->getSprite()->getBoundingBox();
-	if (rectAlita.intersectsRect(rectFlag)) {
-	}
-	if (countMonster >= 1 && flag->isVisible()==false) {
-		flag->setVisible(true);
-		createWin();
 	}
 }
 bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
@@ -401,7 +291,6 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 		auto paricleEffect = ParticleSystemQuad::create("particles/collision.plist");
 		paricleEffect->setPosition(a->getPosition());
 		addChild(paricleEffect);
-
 	}
 
 	//dark vs ground
@@ -431,9 +320,6 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 		auto paricleEffect = ParticleSystemQuad::create("particles/collision.plist");
 		paricleEffect->setPosition(a->getPosition());
 		addChild(paricleEffect);
-		auto audio = SimpleAudioEngine::getInstance();
-		audio->playEffect("res/Music/hurt1.mp3", false);
-
 	}
 
 	//Alita vs Round
@@ -441,16 +327,6 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 		|| (a->getCollisionBitmask() == Objects::BITMASK_ALITA && b->getCollisionBitmask() == Objects::BITMASK_GROUND))
 	{
 		m_Alita->setJumping(false);
-	}
-	//Alita vs Gold
-	if ((a->getCollisionBitmask() == Objects::BITMASK_GOLD && b->getCollisionBitmask() == Objects::BITMASK_ALITA)
-		|| (a->getCollisionBitmask() == Objects::BITMASK_ALITA && b->getCollisionBitmask() == Objects::BITMASK_GOLD))
-	{
-		mGold.at(a->getGroup())->GoldCollision();
-		mGold.at(b->getGroup())->GoldCollision();
-		auto audio = SimpleAudioEngine::getInstance();
-		audio->playEffect("res/Music/eatcoin.wav", false);
-
 	}
 	return true;
 }
@@ -480,10 +356,6 @@ void PlayGameScene::updateCenterView()
 		mMcHudBlood->setPosition(hud_bg->getPosition());
 		btnPause->setPosition(Vec2(btnPause->getPosition().x + (x_alita - x_positon_Alita), btnPause->getPosition().y));
 		mPauseLayer->setPosition(Vec2(mPauseLayer->getPosition().x + (x_alita - x_positon_Alita), mPauseLayer->getPosition().y));
-		labelMonster->setPosition(Vec2(labelMonster->getPosition().x + (x_alita - x_positon_Alita), labelMonster->getPosition().y));
-		labelGold->setPosition(Vec2(labelGold->getPosition().x + (x_alita - x_positon_Alita), labelGold->getPosition().y));
-		goldFrame->setPosition(Vec2(goldFrame->getPosition().x + (x_alita - x_positon_Alita), goldFrame->getPosition().y));
-		monsterFrame->setPosition(Vec2(monsterFrame->getPosition().x + (x_alita - x_positon_Alita), monsterFrame->getPosition().y));
 		x_positon_Alita = x_alita;
 	}
 }
@@ -674,6 +546,7 @@ void PlayGameScene::pause(Ref* sender, ui::Widget::TouchEventType type)
 			Director::getInstance()->pause();
 			auto audio = SimpleAudioEngine::getInstance();
 			audio->playEffect("res/Music/buttonclick.mp3", false);
+			//Director::getInstance()->replaceScene(PauseScene::createScene());
 		});
 		mPauseLayer->setOpacity(0);
 		mPauseLayer->setVisible(true);

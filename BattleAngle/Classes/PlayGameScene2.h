@@ -1,5 +1,5 @@
-#ifndef __PLAY_GAME_SCENE_H__
-#define __PLAY_GAME_SCENE_H__
+#ifndef __PLAY_GAME_SCENE2_H__
+#define __PLAY_GAME_SCENE2_H__
 
 #include "cocos2d.h"
 #include "Murad_Monster.h"
@@ -10,7 +10,7 @@
 
 using namespace cocos2d;
 
-class PlayGameScene : public cocos2d::Scene
+class PlayGameScene2 : public cocos2d::Scene
 {
 private:
 	/*Attriibute Mainly*/
@@ -43,9 +43,11 @@ private:
 	Label* labelGold;
 	Sprite* goldFrame;
 	Sprite* monsterFrame;
-	int sizeMonster= 0;
+	int sizeMonster = 0;
 	int countGold;
 
+	Size visibleSize;
+	cocos2d::Sprite* mPauseLayer;
 
 
 	/*Another Attribute */
@@ -105,7 +107,7 @@ public:
 	void UpdateMonster(float x_alita);
 	void UpdateGotoFlag();
 
-	CREATE_FUNC(PlayGameScene);
+	CREATE_FUNC(PlayGameScene2);
 };
 
-#endif // __PLAY_GAME_SCENE_H__
+#endif // __PLAY_GAME_SCENE2_H__

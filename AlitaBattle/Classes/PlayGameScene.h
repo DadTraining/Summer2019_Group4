@@ -5,7 +5,6 @@
 #include "Murad_Monster.h"
 #include "Kaisa_Monster.h"
 #include "Alita.h"
-#include "Gold.h"
 #include "ui/CocosGUI.h"
 
 using namespace cocos2d;
@@ -14,8 +13,6 @@ class PlayGameScene : public cocos2d::Scene
 {
 private:
 	/*Attriibute Mainly*/
-	Rect rectFlag;
-	Sprite * flag;
 	Alita* m_Alita;
 	Node *egdeNode;
 	Point mCurrentTouchPoint;
@@ -26,27 +23,14 @@ private:
 	Camera *camera;
 	Kaisa_Monster *kaisa;
 	Murad_Monster *murad;
-	Gold *gold;
 	std::vector<Murad_Monster*> mMurad;
 	std::vector<Kaisa_Monster*> mKaisa;
-	std::vector<Gold*> mGold;
 	Sprite * hud;
 	Sprite * hud_bg;
 	cocos2d::ui::LoadingBar *mMcHudBlood;
 	int mHP = Objects::ALITA_HP;
 	Rect rectMonster;
 	Rect rectAlita;
-	CCString *tempCount;
-	CCString *tempCount1;
-	int countMonster = 0;
-	Label* labelMonster;
-	Label* labelGold;
-	Sprite* goldFrame;
-	Sprite* monsterFrame;
-	int sizeMonster= 0;
-	int countGold;
-
-
 
 	/*Another Attribute */
 	float STATIC_Position_Alita;
@@ -70,11 +54,6 @@ public:
 	void createHub();
 	void createPause();
 	void createLose();
-	void createWin();
-	void createLabel();
-	void updateKillLabel();
-	void createGoldLabel();
-	void updateGoldLabel();
 
 	/* Methods using for controller game*/
 	cocos2d::ui::Button* mMoveLeftController;
@@ -103,7 +82,6 @@ public:
 	void setTurn_Monster(float xAlita);
 	void updateCenterView();
 	void UpdateMonster(float x_alita);
-	void UpdateGotoFlag();
 
 	CREATE_FUNC(PlayGameScene);
 };

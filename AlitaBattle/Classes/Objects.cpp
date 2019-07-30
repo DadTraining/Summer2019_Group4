@@ -86,7 +86,6 @@ void Objects::setAlive(bool alive)
 	m_isAlive = alive;
 }
 
-
 Sprite* Objects::DuplicateSprite(Sprite * sprite)
 {
 	Sprite* pRet = Sprite::createWithTexture(sprite->getTexture());

@@ -10,7 +10,7 @@ Alita::Alita(Scene * scene)
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	auto ScreenSize = Director::getInstance()->getVisibleSize();
 	m_sprite->setPosition(ScreenSize / 2);
-	m_sprite->setScale(0.15);
+	m_sprite->setScale(0.2);
 	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
 	mPhysicBody->setGravityEnable(true);	//Gravity
 	mPhysicBody->setMass(200);

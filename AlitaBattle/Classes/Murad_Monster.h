@@ -29,7 +29,7 @@ public:
 	void setTurn_Murad(float position);
 	void Collision();
 
-protected:
+private:
 	cocos2d::Action* mAnimation[ANIM_TOTAl];
 	int FPS = 0;
 };

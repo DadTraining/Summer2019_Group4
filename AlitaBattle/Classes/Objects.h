@@ -2,7 +2,6 @@
 #define __OBJECTS__
 
 #include "cocos2d.h"
-#include "ui/CocosGUI.h"
 
 USING_NS_CC;
 
@@ -17,25 +16,19 @@ public:
 	static const int BITMASK_BULLET = BITMASK_GROUND + 1;
 	static const int BITMASK_DART = BITMASK_BULLET + 1;
 	static const int BITMASK_MURAD = BITMASK_DART + 1;
-	static const int BITMASK_GOLD = BITMASK_MURAD + 1;
 
 	static const int ALITA_DAME = 10;
-	static const int ALITA_HP = 4000;
+	static const int ALITA_HP = 400;
 	static const int KAISA_DAME = 10;
 	static const int KAISA_HP = 30;
 	static const int MURAD_DAME = 10;
 	static const int MURAD_HP = 40;
-	static int countMonster;
-	bool getKill = false;
 protected:
 	Sprite* m_sprite;
-	Sprite* loadingBarMonsterBG;
-	ui::LoadingBar * loadingMonster;
 
 	int m_hp;
 	int m_dame;
 	bool m_isAlive;
-
 
 
 public:

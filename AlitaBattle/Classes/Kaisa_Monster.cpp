@@ -16,9 +16,6 @@ Kaisa_Monster::Kaisa_Monster(Scene * scene)
 
 	Init();
 	scene->addChild(m_sprite);
-	scene->addChild(loadingBarMonsterBG, 10);
-	scene->addChild(loadingMonster, 15);
-
 
 	//Create Bullet
 	bullet = new Bullet(scene);
@@ -79,7 +76,7 @@ void Kaisa_Monster::Init()
 	m_sprite = Sprite::create("plist/Kaisa/Die_000.png");
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	m_sprite->setPosition(Vec2(visibleSize.width / 1.1, visibleSize.height / 2));
-	m_sprite->setScale(0.06);
+	m_sprite->setScale(0.08);
 	//PhysicBody
 	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize()-Size(1000,0));
 	mPhysicBody->setDynamic(true);
@@ -88,17 +85,6 @@ void Kaisa_Monster::Init()
 	mPhysicBody->setContactTestBitmask(true);
 	mPhysicBody->setCategoryBitmask(1);
 	m_sprite->setPhysicsBody(mPhysicBody);
-
-	//LoadingBar
-	loadingBarMonsterBG = Sprite::create("loading_bg.png");
-	loadingBarMonsterBG->setAnchorPoint(Vec2(0.5, 0));
-	loadingBarMonsterBG->setScale(0.2);
-	loadingMonster = ui::LoadingBar::create("progress.png");
-	loadingMonster->setAnchorPoint(Vec2(0.5, 0));
-	loadingMonster->setScale(0.2);
-	loadingMonster->setPercent(Objects::KAISA_HP);
-	loadingMonster->setDirection(ui::LoadingBar::Direction::LEFT);
-
 }
 
 
@@ -115,11 +101,6 @@ void Kaisa_Monster::Update(float deltaTime)
 		FPSKaisa = 0;
 	}
 	//bullet->UpdateAlive();
-	//update LoadingMonster
-	loadingBarMonsterBG->setPosition(m_sprite->getPosition().x, m_sprite->getPosition().y + m_sprite->getContentSize().height*0.1);
-	loadingMonster->setPosition(loadingBarMonsterBG->getPosition());
-	loadingMonster->setPercent(getHP() * 100 / Objects::KAISA_HP);
-
 }
 
 void Kaisa_Monster::Run()
@@ -151,7 +132,7 @@ void Kaisa_Monster::Shoot()
 {
 	if (bullet->getSprite()->isVisible() == false)
 	{
-		bullet->getSprite()->setPosition(Vec2(this->m_sprite->getPosition().x - 20, this->m_sprite->getPosition().y + 30));
+		bullet->getSprite()->setPosition(Vec2(this->m_sprite->getPosition().x - 20, this->m_sprite->getPosition().y + 60));
 		/*if (bullet->isAlive()) {
 		bullet->getSprite()->setVisible(true);
 		}*/
@@ -174,11 +155,6 @@ void Kaisa_Monster::Die()
 	bullet->mPhysicBody->setEnabled(false);
 	bullet->getSprite()->setVisible(false);
 	bullet->setAlive(false);
-	this->setAlive(false);
-	loadingBarMonsterBG->setVisible(false);
-	loadingMonster->setVisible(false);
-	
-
 }
 
 void Kaisa_Monster::setTurnRight()

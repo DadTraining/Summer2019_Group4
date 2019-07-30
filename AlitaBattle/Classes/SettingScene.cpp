@@ -2,7 +2,6 @@
 #include "ui/CocosGUI.h"
 #include "MenuScene.h"
 #include "SimpleAudioEngine.h"
-#include "ControlMusic.h"
 
 using namespace CocosDenshion;
 
@@ -28,7 +27,7 @@ bool SettingScene::init()
 	if (!Scene::init())
 	{
 		return false;
-	}
+	} 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	//set background
@@ -55,7 +54,7 @@ bool SettingScene::init()
 	addChild(bg2, 3);
 	//BackButton
 	auto btnBack = ui::Button::create("res/Setting_UI/close.png");
-	btnBack->setPosition(Vec2(visibleSize.width - btnBack->getContentSize().width - 24, visibleSize.height - btnBack->getContentSize().height + 70));
+	btnBack->setPosition(Vec2(visibleSize.width-btnBack->getContentSize().width -24,visibleSize.height-btnBack->getContentSize().height+70));
 	btnBack->setScale(0.23);
 	addChild(btnBack, 7);
 	btnBack->addClickEventListener([&](Ref* event) {
@@ -69,7 +68,7 @@ bool SettingScene::init()
 
 		});
 
-		auto sequence = Sequence::create(DelayTime::create(0.00001f), gotoNext, nullptr);
+		auto sequence = Sequence::create(DelayTime::create(0.00001f), gotoNext,nullptr);
 
 		runAction(sequence);
 
@@ -81,21 +80,20 @@ bool SettingScene::init()
 	title->setColor(Color3B::BLACK);
 	addChild(title, 7);
 
-	checkboxSound = ui::CheckBox::create("res/Setting_UI/off.png", "res/Setting_UI/on.png");
+	checkboxSound = ui::CheckBox::create("res/Setting_UI/on.png","res/Setting_UI/off.png");
 	checkboxSound->retain();
 	checkboxSound->setScale(0.3);
-	checkboxSound->setSelected(ControlMusic::GetInstance()->isSound());
+	checkboxSound->setSelected(true);
 	checkboxSound->addClickEventListener([&](Ref* event)
 	{
 		checkboxSound->isSelected();
-		if (!checkboxSound->isSelected())
+		if (!checkboxSound->isSelected() && !checkboxMusic->isSelected())
 		{
-			ControlMusic::GetInstance()->setSound(true);
+			volumeSlider->setEnabled(false);
 		}
 		else
 		{
-			ControlMusic::GetInstance()->setSound(false);
-			SimpleAudioEngine::getInstance()->stopAllEffects();
+			volumeSlider->setEnabled(true);
 		}
 
 	});
@@ -105,27 +103,25 @@ bool SettingScene::init()
 
 	//Music checkbox
 	auto title1 = Label::createWithTTF("MUSIC", "fonts/Marker Felt.ttf", 20);
-	title1->setPosition(Vec2(title->getPosition() - Vec2(0, 30)));
+	title1->setPosition(Vec2(title->getPosition()-Vec2(0,30)));
 	title1->setColor(Color3B::BLACK);
 	addChild(title1, 7);
 
-	checkboxMusic = ui::CheckBox::create("res/Setting_UI/off.png", "res/Setting_UI/on.png");
+	checkboxMusic = ui::CheckBox::create("res/Setting_UI/on.png", "res/Setting_UI/off.png");
 	checkboxMusic->retain();
 	checkboxMusic->setScale(0.3);
-	checkboxMusic->setSelected(ControlMusic::GetInstance()->isMusic());
+	checkboxMusic->setSelected(true);
 	checkboxMusic->addClickEventListener([&](Ref* event)
 	{
-
-
-		if (!checkboxMusic->isSelected())
+		checkboxMusic->isSelected();
+		checkboxSound->isSelected();
+		if (!checkboxSound->isSelected() && !checkboxMusic->isSelected())
 		{
-			ControlMusic::GetInstance()->setMusic(true);
-			SimpleAudioEngine::getInstance()->playBackgroundMusic("res/Music/soundMenu.mp3", true);
+			volumeSlider->setEnabled(false);
 		}
 		else
 		{
-			ControlMusic::GetInstance()->setMusic(false);
-			SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+			volumeSlider->setEnabled(true);
 		}
 
 	});
@@ -135,7 +131,7 @@ bool SettingScene::init()
 
 	//Volume Slider
 	auto title2 = Label::createWithTTF("VOLUME", "fonts/Marker Felt.ttf", 20);
-	title2->setPosition(Vec2(title1->getPosition() - Vec2(0, 30)));
+	title2->setPosition(Vec2(title1->getPosition() - Vec2(0,30)));
 	title2->setColor(Color3B::BLACK);
 	addChild(title2, 7);
 
@@ -145,26 +141,23 @@ bool SettingScene::init()
 	volumeSlider->loadSlidBallTextures("res/Setting_UI/rate.png", "res/Setting_UI/rate.png", "res/Setting_UI/less.png");
 	volumeSlider->loadProgressBarTexture("res/Setting_UI/volume2.png");
 	volumeSlider->setPosition(Vec2(title2->getPosition().x + 115, title2->getPosition().y));
-	volumeSlider->setPercent(ControlMusic::GetInstance()->getVolume());
+	//volumeSlider->setPercent();
 	volumeSlider->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type) {
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			ControlMusic::GetInstance()->setVolume(volumeSlider->getPercent());
-			SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(ControlMusic::GetInstance()->getVolume());
-			SimpleAudioEngine::getInstance()->setEffectsVolume(ControlMusic::GetInstance()->getVolume());
 			break;
 		default:
 			break;
 		}
 	});
 
-	this->addChild(volumeSlider, 10);
+	this->addChild(volumeSlider,10);
 
 
-
+	
 
 	return true;
 }
