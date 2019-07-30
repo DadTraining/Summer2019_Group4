@@ -33,11 +33,12 @@ void Gold::Init()
 	m_sprite = Sprite::create("plist/Gold/gold_00.png");
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	m_sprite->setPosition(Vec2(visibleSize.width / 2, 0));
-	m_sprite->setScale(0.5);
+	m_sprite->setScale(0.3);
 	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
 	mPhysicBody->setCollisionBitmask(Objects::BITMASK_GOLD);
 	mPhysicBody->setContactTestBitmask(3);
 	mPhysicBody->setCategoryBitmask(1);
+	mPhysicBody->setGravityEnable(false);
 	mPhysicBody->setDynamic(true);
 	mPhysicBody->setRotationEnable(false);
 	m_sprite->setPhysicsBody(mPhysicBody);

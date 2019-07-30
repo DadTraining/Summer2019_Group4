@@ -38,13 +38,16 @@ private:
 	Rect rectAlita;
 	CCString *tempCount;
 	CCString *tempCount1;
+	CCString *tempCountBlood;
 	int countMonster = 0;
 	Label* labelMonster;
 	Label* labelGold;
+	Label* labelBottleBlood;
 	Sprite* goldFrame;
 	Sprite* monsterFrame;
 	int sizeMonster= 0;
 	int countGold;
+	int countBottleBlood = 0;
 
 
 
@@ -75,6 +78,7 @@ public:
 	void updateKillLabel();
 	void createGoldLabel();
 	void updateGoldLabel();
+	void updateBottleBlood();
 
 	/* Methods using for controller game*/
 	cocos2d::ui::Button* mMoveLeftController;
@@ -83,6 +87,7 @@ public:
 	cocos2d::ui::Button* mAttackController;
 	cocos2d::ui::Button* mThrowController;
 	cocos2d::ui::Button* btnPause;
+	cocos2d::ui::Button* btnBlood;
 	bool onTouchBegan(Touch* touch, Event  *event);
 	bool onTouchEnded(Touch* touch, Event  *event);
 	cocos2d::ui::Widget::TouchEventType mCurrentTouchState;
@@ -92,6 +97,7 @@ public:
 	void attack(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void throws(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 	void pause(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
+	void bloodMC(cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 
 	/*Methods using logic game*/
 	void setPhysicsWorld(PhysicsWorld *m_world) {

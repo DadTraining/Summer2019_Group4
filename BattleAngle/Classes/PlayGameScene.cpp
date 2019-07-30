@@ -78,6 +78,7 @@ void PlayGameScene::update(float deltaTime) {
 	updateKillLabel();
 	updateGoldLabel();
 	UpdateGotoFlag();
+	updateBottleBlood();
 }
 
 
@@ -338,6 +339,12 @@ void PlayGameScene::updateGoldLabel()
 	tempCount1 = CCString::createWithFormat("%i",countGold);
 	labelGold->setString(tempCount1->getCString());
 }
+void PlayGameScene::updateBottleBlood()
+{
+	
+	tempCountBlood = CCString::createWithFormat("%i", countBottleBlood);
+	labelBottleBlood->setString(tempCountBlood->getCString());
+}
 void PlayGameScene::UpdateMonster(float x_alita)
 {
 	//	auto PositionAlita = m_Alita->getSprite()->getPositionX();
@@ -355,7 +362,7 @@ void PlayGameScene::UpdateGotoFlag()
 	rectAlita = m_Alita->getSprite()->getBoundingBox();
 	if (rectAlita.intersectsRect(rectFlag)) {
 	}
-	if (countMonster >= 1 && flag->isVisible()==false) {
+	if (countMonster == 1 && flag->isVisible()==false) {
 		flag->setVisible(true);
 		createWin();
 	}
@@ -466,7 +473,8 @@ void PlayGameScene::setTurn_Monster(float xAlita)
 void PlayGameScene::updateCenterView()
 {
 	auto x_alita = m_Alita->getSprite()->getPosition().x;
-	if (x_alita>STATIC_Position_Alita && x_alita<(map->getContentSize().width - visibleSize.width / 2)) {
+	if (x_alita>STATIC_Position_Alita && x_alita<(map->getContentSize().width - visibleSize.width / 2)) 
+	{
 		camera->setPosition(camera->getPosition().x + (x_alita - x_positon_Alita), visibleSize.height / 2);
 		//egdeNode->setPosition(egdeNode->getPosition().x + (x_alita - x_positon_Alita), visibleSize.height / 2);
 		mMoveLeftController->setPosition(Vec2(mMoveLeftController->getPosition().x + (x_alita - x_positon_Alita), mMoveLeftController->getPosition().y));
@@ -484,6 +492,8 @@ void PlayGameScene::updateCenterView()
 		labelGold->setPosition(Vec2(labelGold->getPosition().x + (x_alita - x_positon_Alita), labelGold->getPosition().y));
 		goldFrame->setPosition(Vec2(goldFrame->getPosition().x + (x_alita - x_positon_Alita), goldFrame->getPosition().y));
 		monsterFrame->setPosition(Vec2(monsterFrame->getPosition().x + (x_alita - x_positon_Alita), monsterFrame->getPosition().y));
+		btnBlood->setPosition(Vec2(btnBlood->getPosition().x + (x_alita - x_positon_Alita), btnBlood->getPosition().y));
+		labelBottleBlood->setPosition(Vec2(labelBottleBlood->getPosition().x + (x_alita - x_positon_Alita), labelBottleBlood->getPosition().y));
 		x_positon_Alita = x_alita;
 	}
 }
@@ -562,6 +572,19 @@ void PlayGameScene::createController()
 	btnPause->setPosition(Vec2(visibleSize.width - 50, visibleSize.height - 30));
 	btnPause->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::pause, this));
 	addChild(btnPause, 20);
+	//Blood
+	btnBlood = ui::Button::create("res/BloodMc/bloodbottle.png");
+	btnBlood->setAnchorPoint(Vec2(0, 0.5));
+	//btnBlood->setScale(1.3);
+	btnBlood->setPosition(mAttackController->getPosition() - Vec2(150,0));
+	btnBlood->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::bloodMC, this));
+	addChild(btnBlood,21);
+	countBottleBlood = 3;
+	tempCountBlood = CCString::createWithFormat("%i", countBottleBlood);
+	labelBottleBlood = Label::createWithTTF(tempCountBlood->getCString(), "fonts/Marker Felt.ttf", 20);
+	labelBottleBlood->setColor(Color3B::RED);
+	labelBottleBlood->setPosition(btnBlood->getPosition() + Vec2(40, 0));
+	addChild(labelBottleBlood, 21);
 }
 
 void PlayGameScene::createMC()
@@ -679,6 +702,37 @@ void PlayGameScene::pause(Ref* sender, ui::Widget::TouchEventType type)
 		mPauseLayer->setVisible(true);
 		auto fadeIn = FadeIn::create(0.3f);
 		mPauseLayer->runAction(Sequence::create(fadeIn, funcPause, nullptr));
+		break;
+	}
+}
+
+void PlayGameScene::bloodMC(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEventType type)
+{
+	switch (type)
+	{
+	case ui::Widget::TouchEventType::BEGAN:
+		break;
+	case ui::Widget::TouchEventType::ENDED:
+		if (countBottleBlood > 0)
+		{
+			if (m_Alita->getHP() < mHP)
+			{
+				auto tempBlood = m_Alita->getHP() + 200;
+				if (tempBlood > mHP)
+				{
+					m_Alita->setHP(mHP);
+				}
+				else
+				{
+					m_Alita->setHP(tempBlood);
+				}
+				
+			}
+
+			countBottleBlood--;
+			auto audio = SimpleAudioEngine::getInstance()->playEffect("res/Music/eatblood.wav", false);
+		}
+		
 		break;
 	}
 }

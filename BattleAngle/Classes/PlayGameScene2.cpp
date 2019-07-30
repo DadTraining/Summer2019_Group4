@@ -566,7 +566,7 @@ void PlayGameScene2::createController()
 void PlayGameScene2::createMC()
 {
 	m_Alita = new Alita(this);
-	m_Alita->setHP(SaveBloodGold::GetInstance()->getBloood());
+	//m_Alita->setHP(SaveBloodGold::GetInstance()->getBloood());
 	STATIC_Position_Alita = m_Alita->getSprite()->getPosition().x;
 	x_positon_Alita = m_Alita->getSprite()->getPosition().x;
 }
