@@ -12,6 +12,7 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	scene->addChild(loadingBarMonsterBG, 10);
 	scene->addChild(loadingMonster, 15);
 
+
 	SpriteBatchNode *spriteNode;
 	Sprite* sprite;
 	SpriteFrame* spriteFrame;
@@ -53,7 +54,7 @@ Murad_Monster::Murad_Monster(Scene * scene)
 	auto animateAttack = Animate::create(Murad_Monster::createAnimation("Attack_00", 9, 0.15));
 	//animateAttack->retain();
 
-	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create(animateAttack, 1.2));
+	mAnimation[ANIM_ATTACK] = m_sprite->runAction(Repeat::create(animateAttack, 1));
 	CC_SAFE_RETAIN(mAnimation[ANIM_ATTACK]);
 
 	spriteNode = SpriteBatchNode::create("plist/Murad/Dead_Murad.png");
@@ -100,14 +101,13 @@ void Murad_Monster::Init() {
 	loadingMonster->setScale(0.2);
 	loadingMonster->setPercent(Objects::MURAD_HP);
 	loadingMonster->setDirection(ui::LoadingBar::Direction::LEFT);
-
 }
 void Murad_Monster::UpdateAttack(float xAlita, Alita * alita) {
 	if (getHP() > 0) {
-		FPS++;
-		if (FPS == 20) {
+		FPSMurad++;
+		if (FPSMurad == 20) {
 			setState_Murad(xAlita);
-			FPS = 0;
+			FPSMurad = 0;
 		}
 		if (attacked == true) {
 			alita->BulletCollision();
@@ -121,7 +121,6 @@ void Murad_Monster::Update(float deltaTime)
 	loadingBarMonsterBG->setPosition(m_sprite->getPosition().x, m_sprite->getPosition().y + m_sprite->getContentSize().height*0.1);
 	loadingMonster->setPosition(loadingBarMonsterBG->getPosition());
 	loadingMonster->setPercent(getHP() * 100 / Objects::MURAD_HP);
-
 }
 void Murad_Monster::Idle()
 {
@@ -153,11 +152,8 @@ void Murad_Monster::Die()
 	m_sprite->runAction(mAnimation[ANIM_DIE]);
 	mPhysicBody->setEnabled(false);
 	m_sprite->setVisible(false);
-	this->setAlive(false);
 	loadingBarMonsterBG->setVisible(false);
 	loadingMonster->setVisible(false);
-	
-
 }
 
 
@@ -185,9 +181,9 @@ bool Murad_Monster::getm_LetftoRight()
 		return false;
 }
 
-void Murad_Monster::DarkCollision()
+void Murad_Monster::DarkCollision(int dame)
 {
-	this->setHP(this->getHP() - Objects::ALITA_DAME);
+	this->setHP(this->getHP() - dame);
 	if (this->getHP() <= 0) {
 		this->Die();
 	}

@@ -6,6 +6,7 @@ USING_NS_CC;
 SaveBloodGold* SaveBloodGold::s_instance = NULL;
 SaveBloodGold::SaveBloodGold()
 {
+	this->gold = 0;
 }
 
 SaveBloodGold::~SaveBloodGold()

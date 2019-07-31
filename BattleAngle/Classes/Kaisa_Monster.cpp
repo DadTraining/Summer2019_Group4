@@ -13,12 +13,10 @@ Kaisa_Monster::Kaisa_Monster(Scene * scene)
 
 	//KaisaMonster is live
 	this->m_isAlive = true;
-
 	Init();
 	scene->addChild(m_sprite);
 	scene->addChild(loadingBarMonsterBG, 10);
 	scene->addChild(loadingMonster, 15);
-
 
 	//Create Bullet
 	bullet = new Bullet(scene);
@@ -79,9 +77,9 @@ void Kaisa_Monster::Init()
 	m_sprite = Sprite::create("plist/Kaisa/Die_000.png");
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	m_sprite->setPosition(Vec2(visibleSize.width / 1.1, visibleSize.height / 2));
-	m_sprite->setScale(0.06);
+	m_sprite->setScale(0.08);
 	//PhysicBody
-	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize()-Size(1000,0));
+	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize() - Size(1000, 0));
 	mPhysicBody->setDynamic(true);
 	mPhysicBody->setRotationEnable(false);
 	mPhysicBody->setCollisionBitmask(Objects::BITMASK_KAISA);
@@ -98,7 +96,6 @@ void Kaisa_Monster::Init()
 	loadingMonster->setScale(0.2);
 	loadingMonster->setPercent(Objects::KAISA_HP);
 	loadingMonster->setDirection(ui::LoadingBar::Direction::LEFT);
-
 }
 
 
@@ -119,7 +116,6 @@ void Kaisa_Monster::Update(float deltaTime)
 	loadingBarMonsterBG->setPosition(m_sprite->getPosition().x, m_sprite->getPosition().y + m_sprite->getContentSize().height*0.1);
 	loadingMonster->setPosition(loadingBarMonsterBG->getPosition());
 	loadingMonster->setPercent(getHP() * 100 / Objects::KAISA_HP);
-
 }
 
 void Kaisa_Monster::Run()
@@ -151,7 +147,7 @@ void Kaisa_Monster::Shoot()
 {
 	if (bullet->getSprite()->isVisible() == false)
 	{
-		bullet->getSprite()->setPosition(Vec2(this->m_sprite->getPosition().x - 20, this->m_sprite->getPosition().y + 30));
+		bullet->getSprite()->setPosition(Vec2(this->m_sprite->getPosition().x - 20, this->m_sprite->getPosition().y + 60));
 		/*if (bullet->isAlive()) {
 		bullet->getSprite()->setVisible(true);
 		}*/
@@ -174,11 +170,8 @@ void Kaisa_Monster::Die()
 	bullet->mPhysicBody->setEnabled(false);
 	bullet->getSprite()->setVisible(false);
 	bullet->setAlive(false);
-	this->setAlive(false);
 	loadingBarMonsterBG->setVisible(false);
 	loadingMonster->setVisible(false);
-	
-
 }
 
 void Kaisa_Monster::setTurnRight()
@@ -204,9 +197,9 @@ bool Kaisa_Monster::getm_LetftoRight()
 		return false;
 }
 
-void Kaisa_Monster::DarkCollision()
+void Kaisa_Monster::DarkCollision(int dame)
 {
-	this->setHP(this->getHP() - Objects::ALITA_DAME);
+	this->setHP(this->getHP() - dame);
 	if (this->getHP() <= 0) {
 		this->Die();
 	}

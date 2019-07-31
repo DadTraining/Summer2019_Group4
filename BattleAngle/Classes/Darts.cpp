@@ -1,5 +1,5 @@
 #include "Darts.h"
-
+#include <sstream>
 Darts::Darts(cocos2d::Scene * scene)
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -15,8 +15,9 @@ Darts::Darts(cocos2d::Scene * scene)
 	mPhysicBody->setContactTestBitmask(true);
 	mPhysicBody->setCategoryBitmask(3);
 	mPhysicBody->setEnabled(false);
+	m_sprite->removeAllComponents();
 	m_sprite->setPhysicsBody(mPhysicBody);
-	m_sprite->setScale(0.3);
+
 	//add bullet in scene
 	scene->addChild(this->m_sprite, 0);
 	m_LefttoRight = true;
@@ -28,8 +29,25 @@ Darts::~Darts()
 
 void Darts::Init()
 {
-	Sprite* sprite = Sprite::create("Kunai.png");
-	this->m_sprite = DuplicateSprite(sprite);
+	for (list<Item*>::iterator it = MyItems::GetInstance()->ListItems.begin(); it != MyItems::GetInstance()->ListItems.end(); it++) {
+		if ((*it)->getUse() == true) {
+			std::string out_string;
+			std::stringstream ss;
+			ss << (*it)->getId();
+			this->m_sprite = Sprite::create("res/shop/PNG/Dart" + ss.str() + ".png");
+			this->m_sprite->setScale(0.1);
+			this->m_sprite->setRotation(45);
+			this->setDame(Objects::ALITA_DAME / 2 + (*it)->getDame());
+			hadDart = true;
+			break;
+		}
+	}
+	if (hadDart == false) {
+		Sprite* sprite = Sprite::create("Kunai.png");
+		this->m_sprite = DuplicateSprite(sprite);
+		this->m_sprite->setScale(0.3);
+		this->setDame(Objects::ALITA_DAME / 2);
+	}
 }
 
 

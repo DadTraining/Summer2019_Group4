@@ -5,6 +5,7 @@
 #include "SettingScene.h"
 #include "OverScene.h"
 #include "WinScene.h"
+#include "ShopScene.h"
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1

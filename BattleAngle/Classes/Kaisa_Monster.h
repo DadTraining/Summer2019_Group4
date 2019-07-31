@@ -34,7 +34,7 @@ public:
 	void setTurnRight();
 	void setTurnLeft();
 	bool getm_LetftoRight();
-	void DarkCollision();
+	void DarkCollision(int dame);
 	void AlitaCollision();
 	void setStateKaiSa(float position);
 	void setTurnKaisa(float position);

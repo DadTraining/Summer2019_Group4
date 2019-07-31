@@ -4,6 +4,7 @@
 #include "SimpleAudioEngine.h"
 #include "SettingScene.h"
 #include "ControlMusic.h"
+#include "ShopScene.h"
 
 using namespace CocosDenshion;
 
@@ -85,6 +86,8 @@ bool MenuScene::init()
 		auto audio = SimpleAudioEngine::getInstance();
 		audio->playEffect("res/Music/buttonclick.mp3", false);
 		//replace ShopScene
+		Director::getInstance()->replaceScene(ShopScene::createScene());
+
 	});
 	btnShop->setPosition(btnSetting->getPosition()+Vec2(0,60));
 	addChild(btnShop);

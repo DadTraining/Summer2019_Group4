@@ -10,7 +10,7 @@ Alita::Alita(Scene * scene)
 	m_sprite->setAnchorPoint(Vec2(0.5, 0));
 	auto ScreenSize = Director::getInstance()->getVisibleSize();
 	m_sprite->setPosition(ScreenSize / 2);
-	m_sprite->setScale(0.15);
+	m_sprite->setScale(0.2);
 	mPhysicBody = PhysicsBody::createBox(m_sprite->getContentSize());
 	mPhysicBody->setGravityEnable(true);	//Gravity
 	mPhysicBody->setMass(200);
@@ -43,7 +43,7 @@ void Alita::createAnimate()
 	SpriteBatchNode *spriteNode = SpriteBatchNode::create("plist/Alita/runAlita.png");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("plist/Alita/runAlita.plist");
 	auto model = Sprite::createWithSpriteFrameName("Run__000.png");
-	model->setPosition(m_sprite->getPosition());
+	//model->setPosition(m_sprite->getPosition());
 	spriteNode->addChild(model);
 	auto animate = Animate::create(createAnimation("Run__00", 9, 0.05));
 	mAnimation[ANIM_RUN] = RepeatForever::create(animate);
@@ -164,12 +164,12 @@ void Alita::Throw()
 		attacking = false;
 		m_sprite->runAction(mAnimation[ANIM_THROW]);
 		/*if (isRunning()) {
-			auto sequence = Sequence::create(DelayTime::create(1.2), this->mAnimation[ANIM_RUN], nullptr);
-			this->m_sprite->runAction(sequence);
+		auto sequence = Sequence::create(DelayTime::create(1.2), this->mAnimation[ANIM_RUN], nullptr);
+		this->m_sprite->runAction(sequence);
 		}*/
 		auto audio = SimpleAudioEngine::getInstance();
 		audio->playEffect("res/Music/attackAlita.wav", false);
-		}
+	}
 }
 
 void Alita::Update(float deltaTime)

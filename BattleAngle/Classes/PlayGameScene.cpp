@@ -37,6 +37,13 @@ bool PlayGameScene::init()
 	flag->setScale(0.05);
 	addChild(flag, 10);
 	rectFlag = flag->getBoundingBox();
+	for (std::list<Item*>::iterator it = MyItems::GetInstance()->ListItems.begin(); it != MyItems::GetInstance()->ListItems.end(); it++)
+	{
+		if ((*it)->getId() == Objects::ID_BottleBlood)
+		{
+			countBottleBlood = (*it)->getSum();
+		}
+	}
 	visibleSize = Director::getInstance()->getVisibleSize();
 	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
 	auto turn = ControlMusic::GetInstance()->isMusic();
@@ -92,7 +99,7 @@ void PlayGameScene::createMap()
 	visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	map = TMXTiledMap::create("res/map/ok.tmx");
-	//map->setScaleX(0.5);
+	//map->setScale(visibleSize.width / map->getContentSize().width, visibleSize.height / map->getContentSize().height);
 	map->setAnchorPoint(Vec2(0, 0));
 	map->setPosition(0, 0);
 
@@ -341,7 +348,6 @@ void PlayGameScene::updateGoldLabel()
 }
 void PlayGameScene::updateBottleBlood()
 {
-	
 	tempCountBlood = CCString::createWithFormat("%i", countBottleBlood);
 	labelBottleBlood->setString(tempCountBlood->getCString());
 }
@@ -378,12 +384,12 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 	{
 		if (a->getCollisionBitmask() == Objects::BITMASK_DART)
 		{
-			mKaisa.at(b->getGroup())->DarkCollision();
+			mKaisa.at(b->getGroup())->DarkCollision(m_Alita->getDarts()->getDame());
 			m_Alita->getDarts()->setAlive(false);
 		}
 		else if (b->getCollisionBitmask() == Objects::BITMASK_DART)
 		{
-			mKaisa.at(a->getGroup())->DarkCollision();
+			mKaisa.at(a->getGroup())->DarkCollision(m_Alita->getDarts()->getDame());
 			m_Alita->getDarts()->setAlive(false);
 		}
 		auto paricleEffect = ParticleSystemQuad::create("particles/collision.plist");
@@ -397,12 +403,12 @@ bool PlayGameScene::onContactBegin(cocos2d::PhysicsContact & contact)
 	{
 		if (a->getCollisionBitmask() == Objects::BITMASK_DART&& b->getContactTestBitmask() == 3)
 		{
-			mMurad.at(b->getGroup())->DarkCollision();
+			mMurad.at(b->getGroup())->DarkCollision(m_Alita->getDarts()->getDame());
 			m_Alita->getDarts()->setAlive(false);
 		}
 		else if (b->getCollisionBitmask() == Objects::BITMASK_DART &&a->getContactTestBitmask() == 3)
 		{
-			mMurad.at(a->getGroup())->DarkCollision();
+			mMurad.at(a->getGroup())->DarkCollision(m_Alita->getDarts()->getDame());
 			m_Alita->getDarts()->setAlive(false);
 		}
 		auto paricleEffect = ParticleSystemQuad::create("particles/collision.plist");
@@ -579,7 +585,6 @@ void PlayGameScene::createController()
 	btnBlood->setPosition(mAttackController->getPosition() - Vec2(150,0));
 	btnBlood->addTouchEventListener(CC_CALLBACK_2(PlayGameScene::bloodMC, this));
 	addChild(btnBlood,21);
-	countBottleBlood = 3;
 	tempCountBlood = CCString::createWithFormat("%i", countBottleBlood);
 	labelBottleBlood = Label::createWithTTF(tempCountBlood->getCString(), "fonts/Marker Felt.ttf", 20);
 	labelBottleBlood->setColor(Color3B::RED);
@@ -657,13 +662,13 @@ void PlayGameScene::attack(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEven
 			for (auto i : mMurad) {
 				rectMonster = i->getSprite()->getBoundingBox();
 				if (rectAlita.intersectsRect(rectMonster)) {
-					i->DarkCollision();
+					i->DarkCollision(m_Alita->getDame());
 				}
 			}
 			for (auto i : mKaisa) {
 				rectMonster = i->getSprite()->getBoundingBox();
 				if (rectAlita.intersectsRect(rectMonster)) {
-					i->DarkCollision();
+					i->DarkCollision(m_Alita->getDame());
 				}
 			}
 		}
@@ -730,6 +735,13 @@ void PlayGameScene::bloodMC(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEve
 			}
 
 			countBottleBlood--;
+			for (std::list<Item*>::iterator it = MyItems::GetInstance()->ListItems.begin(); it != MyItems::GetInstance()->ListItems.end(); it++)
+			{
+				if ((*it)->getId() == Objects::ID_BottleBlood)
+				{
+					(*it)->setSum(countBottleBlood);
+				}
+			}
 			auto audio = SimpleAudioEngine::getInstance()->playEffect("res/Music/eatblood.wav", false);
 		}
 		

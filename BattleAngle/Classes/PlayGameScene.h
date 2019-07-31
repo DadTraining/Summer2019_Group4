@@ -7,6 +7,8 @@
 #include "Alita.h"
 #include "Gold.h"
 #include "ui/CocosGUI.h"
+#include "MyItems.h"
+#include "Item.h"
 
 using namespace cocos2d;
 

@@ -35,6 +35,13 @@ bool PlayGameScene2::init()
 	flag->setScale(0.05);
 	addChild(flag, 10);
 	rectFlag = flag->getBoundingBox();
+	for (std::list<Item*>::iterator it = MyItems::GetInstance()->ListItems.begin(); it != MyItems::GetInstance()->ListItems.end(); it++)
+	{
+		if ((*it)->getId() == Objects::ID_BottleBlood)
+		{
+			countBottleBlood = (*it)->getSum();
+		}
+	}
 	visibleSize = Director::getInstance()->getVisibleSize();
 	mCurrentTouchState = ui::Widget::TouchEventType::ENDED;
 	auto turn = ControlMusic::GetInstance()->isMusic();
@@ -76,6 +83,7 @@ void PlayGameScene2::update(float deltaTime) {
 	updateKillLabel();
 	updateGoldLabel();
 	UpdateGotoFlag();
+	updateBottleBlood();
 }
 
 
@@ -89,7 +97,7 @@ void PlayGameScene2::createMap()
 	visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	map = TMXTiledMap::create("res/map3/map3.tmx");
-	map->setScaleX(0.5);
+	//map->setScaleX(0.5);
 	map->setAnchorPoint(Vec2(0, 0));
 	map->setPosition(0, 0);
 
@@ -117,11 +125,11 @@ void PlayGameScene2::createPhysics()
 		}
 	}
 	addChild(map, -1);
-	auto egdeBody = PhysicsBody::createEdgeBox(map->getContentSize()/2, PHYSICSBODY_MATERIAL_DEFAULT, 3);
+	auto egdeBody = PhysicsBody::createEdgeBox(map->getContentSize(), PHYSICSBODY_MATERIAL_DEFAULT, 3);
 	egdeBody->setDynamic(false);
 	//egdeBody->;
 	egdeNode = Node::create();
-	egdeNode->setPosition(map->getContentSize().width / 4, map->getContentSize().height / 4);
+	egdeNode->setPosition(map->getContentSize().width / 2, map->getContentSize().height / 2);
 	egdeNode->setPhysicsBody(egdeBody);
 	addChild(egdeNode);
 }
@@ -337,6 +345,11 @@ void PlayGameScene2::updateGoldLabel()
 	tempCount1 = CCString::createWithFormat("%i", countGold);
 	labelGold->setString(tempCount1->getCString());
 }
+void PlayGameScene2::updateBottleBlood()
+{
+	tempCountBlood = CCString::createWithFormat("%i", countBottleBlood);
+	labelBottleBlood->setString(tempCountBlood->getCString());
+}
 void PlayGameScene2::UpdateMonster(float x_alita)
 {
 	//	auto PositionAlita = m_Alita->getSprite()->getPositionX();
@@ -370,12 +383,12 @@ bool PlayGameScene2::onContactBegin(cocos2d::PhysicsContact & contact)
 	{
 		if (a->getCollisionBitmask() == Objects::BITMASK_DART)
 		{
-			mKaisa.at(b->getGroup())->DarkCollision();
+			mKaisa.at(b->getGroup())->DarkCollision(m_Alita->getDarts()->getDame());
 			m_Alita->getDarts()->setAlive(false);
 		}
 		else if (b->getCollisionBitmask() == Objects::BITMASK_DART)
 		{
-			mKaisa.at(a->getGroup())->DarkCollision();
+			mKaisa.at(a->getGroup())->DarkCollision(m_Alita->getDarts()->getDame());
 			m_Alita->getDarts()->setAlive(false);
 		}
 		auto paricleEffect = ParticleSystemQuad::create("particles/collision.plist");
@@ -389,12 +402,12 @@ bool PlayGameScene2::onContactBegin(cocos2d::PhysicsContact & contact)
 	{
 		if (a->getCollisionBitmask() == Objects::BITMASK_DART&& b->getContactTestBitmask() == 3)
 		{
-			mMurad.at(b->getGroup())->DarkCollision();
+			mMurad.at(b->getGroup())->DarkCollision(m_Alita->getDarts()->getDame());
 			m_Alita->getDarts()->setAlive(false);
 		}
 		else if (b->getCollisionBitmask() == Objects::BITMASK_DART &&a->getContactTestBitmask() == 3)
 		{
-			mMurad.at(a->getGroup())->DarkCollision();
+			mMurad.at(a->getGroup())->DarkCollision(m_Alita->getDarts()->getDame());
 			m_Alita->getDarts()->setAlive(false);
 		}
 		auto paricleEffect = ParticleSystemQuad::create("particles/collision.plist");
@@ -483,6 +496,8 @@ void PlayGameScene2::updateCenterView()
 		labelGold->setPosition(Vec2(labelGold->getPosition().x + (x_alita - x_positon_Alita), labelGold->getPosition().y));
 		goldFrame->setPosition(Vec2(goldFrame->getPosition().x + (x_alita - x_positon_Alita), goldFrame->getPosition().y));
 		monsterFrame->setPosition(Vec2(monsterFrame->getPosition().x + (x_alita - x_positon_Alita), monsterFrame->getPosition().y));
+		btnBlood->setPosition(Vec2(btnBlood->getPosition().x + (x_alita - x_positon_Alita), btnBlood->getPosition().y));
+		labelBottleBlood->setPosition(Vec2(labelBottleBlood->getPosition().x + (x_alita - x_positon_Alita), labelBottleBlood->getPosition().y));
 		x_positon_Alita = x_alita;
 	}
 }
@@ -561,6 +576,18 @@ void PlayGameScene2::createController()
 	btnPause->setPosition(Vec2(visibleSize.width - 50, visibleSize.height - 30));
 	btnPause->addTouchEventListener(CC_CALLBACK_2(PlayGameScene2::pause, this));
 	addChild(btnPause, 20);
+	//Blood
+	btnBlood = ui::Button::create("res/BloodMc/bloodbottle.png");
+	btnBlood->setAnchorPoint(Vec2(0, 0.5));
+	//btnBlood->setScale(1.3);
+	btnBlood->setPosition(mAttackController->getPosition() - Vec2(150, 0));
+	btnBlood->addTouchEventListener(CC_CALLBACK_2(PlayGameScene2::bloodMC, this));
+	addChild(btnBlood, 21);
+	tempCountBlood = CCString::createWithFormat("%i", countBottleBlood);
+	labelBottleBlood = Label::createWithTTF(tempCountBlood->getCString(), "fonts/Marker Felt.ttf", 20);
+	labelBottleBlood->setColor(Color3B::RED);
+	labelBottleBlood->setPosition(btnBlood->getPosition() + Vec2(40, 0));
+	addChild(labelBottleBlood, 21);
 }
 
 void PlayGameScene2::createMC()
@@ -634,13 +661,13 @@ void PlayGameScene2::attack(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEve
 			for (auto i : mMurad) {
 				rectMonster = i->getSprite()->getBoundingBox();
 				if (rectAlita.intersectsRect(rectMonster)) {
-					i->DarkCollision();
+					i->DarkCollision(m_Alita->getDame());
 				}
 			}
 			for (auto i : mKaisa) {
 				rectMonster = i->getSprite()->getBoundingBox();
 				if (rectAlita.intersectsRect(rectMonster)) {
-					i->DarkCollision();
+					i->DarkCollision(m_Alita->getDame());
 				}
 			}
 		}
@@ -679,6 +706,44 @@ void PlayGameScene2::pause(Ref* sender, ui::Widget::TouchEventType type)
 		mPauseLayer->setVisible(true);
 		auto fadeIn = FadeIn::create(0.3f);
 		mPauseLayer->runAction(Sequence::create(fadeIn, funcPause, nullptr));
+		break;
+	}
+}
+
+void PlayGameScene2::bloodMC(cocos2d::Ref * sender, cocos2d::ui::Widget::TouchEventType type)
+{
+	switch (type)
+	{
+	case ui::Widget::TouchEventType::BEGAN:
+		break;
+	case ui::Widget::TouchEventType::ENDED:
+		if (countBottleBlood > 0)
+		{
+			if (m_Alita->getHP() < mHP)
+			{
+				auto tempBlood = m_Alita->getHP() + 200;
+				if (tempBlood > mHP)
+				{
+					m_Alita->setHP(mHP);
+				}
+				else
+				{
+					m_Alita->setHP(tempBlood);
+				}
+
+			}
+
+			countBottleBlood--;
+			for (std::list<Item*>::iterator it = MyItems::GetInstance()->ListItems.begin(); it != MyItems::GetInstance()->ListItems.end(); it++)
+			{
+				if ((*it)->getId() == Objects::ID_BottleBlood)
+				{
+					(*it)->setSum(countBottleBlood);
+				}
+			}
+			auto audio = SimpleAudioEngine::getInstance()->playEffect("res/Music/eatblood.wav", false);
+		}
+
 		break;
 	}
 }
