@@ -144,9 +144,6 @@ void PlayGameScene::createCamera()
 void PlayGameScene::createMonsters() {
 
 	//add effect
-	auto paricleEffect = ParticleSnow::create();
-	paricleEffect->setPosition(Vec2(visibleSize.width / 2, visibleSize.height));
-	addChild(paricleEffect);
 	auto objects = mObjectGroup->getObjects();
 	int kaisa_count = 0;
 	int murad_count = 0;
