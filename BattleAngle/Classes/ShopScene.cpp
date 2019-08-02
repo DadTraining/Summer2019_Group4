@@ -110,7 +110,7 @@ void ShopScene::createLayout(ui::PageView * pageView, Sprite * sprite)
 	button_Buy = cocos2d::ui::Button::create("res/shop/btn.png", "res/shop/btn.png");
 	button_Buy->setScale(0.3);
 	button_Buy->setAnchorPoint(Vec2(0, 0.5));
-	button_Buy->setPosition(Vec2(visibleSize.width / 2, 20));
+	button_Buy->setPosition(Vec2(visibleSize.width / 2, visibleSize.height*0.08));
 	button_Buy->addTouchEventListener(CC_CALLBACK_2(ShopScene::buy, this));
 	page->addChild(button_Buy, 10);
 
@@ -134,7 +134,7 @@ void ShopScene::createLayout(ui::PageView * pageView, Sprite * sprite)
 	button_Use = cocos2d::ui::Button::create("res/shop/btn.png", "res/shop/btn.png");
 	button_Use->setScale(0.3);
 	button_Use->setAnchorPoint(Vec2(1, 0.5));
-	button_Use->setPosition(Vec2(visibleSize.width / 2, 20));
+	button_Use->setPosition(Vec2(visibleSize.width / 2, visibleSize.height*0.08));
 	button_Use->addTouchEventListener(CC_CALLBACK_2(ShopScene::use, this));
 	page->addChild(button_Use, 10);
 
